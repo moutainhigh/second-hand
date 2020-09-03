@@ -1,7 +1,9 @@
-package com.example.payment.center.controller;
+package com.example.user.center.controller;
 
 
 import com.example.springbootdemoentity.entity.Product;
+import com.example.user.center.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,10 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class ProductController {
-    @RequestMapping(value = "getProduct")
+    @Autowired
+    private ProductService productService;
+
+
+    @RequestMapping(value = "getcort")
     public String getProduct() {
-     Product product = new Product();
-        System.out.println("我是服务的提供者");
-        return product.toString();
+        String str =  productService.getProduct();
+        return str;
     }
 }

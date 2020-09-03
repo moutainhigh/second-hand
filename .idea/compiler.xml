@@ -23,7 +23,7 @@
       <module name="second-payment-center" target="11" />
       <module name="second-product-center" target="1.8" />
       <module name="second-user-center" target="1.8" />
-      <module name="springbootdemo-consumer" target="1.5" />
+      <module name="springbootdemo-consumer" target="1.8" />
       <module name="springbootdemo-entity" target="1.8" />
       <module name="springbootdemo-eureka" target="1.8" />
       <module name="springbootdemo-product" target="1.5" />

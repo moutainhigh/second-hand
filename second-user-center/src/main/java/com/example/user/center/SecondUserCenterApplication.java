@@ -1,4 +1,4 @@
-package com.example.payment.center;
+package com.example.user.center;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,6 +1,6 @@
 spring:
   application:
-    name: product-server
+    name: product-center
 server:
   port: 7002
   servlet:

@@ -1,10 +1,10 @@
 spring:
   application:
-    name: product-center
+    name: user-center
 server:
   port: 7004
   servlet:
-    context-path: /product
+    context-path: /user
 eureka:
   client:
     service-url:
