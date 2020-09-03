@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 /**
- * @author YangPeng
+ * @author shihao
  * @Title: ProductController
- * @ProjectName springbootdemo
+ * @ProjectName Second-order-center
  * @Description: TODO
- * @date 2019/3/25-19:26
+ * @date 2020/9/3-14:18
  */
 @RestController
 public class ProductController {
