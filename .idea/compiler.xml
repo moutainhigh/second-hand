@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="second-hand" />
+        <module name="second-order-center" />
+        <module name="second-product-center" />
+        <module name="second-user-center" />
+        <module name="springbootdemo-consumer" />
+        <module name="springbootdemo-entity" />
+        <module name="springbootdemo-eureka" />
+        <module name="springbootdemo-product" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="second-hand" target="1.8" />
+      <module name="second-order-center" target="1.8" />
+      <module name="second-product-center" target="1.8" />
+      <module name="second-user-center" target="1.8" />
+      <module name="springbootdemo-consumer" target="1.8" />
+      <module name="springbootdemo-entity" target="1.8" />
+      <module name="springbootdemo-eureka" target="1.8" />
+      <module name="springbootdemo-product" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
