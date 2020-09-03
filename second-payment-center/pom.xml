@@ -8,13 +8,13 @@
         <version>0.0.1-SNAPSHOT</version>
         <relativePath/>
     </parent>
-    <groupId>com.example.order.center</groupId>
-    <artifactId>second-order-center</artifactId>
+    <groupId>com.example.payment.center</groupId>
+    <artifactId>second-payment-center</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>second-order-center</name>
+    <name>second-payment-center</name>
     <description>Demo project for Spring Boot</description>
     <properties>
-        <java.version>1.8</java.version>
+        <java.version>11</java.version>
     </properties>
 
     <dependencies>

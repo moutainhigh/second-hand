@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/second-hand.iml" filepath="$PROJECT_DIR$/.idea/second-hand.iml" />
       <module fileurl="file://$PROJECT_DIR$/second-order-center/second-order-center.iml" filepath="$PROJECT_DIR$/second-order-center/second-order-center.iml" />
+      <module fileurl="file://$PROJECT_DIR$/second-payment-center/second-payment-center.iml" filepath="$PROJECT_DIR$/second-payment-center/second-payment-center.iml" />
       <module fileurl="file://$PROJECT_DIR$/second-product-center/second-product-center.iml" filepath="$PROJECT_DIR$/second-product-center/second-product-center.iml" />
       <module fileurl="file://$PROJECT_DIR$/second-user-center/second-user-center.iml" filepath="$PROJECT_DIR$/second-user-center/second-user-center.iml" />
       <module fileurl="file://$PROJECT_DIR$/springbootdemo-consumer/springbootdemo-consumer.iml" filepath="$PROJECT_DIR$/springbootdemo-consumer/springbootdemo-consumer.iml" />

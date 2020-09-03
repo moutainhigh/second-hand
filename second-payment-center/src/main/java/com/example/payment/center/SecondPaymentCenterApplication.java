@@ -1,4 +1,4 @@
-package com.example.springbootdemoproduct;
+package com.example.payment.center;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,10 +8,10 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication
 @EnableFeignClients
 @EnableEurekaClient
-public class SpringbootdemoProductApplication {
+public class SecondPaymentCenterApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SpringbootdemoProductApplication.class, args);
+        SpringApplication.run(SecondPaymentCenterApplication.class, args);
     }
 
 }

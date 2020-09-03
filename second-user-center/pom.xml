@@ -4,14 +4,14 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.example</groupId>
-        <artifactId>springbootdemo</artifactId>
+        <artifactId>second-hand</artifactId>
         <version>0.0.1-SNAPSHOT</version>
         <relativePath/>
     </parent>
-    <groupId>com.example</groupId>
-    <artifactId>springbootdemo-product</artifactId>
+    <groupId>com.example.user.center</groupId>
+    <artifactId>second-user-center</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>springbootdemo-product</name>
+    <name>second-user-center</name>
     <description>Demo project for Spring Boot</description>
     <properties>
         <java.version>1.8</java.version>

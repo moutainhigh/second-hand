@@ -20,6 +20,7 @@
         <option value="$PROJECT_DIR$/second-user-center/pom.xml" />
         <option value="$PROJECT_DIR$/second-product-center/pom.xml" />
         <option value="$PROJECT_DIR$/second-order-center/pom.xml" />
+        <option value="$PROJECT_DIR$/second-payment-center/pom.xml" />
       </list>
     </option>
   </component>

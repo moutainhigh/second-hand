@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="second-hand" />
         <module name="second-order-center" />
+        <module name="second-payment-center" />
         <module name="second-product-center" />
         <module name="second-user-center" />
         <module name="springbootdemo-consumer" />
@@ -17,14 +18,15 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="second-hand" target="1.8" />
+      <module name="second-hand" target="11" />
       <module name="second-order-center" target="1.8" />
+      <module name="second-payment-center" target="11" />
       <module name="second-product-center" target="1.8" />
       <module name="second-user-center" target="1.8" />
-      <module name="springbootdemo-consumer" target="1.8" />
+      <module name="springbootdemo-consumer" target="1.5" />
       <module name="springbootdemo-entity" target="1.8" />
       <module name="springbootdemo-eureka" target="1.8" />
-      <module name="springbootdemo-product" target="1.8" />
+      <module name="springbootdemo-product" target="1.5" />
     </bytecodeTargetLevel>
   </component>
 </project>

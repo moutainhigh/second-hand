@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: payment-center
+server:
+  port: 7005
+  servlet:
+    context-path: /payment
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:5060/eureka/eureka
