@@ -6,6 +6,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="second-common" />
         <module name="second-hand" />
         <module name="second-order-center" />
         <module name="second-payment-center" />
@@ -18,6 +19,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="second-common" target="11" />
       <module name="second-hand" target="11" />
       <module name="second-order-center" target="1.8" />
       <module name="second-payment-center" target="11" />
