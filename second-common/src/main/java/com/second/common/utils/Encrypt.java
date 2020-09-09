@@ -21,7 +21,7 @@ public final class Encrypt {
      * @return 加密后的token
      */
     public String getToken(final boolean isVip, final Integer userId,
-                           final String Type) {
+                           final String Type,Integer CertificationStatus) {
         String token = null;
         try {
             Date expiresAt = new Date(System.currentTimeMillis() + 24L * 60L * 3600L * 1000L);
@@ -30,6 +30,7 @@ public final class Encrypt {
                     .withClaim("isVip", isVip)
                     .withClaim("userId", userId)
                     .withClaim("Type", Type)
+                    .withClaim("CertificationStatus", CertificationStatus)
                     .withExpiresAt(expiresAt)
                     // 使用了HMAC256加密算法。
                     // mysecret是用来加密数字签名的密钥。

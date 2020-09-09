@@ -1,9 +1,10 @@
 package com.example.order.center.controller;
 
 
-import com.example.springbootdemoentity.entity.Product;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 
 /**
@@ -15,10 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class ProductController {
-    @RequestMapping(value = "getProduct")
+
+    @RequestMapping(value = "/getProduct")
     public String getProduct() {
-     Product product = new Product();
-        System.out.println("我是服务的提供者");
-        return product.toString();
+//     Product product = new Product();
+//        System.out.println("我是服务的提供者");
+        return "789";
     }
 }

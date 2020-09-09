@@ -1,0 +1,81 @@
+package com.example.user.center.controller;
+
+import com.alibaba.fastjson.JSONObject;
+import com.example.user.center.dao.SecondFileMapper;
+import com.example.user.center.model.SecondFile;
+import com.second.common.service.FileMangeService;
+import com.second.utils.response.handler.ResponseEntity;
+import com.second.utils.response.handler.ResponseUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.OutputStream;
+import java.time.LocalDateTime;
+
+/**
+ * @author shihao
+ * @Title: FileController
+ * @ProjectName Second-order-center
+ * @Description:
+ * @date Created in
+ * @Version: $
+ */
+@RestController
+@Api
+@RequestMapping("/File")
+@CrossOrigin
+public class FileController {
+    @Autowired
+    private SecondFileMapper secondFileMapper;
+
+    private static final String LOCK = "LOCK";
+
+    @ApiOperation(value = "上传图片", notes = "上传图片")
+    @RequestMapping(value = "/fileUpLoad", method = RequestMethod.POST)
+    public ResponseEntity<JSONObject> fileUpLoad(MultipartFile file) throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
+        String arr[];
+        FileMangeService fileMangeService = new FileMangeService();
+        arr = fileMangeService.uploadFile(file.getBytes(), String.valueOf("-1"));
+        SecondFile fileDesc = new SecondFile();
+        fileDesc.setFileName(file.getName());
+        fileDesc.setGroupName(arr[0]);
+        fileDesc.setRemoteFilename(arr[1]);
+        fileDesc.setUserId(-1);
+        fileDesc.setCreateTime(LocalDateTime.now());
+        fileDesc.setModifyTime(LocalDateTime.now());
+        fileDesc.setIsDeleted((short) 0);
+        secondFileMapper.insert(fileDesc);
+        return builder.body(ResponseUtils.getResponseBody(fileDesc.getId()));
+    }
+    @ApiOperation(value = "获取图片", notes = "获取图片")
+    @RequestMapping(value = "/getPicture", method = RequestMethod.GET)
+    public void getPicture(Integer id, HttpServletResponse response) throws Exception {
+        response.addHeader("Access-Control-Allow-Origin", "*");
+        SecondFile fileDesc = secondFileMapper.selectByPrimaryKey(id);
+        if (fileDesc == null) {
+            throw new Exception("file not exists");
+        }
+        FileMangeService fileManageService = new FileMangeService();
+        synchronized (LOCK) {
+            byte[] file = fileManageService.downloadFile(fileDesc.getGroupName(), fileDesc.getRemoteFilename());
+            ByteArrayInputStream stream = new ByteArrayInputStream(file);
+            BufferedImage readImg = ImageIO.read(stream);
+            stream.reset();
+            OutputStream outputStream = response.getOutputStream();
+            ImageIO.write(readImg, "jpg", outputStream);
+            outputStream.close();
+        }
+    }
+}

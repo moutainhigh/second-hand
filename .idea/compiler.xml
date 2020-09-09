@@ -12,8 +12,10 @@
         <module name="second-payment-center" />
         <module name="second-product-center" />
         <module name="second-user-center" />
+        <module name="second-web-utils" />
         <module name="springbootdemo-consumer" />
         <module name="springbootdemo-entity" />
+        <module name="springbootdemo-entity (1)" />
         <module name="springbootdemo-eureka" />
         <module name="springbootdemo-product" />
       </profile>
@@ -25,8 +27,10 @@
       <module name="second-payment-center" target="11" />
       <module name="second-product-center" target="1.8" />
       <module name="second-user-center" target="1.8" />
+      <module name="second-web-utils" target="1.8" />
       <module name="springbootdemo-consumer" target="1.8" />
       <module name="springbootdemo-entity" target="1.8" />
+      <module name="springbootdemo-entity (1)" target="1.8" />
       <module name="springbootdemo-eureka" target="1.8" />
       <module name="springbootdemo-product" target="1.5" />
     </bytecodeTargetLevel>

@@ -20,8 +20,8 @@
     <dependencies>
 
         <dependency>
-            <groupId>com.example</groupId>
-            <artifactId>springbootdemo-entity</artifactId>
+            <groupId>com.example.entity.center</groupId>
+            <artifactId>second-entity-center</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>

@@ -8,7 +8,7 @@
         <version>0.0.1-SNAPSHOT</version>
         <relativePath/>
     </parent>
-    <groupId>com.hanfu.second</groupId>
+    <groupId>com.second.common</groupId>
     <artifactId>second-common</artifactId>
     <version>0.0.1</version>
 
