@@ -7,7 +7,6 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="second-common" />
-        <module name="second-hand" />
         <module name="second-order-center" />
         <module name="second-payment-center" />
         <module name="second-product-center" />
