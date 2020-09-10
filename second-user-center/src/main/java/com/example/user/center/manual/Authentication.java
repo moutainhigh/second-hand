@@ -58,4 +58,57 @@ public class Authentication {
         }
 
     }
+
+    //用户登录方式
+    public static enum LoginType {
+        USERWX("userwx"),//用户端微信登录
+        BOSS("boss"),//平台后台登录
+        STOREWX("store"),//店铺小程序端口登录
+        SON("son");//子站点后台登录
+        private String state;
+
+        LoginType(String state) {
+            this.state = state;
+        }
+
+        public String getState(){
+            return this.state;
+        }
+
+        public static LoginType getState(String state) {
+            for(LoginType type1: LoginType.values()) {
+                if (type1.getState().equals(state)) {
+                    return type1;
+                }
+            }
+            return USERWX;
+        }
+
+    }
+
+    //店铺类型
+    public static enum StoreType {
+        USER("user"),//用户店铺
+        BOSS("boss"),//总后台店铺
+        STORE("store");//入驻商家店铺
+        private String state;
+
+        StoreType(String state) {
+            this.state = state;
+        }
+
+        public String getState(){
+            return this.state;
+        }
+
+        public static StoreType getState(Integer state) {
+            for(StoreType type1: StoreType.values()) {
+                if (type1.getState().equals(state)) {
+                    return type1;
+                }
+            }
+            return USER;
+        }
+
+    }
 }

@@ -65,7 +65,7 @@ public class WxLoginConfig {
 
 
     public static enum AuthType{
-        WECHART("1"),
+        WECHART("1"),//小程序微信登录
         phone("2");
         private String authType;
         AuthType(String authType) {

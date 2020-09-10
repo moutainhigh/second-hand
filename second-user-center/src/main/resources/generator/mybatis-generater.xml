@@ -51,8 +51,8 @@
             <generatedKey column="id" sqlStatement="mysql"
                           identity="true"/>
         </table>
-        <table schema="user_center" tableName="second_user_address"
-               domainObjectName="SecondUserAddress">
+        <table schema="user_center" tableName="second_store_address"
+               domainObjectName="SecondStoreAddress">
             <property name="useActualColumnNames" value="false"/>
             <generatedKey column="id" sqlStatement="mysql"
                           identity="true"/>
@@ -283,6 +283,19 @@
         <!--文件-->
         <table schema="user_center" tableName="second_file"
                domainObjectName="SecondFile">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="mysql"
+                          identity="true"/>
+        </table>
+        <!--商家入驻认证-->
+        <table schema="user_center" tableName="second_store_authentication"
+               domainObjectName="SecondStoreAuthentication">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="mysql"
+                          identity="true"/>
+        </table>
+        <table schema="user_center" tableName="second_store_authentication_picture"
+               domainObjectName="SecondStoreAuthenticationPicture">
             <property name="useActualColumnNames" value="false"/>
             <generatedKey column="id" sqlStatement="mysql"
                           identity="true"/>

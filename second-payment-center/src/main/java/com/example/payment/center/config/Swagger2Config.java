@@ -1,4 +1,4 @@
-package com.example.payment.center.controller.config;
+package com.example.payment.center.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -72,8 +72,9 @@ public class MiniLoginController {
     private SecondCollegesMapper collegesMapper;
     @Autowired
     private SecondAuthenticationPictureMapper secondAuthenticationPictureMapper;
-
-
+//店铺
+@Autowired
+private SecondStoreMapper secondStoreMapper;
     @RequestMapping(path = "/wechart", method = RequestMethod.GET)
     @ApiOperation(value = "微信登录", notes = "微信登录")
     public ResponseEntity<JSONObject> wxLogin(@RequestParam(value = "code", required = false) String code,
@@ -114,6 +115,11 @@ public class MiniLoginController {
         map.put("token", token);
         SecondUser secondUser1 = secondUserMapper.selectByPrimaryKey(secondUser.getId());
         map.put("AuthStart",secondUser1.getIsAuthentication());//认证状态
+        SecondStoreExample secondStoreExample = new SecondStoreExample();
+        secondStoreExample.createCriteria().andUserIdEqualTo(secondUser.getId())
+                .andIsDeletedEqualTo((short) 0).andSecondStatusEqualTo(0);
+        List<SecondStore> secondStores = secondStoreMapper.selectByExample(secondStoreExample);
+        map.put("storeId",secondStores.get(0).getId());
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
         return builder.body(ResponseUtils.getResponseBody(map));
     }
@@ -132,7 +138,7 @@ public class MiniLoginController {
         if (CollectionUtils.isEmpty(list)) {
             secondUser.setAddress(userInfo.getString("country") + " " + userInfo.getString("province") + " " + userInfo.getString("city"));
 //            secondUser.setUsername(openid);
-//            secondUser.setPhone(userInfo.getString("phone"));
+            secondUser.setPhone(userInfo.getString("phone"));
             System.out.println(userInfo);
             secondUser.setCreateDate(LocalDateTime.now());
             secondUser.setModifyDate(LocalDateTime.now());
@@ -141,17 +147,30 @@ public class MiniLoginController {
             secondUser.setRegion(userInfo.getString("province"));
             secondUser.setUserStatus((byte) 0);
             secondUser.setNickName(userInfo.getString("nickName"));
+            secondUser.setUserType(Authentication.LoginType.USERWX.getState());
             secondUserMapper.insert(secondUser);
         } else {
             secondUser = list.get(0);
         }
+
+        SecondStore secondStore = new SecondStore();
+        secondStore.setStoreType(Authentication.StoreType.USER.getState());
+        secondStore.setUserId(secondUser.getId());
+        secondStore.setConcernCount(0);
+        secondStore.setIsDeleted((short) 0);
+        secondStore.setCreateTime(LocalDateTime.now());
+        secondStore.setModifyDate(LocalDateTime.now());
+        secondStore.setSecondStatus(0);//状态
+        secondStoreMapper.insertSelective(secondStore);
         SecondAuth record = new SecondAuth();
+        record.setStoreId(secondStore.getId());
         record.setAuthKey(openid);
         record.setAuthStatus(Byte.valueOf("0"));
         record.setAuthType(WxLoginConfig.AuthType.WECHART.getAuthType());
         record.setCreateDate(LocalDateTime.now());
         record.setModifyDate(LocalDateTime.now());
         record.setUserId(secondUser.getId());
+        record.setLoginType(Authentication.LoginType.USERWX.getState());
         secondAuthMapper.insert(record);
         return secondUser;
     }

@@ -74,8 +74,37 @@ public class FileController {
             BufferedImage readImg = ImageIO.read(stream);
             stream.reset();
             OutputStream outputStream = response.getOutputStream();
-            ImageIO.write(readImg, "jpg", outputStream);
+            ImageIO.write(readImg, "png", outputStream);
             outputStream.close();
         }
+    }
+
+    @ApiOperation(value = "删除图片", notes = "删除")
+    @RequestMapping(value = "/fileDelete", method = RequestMethod.POST)
+    public ResponseEntity<JSONObject> filedelete(Integer fileId) throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
+        SecondFile fileDesc = secondFileMapper.selectByPrimaryKey(fileId);
+        FileMangeService fileManageService = new FileMangeService();
+        if (fileDesc != null) {
+            fileManageService.deleteFile(fileDesc.getGroupName(), fileDesc.getRemoteFilename());
+        }
+        secondFileMapper.deleteByPrimaryKey(fileId);
+        return builder.body(ResponseUtils.getResponseBody(fileId));
+    }
+
+    @ApiOperation(value = "删除图片2", notes = "删除")
+    @RequestMapping(value = "/fileDelete2", method = RequestMethod.POST)
+    public ResponseEntity<JSONObject> fileDelete2(String file) throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
+        String str1=file.substring(0, file.indexOf("="));
+        String str2=file.substring(str1.length()+1, file.length());
+
+        SecondFile fileDesc = secondFileMapper.selectByPrimaryKey(Integer.valueOf(str2));
+        FileMangeService fileManageService = new FileMangeService();
+        if (fileDesc != null) {
+            fileManageService.deleteFile(fileDesc.getGroupName(), fileDesc.getRemoteFilename());
+        }
+        secondFileMapper.deleteByPrimaryKey(Integer.valueOf(str2));
+        return builder.body(ResponseUtils.getResponseBody(Integer.valueOf(str2)));
     }
 }
