@@ -55,13 +55,12 @@ public class CategoryController {
             @ApiImplicitParam(paramType = "query", name = "levelId", value = "级别", required = true, type = "Integer"),
     })
     public ResponseEntity<JSONObject> addCategory(
-            @RequestParam(value = "fileId", required = false) Integer fileId,
+            @RequestParam(value = "fileId", required = false) String fileId,
             @RequestParam(value = "categoryName", required = false) String categoryName,
             @RequestParam(value = "parentCategoryId", required = false) Integer parentCategoryId,
             @RequestParam(value = "levelId", required = false) Integer levelId
     ) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
-        String s = "http://localhost:7004/user/File/getPicture?id=";
         SecondCategory secondCategory = new SecondCategory();
         secondCategory.setLevelId(levelId);
         secondCategory.setSecondName(categoryName);
@@ -69,7 +68,7 @@ public class CategoryController {
         secondCategory.setCreateTime(LocalDateTime.now());
         secondCategory.setModifyTime(LocalDateTime.now());
         secondCategory.setIsDeleted((short) 0);
-        secondCategory.setFile(s+String.valueOf(fileId));
+        secondCategory.setFile(fileId);
         secondCategoryMapper.insertSelective(secondCategory);
         return builder.body(ResponseUtils.getResponseBody(secondCategory));
     }
@@ -132,18 +131,17 @@ public class CategoryController {
     })
     public ResponseEntity<JSONObject> updateCategory(
             @RequestParam(value = "categoryId", required = false) Integer categoryId,
-            @RequestParam(value = "fileId", required = false) Integer fileId,
+            @RequestParam(value = "fileId", required = false) String fileId,
             @RequestParam(value = "categoryName", required = false) String categoryName,
             HttpServletResponse response
     ) throws Exception {
-        String s = "http://localhost:7004/user/File/getPicture?id=";
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
         SecondCategory secondCategory1 = secondCategoryMapper.selectByPrimaryKey(categoryId);
         String str = secondCategory1.getFile();
         SecondCategory secondCategory = new SecondCategory();
         secondCategory.setSecondName(categoryName);
         secondCategory.setId(categoryId);
-        secondCategory.setFile(s+String.valueOf(fileId));
+        secondCategory.setFile(fileId);
         secondCategoryMapper.updateByPrimaryKeySelective(secondCategory);
         //删除图片
         if (fileId!=null){

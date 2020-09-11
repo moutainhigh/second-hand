@@ -55,7 +55,7 @@ public class BossLoginController {
         boolean a = bcp.matches(password,secondAuthList.get(0).getPassword());
         if (a){
             Encrypt encrypt = new Encrypt();
-            String token = encrypt.getToken(true, secondAuthList.get(0).getUserId(), "user", 0);
+            String token = encrypt.getToken(true, secondAuthList.get(0).getUserId(), "boss", 0);
             Map<String,Object> map = new HashMap<>();
             map.put("token",token);
             map.put("userId",secondAuthList.get(0).getUserId());

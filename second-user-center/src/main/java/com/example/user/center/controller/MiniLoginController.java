@@ -222,19 +222,18 @@ private SecondStoreMapper secondStoreMapper;
     @RequestMapping(path = "/authenticationFile", method = RequestMethod.POST)
     @ApiOperation(value = "学生认证文件上传", notes = "提交学生认证文件上传")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "fileIds", value = "文件数组", required = true, type = "Integer[]"),
+            @ApiImplicitParam(paramType = "query", name = "fileIds", value = "文件数组", required = true, type = "String[]"),
             @ApiImplicitParam(paramType = "query", name = "AuthenticationId", value = "审核id", required = true, type = "Integer"),
     })
     public ResponseEntity<JSONObject> authenticationFile(
-            @RequestParam(value = "fileIds", required = false) Integer[] fileIds,
+            @RequestParam(value = "fileIds", required = false) String[] fileIds,
             @RequestParam(value = "AuthenticationId", required = false) Integer AuthenticationId
                                                      ) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
-        String s = "http://localhost:7004/user/File/getPicture?id=";
-        for (Integer file: fileIds){
+        for (String file: fileIds){
             SecondAuthenticationPicture secondAuthenticationPicture = new SecondAuthenticationPicture();
             secondAuthenticationPicture.setSecondAuthenticationId(AuthenticationId);
-            secondAuthenticationPicture.setSecondPicture(s+String.valueOf(file));
+            secondAuthenticationPicture.setSecondPicture(file);
             secondAuthenticationPicture.setCreateDate(LocalDateTime.now());
             secondAuthenticationPicture.setModifyDate(LocalDateTime.now());
             secondAuthenticationPicture.setIsDeleted((byte) 0);

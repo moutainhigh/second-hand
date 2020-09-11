@@ -300,5 +300,13 @@
             <generatedKey column="id" sqlStatement="mysql"
                           identity="true"/>
         </table>
+<!--子站点-->
+        <table schema="user_center" tableName="second_son"
+               domainObjectName="SecondSon">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="mysql"
+                          identity="true"/>
+        </table>
+
     </context>
 </generatorConfiguration>

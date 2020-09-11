@@ -88,8 +88,8 @@ public class SecondProductController {
             @RequestParam(value = "productName", required = false) String productName,
             @RequestParam(value = "productDesc", required = false) String productDesc,
             @RequestParam(value = "showType", required = false) String showType,
-            @RequestParam(value = "file", required = false) Integer[] file,
-            @RequestParam(value = "file1", required = false) Integer file1,
+            @RequestParam(value = "file", required = false) String[] file,
+            @RequestParam(value = "file1", required = false) String file1,
             @RequestParam(value = "addressId", required = false) Integer addressId,
             @RequestParam(value = "isPutaway", required = false) Integer isPutaway,
             @RequestParam(value = "categoryId", required = false) Integer categoryId,
@@ -101,7 +101,6 @@ public class SecondProductController {
 
     ) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
-        String s = "http://localhost:7004/user/File/getPicture?id=";
         SecondProduct secondProduct = new SecondProduct();
         secondProduct.setProductType(ProductEnum.Relation.GENERAL.getState());//普通商品
         secondProduct.setShowType(ProductEnum.ShowType.getState(showType).getState());//普通商品展示
@@ -114,7 +113,7 @@ public class SecondProductController {
         secondProduct.setIsDeleted((short) 0);
         secondProduct.setCreateTime(LocalDateTime.now());
         secondProduct.setModifyTime(LocalDateTime.now());
-        secondProduct.setFile(s+String.valueOf(file1));
+        secondProduct.setFile(file1);
         secondProductMapper.insertSelective(secondProduct);
         //物品
         SecondGoods secondGoods = new SecondGoods();
@@ -128,10 +127,10 @@ public class SecondProductController {
         secondGoodsMapper.insertSelective(secondGoods);
         //商品图片
         if (file.length!=0){
-            for (Integer fie : file){
+            for (String fie : file){
                 SecondProductPictrue secondProductPictrue = new SecondProductPictrue();
                 secondProductPictrue.setProductId(secondProduct.getId());
-                secondProductPictrue.setFile(s+String.valueOf(fie));
+                secondProductPictrue.setFile(fie);
                 secondProductPictrue.setCreateTime(LocalDateTime.now());
                 secondProductPictrue.setModifyTime(LocalDateTime.now());
                 secondProductPictrue.setIsDeleted((short) 0);
@@ -174,7 +173,7 @@ public class SecondProductController {
             @RequestParam(value = "productName", required = false) String productName,
             @RequestParam(value = "productDesc", required = false) String productDesc,
             @RequestParam(value = "showType", required = false) String showType,
-            @RequestParam(value = "file1", required = false) Integer file1,
+            @RequestParam(value = "file1", required = false) String file1,
             @RequestParam(value = "addressId", required = false) Integer addressId,
             @RequestParam(value = "isPutaway", required = false) Integer isPutaway,
             @RequestParam(value = "categoryId", required = false) Integer categoryId,
@@ -183,12 +182,12 @@ public class SecondProductController {
             @RequestParam(value = "goodsResp", required = false) Integer goodsResp,
             @RequestParam(value = "labelIds", required = false) Integer[] labelIds,
             @RequestParam(value = "storeId", required = false) Integer storeId,
-            @RequestParam(value = "file", required = false) Integer[] file,
+            @RequestParam(value = "file", required = false) String[] file,
             @RequestParam(value = "productId", required = false) Integer productId
 
     ) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
-        String s = "http://localhost:7004/user/File/getPicture?id=";
+
         if (file1!=null){
             fileDelete2(secondProductMapper.selectByPrimaryKey(productId).getFile());
         }
@@ -204,7 +203,7 @@ public class SecondProductController {
         secondProduct.setStoreId(storeId);
         secondProduct.setIsDeleted((short) 0);
         secondProduct.setModifyTime(LocalDateTime.now());
-        secondProduct.setFile(s+String.valueOf(file1));
+        secondProduct.setFile(file1);
         secondProductMapper.updateByPrimaryKeySelective(secondProduct);
         //物品
         SecondGoodsExample secondGoodsExample = new SecondGoodsExample();
@@ -218,10 +217,10 @@ public class SecondProductController {
         secondGoodsMapper.updateByExampleSelective(secondGoods,secondGoodsExample);
         //商品图片
         if (file.length!=0){
-            for (Integer fie : file){
+            for (String fie : file){
                 SecondProductPictrue secondProductPictrue = new SecondProductPictrue();
                 secondProductPictrue.setProductId(secondProduct.getId());
-                secondProductPictrue.setFile(s+String.valueOf(fie));
+                secondProductPictrue.setFile(fie);
                 secondProductPictrue.setCreateTime(LocalDateTime.now());
                 secondProductPictrue.setModifyTime(LocalDateTime.now());
                 secondProductPictrue.setIsDeleted((short) 0);

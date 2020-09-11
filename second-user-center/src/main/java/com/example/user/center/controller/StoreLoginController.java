@@ -95,16 +95,18 @@ public class StoreLoginController {
         redisTemplate.opsForValue().set(skey, sessionObj.toJSONString());
         redisTemplate.opsForValue().set(openid.toString(), skey);
         Encrypt encrypt = new Encrypt();
-        String token = encrypt.getToken(true, secondUser.getId(), "user", Integer.valueOf(secondUser.getIsAuthentication()));
+        String token = encrypt.getToken(true, secondUser.getId(), "store", Integer.valueOf(secondUser.getIsAuthentication()));
         System.out.println(token);
         response.addHeader("token", token);
 
         map.put("skey", skey);
-        map.put("userId", secondUser.getId());
+        map.put("userId", secondUser.getId());//自己的用户id
         map.put("user", secondUser);
         map.put("token", token);
         SecondUser secondUser1 = secondUserMapper.selectByPrimaryKey(secondUser.getId());
         map.put("AuthStart",secondUser1.getIsAuthentication());//认证状态
+        List<SecondAuth> auths1 = secondAuthMapper.selectByExample(secondAuthExample);
+        map.put("store",auths1.get(0).getStoreId());//登录的店铺id
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
         return builder.body(ResponseUtils.getResponseBody(map));
     }
@@ -162,7 +164,7 @@ public class StoreLoginController {
     @RequestMapping(path = "/authenticationStore", method = RequestMethod.POST)
     @ApiOperation(value = "商家入驻认证", notes = "商家入驻认证")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "name", value = "名称", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "name", value = "名称", required = true, type = "String"),
             @ApiImplicitParam(paramType = "query", name = "sex", value = "性别", required = true, type = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, type = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "authenticationDesc", value = "认证说明", required = true, type = "String"),
@@ -193,15 +195,14 @@ public class StoreLoginController {
             @ApiImplicitParam(paramType = "query", name = "AuthenticationId", value = "审核id", required = true, type = "Integer"),
     })
     public ResponseEntity<JSONObject> authenticationFile(
-            @RequestParam(value = "fileIds", required = false) Integer[] fileIds,
+            @RequestParam(value = "fileIds", required = false) String[] fileIds,
             @RequestParam(value = "AuthenticationId", required = false) Integer AuthenticationId
     ) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
-        String s = "http://localhost:7004/user/File/getPicture?id=";
-        for (Integer file: fileIds){
+        for (String file: fileIds){
             SecondStoreAuthenticationPicture secondAuthenticationPicture = new SecondStoreAuthenticationPicture();
             secondAuthenticationPicture.setSecondAuthenticationId(AuthenticationId);
-            secondAuthenticationPicture.setSecondPicture(s+String.valueOf(file));
+            secondAuthenticationPicture.setSecondPicture(file);
             secondAuthenticationPicture.setCreateDate(LocalDateTime.now());
             secondAuthenticationPicture.setModifyDate(LocalDateTime.now());
             secondAuthenticationPicture.setIsDeleted((byte) 0);
