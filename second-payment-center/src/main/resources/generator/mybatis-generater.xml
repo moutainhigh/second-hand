@@ -51,8 +51,8 @@
             <generatedKey column="id" sqlStatement="mysql"
                           identity="true"/>
         </table>
-        <table schema="user_center" tableName="second_user_address"
-               domainObjectName="SecondUserAddress">
+        <table schema="user_center" tableName="second_store_address"
+               domainObjectName="SecondStoreAddress">
             <property name="useActualColumnNames" value="false"/>
             <generatedKey column="id" sqlStatement="mysql"
                           identity="true"/>
@@ -160,11 +160,11 @@
                           identity="true"/>
         </table>
         <table schema="user_center" tableName="second_order_address"
-                               domainObjectName="SecondOrderAddress">
-        <property name="useActualColumnNames" value="false"/>
-        <generatedKey column="id" sqlStatement="mysql"
-                      identity="true"/>
-    </table>
+               domainObjectName="SecondOrderAddress">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="mysql"
+                          identity="true"/>
+        </table>
         <table schema="user_center" tableName="second_order_detail"
                domainObjectName="SecondOrderDetail">
             <property name="useActualColumnNames" value="false"/>
@@ -189,14 +189,14 @@
             <generatedKey column="id" sqlStatement="mysql"
                           identity="true"/>
         </table>
-<!--商品点赞，收藏，想要，浏览-->
+        <!--商品点赞，收藏，想要，浏览-->
         <table schema="user_center" tableName="second_product_want"
                domainObjectName="SecondProductWant">
             <property name="useActualColumnNames" value="false"/>
             <generatedKey column="id" sqlStatement="mysql"
                           identity="true"/>
         </table>
-<!--评价-->
+        <!--评价-->
         <table schema="user_center" tableName="second_evaluate"
                domainObjectName="SecondEvaluate">
             <property name="useActualColumnNames" value="false"/>
@@ -210,14 +210,14 @@
             <generatedKey column="id" sqlStatement="mysql"
                           identity="true"/>
         </table>
-<!--关注-->
+        <!--关注-->
         <table schema="user_center" tableName="second_attention"
                domainObjectName="SecondAttention">
             <property name="useActualColumnNames" value="false"/>
             <generatedKey column="id" sqlStatement="mysql"
                           identity="true"/>
         </table>
-<!--店铺余额-->
+        <!--店铺余额-->
         <table schema="user_center" tableName="second_store_balance"
                domainObjectName="SecondStoreBalance">
             <property name="useActualColumnNames" value="false"/>
@@ -231,14 +231,14 @@
             <generatedKey column="id" sqlStatement="mysql"
                           identity="true"/>
         </table>
-<!--提现申请-->
+        <!--提现申请-->
         <table schema="user_center" tableName="second_withdrawal"
                domainObjectName="SecondWithdrawal">
             <property name="useActualColumnNames" value="false"/>
             <generatedKey column="id" sqlStatement="mysql"
                           identity="true"/>
         </table>
-<!--提现方法-->
+        <!--提现方法-->
         <table schema="user_center" tableName="second_withdrawal_method"
                domainObjectName="SecondWithdrawalMethod">
             <property name="useActualColumnNames" value="false"/>
@@ -259,7 +259,7 @@
             <generatedKey column="id" sqlStatement="mysql"
                           identity="true"/>
         </table>
-<!--积分换购-->
+        <!--积分换购-->
         <table schema="user_center" tableName="second_integral"
                domainObjectName="SecondIntegral">
             <property name="useActualColumnNames" value="false"/>
@@ -283,6 +283,46 @@
         <!--文件-->
         <table schema="user_center" tableName="second_file"
                domainObjectName="SecondFile">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="mysql"
+                          identity="true"/>
+        </table>
+        <!--商家入驻认证-->
+        <table schema="user_center" tableName="second_store_authentication"
+               domainObjectName="SecondStoreAuthentication">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="mysql"
+                          identity="true"/>
+        </table>
+        <table schema="user_center" tableName="second_store_authentication_picture"
+               domainObjectName="SecondStoreAuthenticationPicture">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="mysql"
+                          identity="true"/>
+        </table>
+        <!--子站点-->
+        <table schema="user_center" tableName="second_son"
+               domainObjectName="SecondSon">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="mysql"
+                          identity="true"/>
+        </table>
+        <!--boss second_boss-->
+        <table schema="user_center" tableName="second_boss"
+               domainObjectName="SecondBoss">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="mysql"
+                          identity="true"/>
+        </table>
+        <table schema="user_center" tableName="second_boss_setting"
+               domainObjectName="SecondBossSetting">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="mysql"
+                          identity="true"/>
+        </table>
+        <!--支付 second_transaction_flow-->
+        <table schema="user_center" tableName="second_transaction_flow"
+               domainObjectName="SecondTransactionFlow">
             <property name="useActualColumnNames" value="false"/>
             <generatedKey column="id" sqlStatement="mysql"
                           identity="true"/>

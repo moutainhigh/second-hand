@@ -43,3 +43,8 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:5060/eureka/eureka
+
+mybatis:
+  mapper-locations:
+  - mappers/*.xml
+  - manual-mappers/*.xml

@@ -2,6 +2,10 @@ package com.example.user.center.config;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.example.user.center.dao.SecondBossSettingMapper;
+import com.example.user.center.manual.Authentication;
+import com.example.user.center.model.SecondBossSetting;
+import com.example.user.center.model.SecondBossSettingExample;
 import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
 import org.apache.http.ParseException;
@@ -14,6 +18,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.codehaus.xfire.util.Base64;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.BadPaddingException;
@@ -40,6 +45,12 @@ import java.util.List;
  */
 @Component
 public class WxStoreLoginConfig {
+    public static SecondBossSettingMapper secondBossSettingMapper;
+    @Autowired
+    public void setSecondBossSettingMapper(SecondBossSettingMapper secondBossSettingMapper) {
+        WxLoginConfig.secondBossSettingMapper = secondBossSettingMapper;
+    }
+
     public static String APPID ="wx2641aaa105c07dd4";
     public static String SECRET ="fb26dde971b62de61c4573b12bd5f5da";
     public static String GRANTTYPE = "authorization_code";
@@ -158,12 +169,18 @@ public class WxStoreLoginConfig {
     }
 
     public static JSONObject getSessionKeyOrOpenId(String code, String appName) throws ParseException, IOException {
-
-        WechartProPerties wechartConfig = LoginType.getLoginType(appName).getWechartConfig();
+        setBossId(1);
+//        WechartProPerties wechartConfig = LoginType.getLoginType(appName).getWechartConfig();
+        SecondBossSettingExample secondBossSettingExample = new SecondBossSettingExample();
+        secondBossSettingExample.createCriteria().andBossIdEqualTo(getBossId())
+                .andBossTypeEqualTo(Authentication.LoginType.STOREWX.getState())
+                .andIsDeletedEqualTo((byte) 0);
+        List<SecondBossSetting> secondBossSettings =
+                secondBossSettingMapper.selectByExampleWithBLOBs(secondBossSettingExample);
         List<BasicNameValuePair> list = new ArrayList<BasicNameValuePair>();
-        list.add(new BasicNameValuePair("appid", wechartConfig.getAppId()));
-        list.add(new BasicNameValuePair("secret", wechartConfig.getSecret()));
-        list.add(new BasicNameValuePair("grant_type", wechartConfig.getGrantType()));
+        list.add(new BasicNameValuePair("appid", secondBossSettings.get(0).getAppId()));
+        list.add(new BasicNameValuePair("secret", secondBossSettings.get(0).getSecret()));
+        list.add(new BasicNameValuePair("grant_type", secondBossSettings.get(0).getGrantType()));
         list.add(new BasicNameValuePair("js_code", code));
 
         String params = EntityUtils.toString(new UrlEncodedFormEntity(list, Consts.UTF_8));

@@ -12,30 +12,33 @@ import java.io.InputStream;
 public class MiniProgramConfig implements WXPayConfig {
 
     private byte[] certData;
-
+    private String appId = "wx2641aaa105c07dd4";
+    private String mchId = "1574620741";
+    private String payKey = "tjsichuang0827abcdef199509abcdef";
+    private String path = "payment/cert/apiclient_cert.p12";
 //    @Bean
     @Override
     public String getAppID() {
 
-        return "wx2641aaa105c07dd4";
+        return getAppId();
     }
 
     @Override
     public String getMchID() {
         // TODO Auto-generated method stub
-        return "1574620741";
+        return getMchId();
     }
 
     @Override
     public String getKey() {
         // TODO Auto-generated method stub
-        return "tjsichuang0827abcdef199509abcdef";
+        return getPayKey();
     }
 
     @Override
     public InputStream getCertStream() {
         // TODO Auto-generated method stub
-        InputStream certStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("payment/cert/apiclient_cert.p12");
+        InputStream certStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(getPath());
         try {
             this.certData = IOUtils.toByteArray(certStream);
             certStream.close();
@@ -56,5 +59,38 @@ public class MiniProgramConfig implements WXPayConfig {
         // TODO Auto-generated method stub
         return 0;
     }
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
+    }
+
+    public String getMchId() {
+        return mchId;
+    }
+
+    public void setMchId(String mchId) {
+        this.mchId = mchId;
+    }
+
+    public String getPayKey() {
+        return payKey;
+    }
+
+    public void setPayKey(String payKey) {
+        this.payKey = payKey;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
 
 }

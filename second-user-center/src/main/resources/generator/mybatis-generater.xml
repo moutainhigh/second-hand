@@ -307,6 +307,25 @@
             <generatedKey column="id" sqlStatement="mysql"
                           identity="true"/>
         </table>
-
+<!--boss second_boss-->
+        <table schema="user_center" tableName="second_boss"
+               domainObjectName="SecondBoss">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="mysql"
+                          identity="true"/>
+        </table>
+        <table schema="user_center" tableName="second_boss_setting"
+               domainObjectName="SecondBossSetting">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="mysql"
+                          identity="true"/>
+        </table>
+        <!--支付 second_transaction_flow-->
+        <table schema="user_center" tableName="second_transaction_flow"
+               domainObjectName="SecondTransactionFlow">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="mysql"
+                          identity="true"/>
+        </table>
     </context>
 </generatorConfiguration>

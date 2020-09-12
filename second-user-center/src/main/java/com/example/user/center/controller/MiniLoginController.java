@@ -83,9 +83,10 @@ private SecondStoreMapper secondStoreMapper;
                                               @RequestParam(value = "iv", required = false) String iv, HttpServletResponse response, HttpServletRequest request) throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
         JSONObject SessionKeyOpenId = WxLoginConfig.getSessionKeyOrOpenId(code, appName);
+        System.out.println(SessionKeyOpenId);
         String openid = (String) SessionKeyOpenId.get("openid");
         String sessionKey = String.valueOf(SessionKeyOpenId.get("session_key"));
-
+        System.out.println(openid+"我是openId");
         SecondAuthExample secondAuthExample = new SecondAuthExample();
         secondAuthExample.createCriteria().andAuthKeyEqualTo(openid)
                 .andAuthTypeEqualTo(WxLoginConfig.AuthType.WECHART.getAuthType());
@@ -171,6 +172,7 @@ private SecondStoreMapper secondStoreMapper;
         record.setModifyDate(LocalDateTime.now());
         record.setUserId(secondUser.getId());
         record.setLoginType(Authentication.LoginType.USERWX.getState());
+        record.setIsDeleted((byte) 0);
         secondAuthMapper.insert(record);
         return secondUser;
     }
