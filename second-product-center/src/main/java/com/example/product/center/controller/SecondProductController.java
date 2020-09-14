@@ -67,6 +67,11 @@ public class SecondProductController {
     //文件
     @Autowired
     private SecondFileMapper secondFileMapper;
+    //商品地址
+    @Autowired
+    private SecondProductAddressMapper secondProductAddressMapper;
+    @Autowired
+    private SecondStoreAddressMapper secondStoreAddressMapper;
     @RequestMapping(path = "/addProduct", method = RequestMethod.POST)
     @ApiOperation(value = "用户添加商品", notes = "用户添加商品")
     @ApiImplicitParams({
@@ -116,7 +121,22 @@ public class SecondProductController {
         secondProduct.setFile(file1);
         secondProductMapper.insertSelective(secondProduct);
         //地址
-
+        SecondStoreAddress secondStoreAddress = secondStoreAddressMapper.selectByPrimaryKey(addressId);
+        SecondProductAddress secondProductAddress = new SecondProductAddress();
+        secondProductAddress.setProductId(secondProduct.getId());
+        secondProductAddress.setSecondProvince(secondStoreAddress.getSecondProvince());
+        secondProductAddress.setSecondCity(secondStoreAddress.getSecondCity());
+        secondProductAddress.setSecondConty(secondStoreAddress.getSecondConty());
+        secondProductAddress.setSecondAddressDetail(secondStoreAddress.getSecondAddressDetail());
+        secondProductAddress.setLongitude(secondStoreAddress.getLongitude());
+        secondProductAddress.setLatitude(secondStoreAddress.getLatitude());
+        secondProductAddress.setContact(secondStoreAddress.getContact());
+        secondProductAddress.setPhoneNumber(secondStoreAddress.getPhoneNumber());
+        secondProductAddress.setSecondDesc(secondStoreAddress.getSecondDesc());
+        secondProductAddress.setCreateTime(LocalDateTime.now());
+        secondProductAddress.setModifyTime(LocalDateTime.now());
+        secondProductAddress.setIsDeleted((short) 0);
+        secondProductAddressMapper.insertSelective(secondProductAddress);
         //物品
         SecondGoods secondGoods = new SecondGoods();
         secondGoods.setProductId(secondProduct.getId());
@@ -207,6 +227,25 @@ public class SecondProductController {
         secondProduct.setModifyTime(LocalDateTime.now());
         secondProduct.setFile(file1);
         secondProductMapper.updateByPrimaryKeySelective(secondProduct);
+        //地址
+        SecondStoreAddress secondStoreAddress = secondStoreAddressMapper.selectByPrimaryKey(addressId);
+        SecondProductAddress secondProductAddress = new SecondProductAddress();
+//        secondProductAddress.setProductId(secondProduct.getId());
+        secondProductAddress.setSecondProvince(secondStoreAddress.getSecondProvince());
+        secondProductAddress.setSecondCity(secondStoreAddress.getSecondCity());
+        secondProductAddress.setSecondConty(secondStoreAddress.getSecondConty());
+        secondProductAddress.setSecondAddressDetail(secondStoreAddress.getSecondAddressDetail());
+        secondProductAddress.setLongitude(secondStoreAddress.getLongitude());
+        secondProductAddress.setLatitude(secondStoreAddress.getLatitude());
+        secondProductAddress.setContact(secondStoreAddress.getContact());
+        secondProductAddress.setPhoneNumber(secondStoreAddress.getPhoneNumber());
+        secondProductAddress.setSecondDesc(secondStoreAddress.getSecondDesc());
+        secondProductAddress.setCreateTime(LocalDateTime.now());
+        secondProductAddress.setModifyTime(LocalDateTime.now());
+        secondProductAddress.setIsDeleted((short) 0);
+        SecondProductAddressExample secondProductAddressExample = new SecondProductAddressExample();
+        secondProductAddressExample.createCriteria().andProductIdEqualTo(productId);
+        secondProductAddressMapper.updateByExampleSelective(secondProductAddress,secondProductAddressExample);
         //物品
         SecondGoodsExample secondGoodsExample = new SecondGoodsExample();
         secondGoodsExample.createCriteria().andIsDeletedEqualTo((short) 0)
@@ -325,16 +364,16 @@ public class SecondProductController {
             /**
              * 地址
              */
-            SecondStoreAddress secondUserAddress = secondUserAddressMapper.selectByPrimaryKey(secondProduct.getAddressId());
+            SecondProductAddress secondProductAddress = secondProductAddressMapper.selectByPrimaryKey(secondProduct.getAddressId());
             productList.setAddressId(secondProduct.getAddressId());
-            productList.setProvince(secondUserAddress.getSecondProvince());//省
-            productList.setCity(secondUserAddress.getSecondCity());//市
-            productList.setConty(secondUserAddress.getSecondConty());//区/县
-            productList.setAddressDetail(secondUserAddress.getSecondAddressDetail());//地址详情
-            productList.setLongitude(secondUserAddress.getLongitude());//经度
-            productList.setLatitude(secondUserAddress.getLatitude());//纬度
-            productList.setPhone(secondUserAddress.getContact());//电话
-            productList.setAddressDesc(secondUserAddress.getSecondDesc());//描述
+            productList.setProvince(secondProductAddress.getSecondProvince());//省
+            productList.setCity(secondProductAddress.getSecondCity());//市
+            productList.setConty(secondProductAddress.getSecondConty());//区/县
+            productList.setAddressDetail(secondProductAddress.getSecondAddressDetail());//地址详情
+            productList.setLongitude(secondProductAddress.getLongitude());//经度
+            productList.setLatitude(secondProductAddress.getLatitude());//纬度
+            productList.setPhone(secondProductAddress.getContact());//电话
+            productList.setAddressDesc(secondProductAddress.getSecondDesc());//描述
             /**
              * 学校
              * 根据用户id查询认证
