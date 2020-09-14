@@ -11,8 +11,8 @@ package com.example.product.center.manual;
 public class IntegralEnum {
     //换购商品,换购免手续费
     public static enum Relation {
-        PRODUCT("product"),//积分
-        WITHDRAW("withdraw");//普通商品
+        PRODUCT("product"),//积分普通商品
+        WITHDRAW("withdraw");//提现
         private String state;
 
         Relation(String state) {

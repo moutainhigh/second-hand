@@ -161,7 +161,7 @@ private SecondStoreMapper secondStoreMapper;
         secondStore.setIsDeleted((short) 0);
         secondStore.setCreateTime(LocalDateTime.now());
         secondStore.setModifyDate(LocalDateTime.now());
-        secondStore.setSecondStatus(0);//状态
+        secondStore.setSecondStatus(Authentication.UserState.NOPASS.getState());
         secondStoreMapper.insertSelective(secondStore);
         SecondAuth record = new SecondAuth();
         record.setStoreId(secondStore.getId());
@@ -190,6 +190,7 @@ private SecondStoreMapper secondStoreMapper;
     })
     public ResponseEntity<JSONObject> authentication(@RequestParam(value = "name", required = false) String name,
                                                      @RequestParam(value = "sex", required = false) Integer sex,
+                                                     @RequestParam(value = "storeId", required = false) Integer storeId,
                                                      @RequestParam(value = "date", required = false) Date date,
                                                      @RequestParam(value = "number", required = false) String number,
                                                      @RequestParam(value = "colleges", required = false) Integer colleges,
@@ -216,6 +217,7 @@ private SecondStoreMapper secondStoreMapper;
         secondAuthentication.setCreateDate(LocalDateTime.now());
         secondAuthentication.setModifyDate(LocalDateTime.now());
         secondAuthentication.setIsDeleted((byte) 0);
+        secondAuthentication.setStoreId(storeId);
         System.out.println(secondAuthentication);
         secondAuthenticationMapper.insert(secondAuthentication);
 
@@ -313,6 +315,10 @@ private SecondStoreMapper secondStoreMapper;
             secondUser.setId(secondAuthentications.get(0).getUserId());
             secondUser.setIsAuthentication(Authentication.UserState.PASS.getState());
             secondUserMapper.updateByPrimaryKeySelective(secondUser);
+            secondUserMapper.updateByPrimaryKeySelective(secondUser);
+            SecondStore secondStore = new SecondStore();
+            secondStore.setId(secondAuthentications.get(0).getStoreId());
+            secondStore.setSecondStatus(Authentication.UserState.PASS.getState());
         }
         return builder.body(ResponseUtils.getResponseBody(0));
     }

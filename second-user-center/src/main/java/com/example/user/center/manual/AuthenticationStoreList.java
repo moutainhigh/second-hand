@@ -17,6 +17,10 @@ public class AuthenticationStoreList {
      */
     private Integer id;
     /**
+     * 店铺id
+     */
+    private Integer storeId;
+    /**
      * 用户id
      */
     private Integer userId;
@@ -44,6 +48,22 @@ public class AuthenticationStoreList {
      * 认证说明
      */
     private String desc;
+    /**
+     * 用户昵称
+     */
+    private String nickName;
+    /**
+     * 商家名称
+     */
+    private String storeName;
+    /**
+     * 商家地址
+     */
+    private String storeAddress;
+    /**
+     * 联系方式
+     */
+    private String storePhone;
 
     public Integer getId() {
         return id;
@@ -109,17 +129,43 @@ public class AuthenticationStoreList {
         this.desc = desc;
     }
 
-    @Override
-    public String toString() {
-        return "AuthenticationStoreList{" +
-                "id=" + id +
-                ", userId=" + userId +
-                ", name='" + name + '\'' +
-                ", sex=" + sex +
-                ", authenticationState=" + authenticationState +
-                ", createDate=" + createDate +
-                ", secondPictures=" + secondPictures +
-                ", desc='" + desc + '\'' +
-                '}';
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public String getStoreName() {
+        return storeName;
+    }
+
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
+    }
+
+    public String getStoreAddress() {
+        return storeAddress;
+    }
+
+    public void setStoreAddress(String storeAddress) {
+        this.storeAddress = storeAddress;
+    }
+
+    public String getStorePhone() {
+        return storePhone;
+    }
+
+    public void setStorePhone(String storePhone) {
+        this.storePhone = storePhone;
+    }
+
+    public Integer getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(Integer storeId) {
+        this.storeId = storeId;
     }
 }

@@ -64,6 +64,9 @@ public class StoreLoginController {
     private SecondStoreAuthenticationMapper secondStoreAuthenticationMapper;
     @Autowired
     private SecondStoreAuthenticationPictureMapper secondStoreAuthenticationPictureMapper;
+    //地址
+    @Autowired
+    private SecondStoreAddressMapper secondStoreAddressMapper;
 
     @RequestMapping(path = "/wechart", method = RequestMethod.GET)
     @ApiOperation(value = "入驻商家微信登录", notes = "入驻商家微信登录")
@@ -147,6 +150,7 @@ public class StoreLoginController {
         secondStore.setIsDeleted((short) 0);
         secondStore.setCreateTime(LocalDateTime.now());
         secondStore.setModifyDate(LocalDateTime.now());
+        secondStore.setSecondStatus(Authentication.UserState.NOPASS.getState());
         secondStoreMapper.insertSelective(secondStore);
         SecondAuth record = new SecondAuth();
         record.setStoreId(secondStore.getId());
@@ -165,17 +169,33 @@ public class StoreLoginController {
     @ApiOperation(value = "商家入驻认证", notes = "商家入驻认证")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "name", value = "名称", required = true, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "storeName", value = "店铺名称", required = true, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "province", value = "省", required = true, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "city", value = "市", required = true, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "conty", value = "区/县", required = true, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "addressDetail", value = "地址详情", required = true, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "phoneNumber", value = "联系方式", required = true, type = "String"),
             @ApiImplicitParam(paramType = "query", name = "sex", value = "性别", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "storeId", value = "店铺id", required = true, type = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, type = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "authenticationDesc", value = "认证说明", required = true, type = "String"),
     })
-    public ResponseEntity<JSONObject> authenticationStore(@RequestParam(value = "name", required = false) String name,
+    public ResponseEntity<JSONObject> authenticationStore(
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "storeName", required = false) String storeName,
+            @RequestParam(value = "province", required = false) String province,
+            @RequestParam(value = "city", required = false) String city,
+            @RequestParam(value = "conty", required = false) String conty,
+            @RequestParam(value = "phoneNumber", required = false) String phoneNumber,
+            @RequestParam(value = "addressDetail", required = false) String addressDetail,
                                                      @RequestParam(value = "sex", required = false) Integer sex,
+                                                     @RequestParam(value = "storeId", required = false) Integer storeId,
                                                      @RequestParam(value = "userId", required = false) Integer userId,
                                                      @RequestParam(value = "authenticationDesc", required = false) String authenticationDesc,
                                                      HttpServletResponse response, HttpServletRequest request) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
         SecondStoreAuthentication secondStoreAuthentication = new SecondStoreAuthentication();
+        secondStoreAuthentication.setStoreId(storeId);
         secondStoreAuthentication.setUserId(userId);
         secondStoreAuthentication.setAuthenticationDesc(authenticationDesc);
         secondStoreAuthentication.setSex(sex);
@@ -184,8 +204,30 @@ public class StoreLoginController {
         secondStoreAuthentication.setModifyDate(LocalDateTime.now());
         secondStoreAuthentication.setIsDeleted((byte) 0);
         secondStoreAuthenticationMapper.insertSelective(secondStoreAuthentication);
+        //地址
+        SecondStoreAddress secondStoreAddress = new SecondStoreAddress();
+        secondStoreAddress.setSecondProvince(province);
+        secondStoreAddress.setSecondCity(city);
+        secondStoreAddress.setSecondConty(conty);
+        secondStoreAddress.setSecondAddressDetail(addressDetail);
+        secondStoreAddress.setContact(phoneNumber);///联系方式
+        secondStoreAddress.setContact(name);
+        secondStoreAddress.setIsDeleted((short) 0);
+        secondStoreAddress.setCreateTime(LocalDateTime.now());
+        secondStoreAddress.setModifyTime(LocalDateTime.now());
+        secondStoreAddressMapper.insertSelective(secondStoreAddress);
+        //店铺
+        SecondStore secondStore = new SecondStore();
+        secondStore.setId(storeId);
+        secondStore.setStoreName(storeName);
+        secondStore.setContact(name);
+        secondStore.setPhoneNumber(phoneNumber);
+        secondStore.setSecondAddress(city+conty+addressDetail);
+        secondStore.setModifyDate(LocalDateTime.now());
+        secondStoreMapper.updateByPrimaryKeySelective(secondStore);
         Map<String,Object> map = new HashMap<>();
         map.put("authenticationId",secondStoreAuthentication.getId());//审核id
+        map.put("addressId",secondStoreAddress.getId());//地址id
         return builder.body(ResponseUtils.getResponseBody(map));
     }
     @RequestMapping(path = "/authenticationFile", method = RequestMethod.POST)
@@ -243,6 +285,13 @@ public class StoreLoginController {
             authenticationStoreList1.setSex(secondStoreAuthentication.getSex());//性别
             authenticationStoreList1.setAuthenticationState(secondStoreAuthentication.getAuthenticationState());//认证状态
             authenticationStoreList1.setCreateDate(secondStoreAuthentication.getCreateDate());//创建时间
+            //店铺
+            SecondStore secondStore = secondStoreMapper.selectByPrimaryKey(secondStoreAuthentication.getStoreId());
+            authenticationStoreList1.setStoreId(secondStore.getId());
+            authenticationStoreList1.setStoreName(secondStore.getStoreName());
+            authenticationStoreList1.setName(secondStore.getContact());
+            authenticationStoreList1.setStoreAddress(secondStore.getSecondAddress());
+            authenticationStoreList1.setStorePhone(secondStore.getPhoneNumber());
             authenticationStoreList.add(authenticationStoreList1);
         });
         return builder.body(ResponseUtils.getResponseBody(authenticationStoreList));
@@ -276,6 +325,9 @@ public class StoreLoginController {
             secondUser.setId(secondStoreAuthentications.get(0).getUserId());
             secondUser.setIsAuthentication(Authentication.UserState.PASS.getState());
             secondUserMapper.updateByPrimaryKeySelective(secondUser);
+            SecondStore secondStore = new SecondStore();
+            secondStore.setId(secondStoreAuthentications.get(0).getStoreId());
+            secondStore.setSecondStatus(Authentication.UserState.PASS.getState());
         }
         return builder.body(ResponseUtils.getResponseBody(0));
     }
