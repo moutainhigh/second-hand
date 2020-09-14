@@ -115,6 +115,8 @@ public class SecondProductController {
         secondProduct.setModifyTime(LocalDateTime.now());
         secondProduct.setFile(file1);
         secondProductMapper.insertSelective(secondProduct);
+        //地址
+
         //物品
         SecondGoods secondGoods = new SecondGoods();
         secondGoods.setProductId(secondProduct.getId());

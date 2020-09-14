@@ -6,6 +6,7 @@ import com.example.user.center.dao.*;
 import com.example.user.center.manual.Authentication;
 import com.example.user.center.manual.AuthenticationList;
 import com.example.user.center.manual.AuthenticationStoreList;
+import com.example.user.center.manual.EnterStoreList;
 import com.example.user.center.model.*;
 import com.second.common.utils.Encrypt;
 import com.second.utils.response.handler.ResponseEntity;
@@ -329,6 +330,46 @@ public class StoreLoginController {
             secondStore.setId(secondStoreAuthentications.get(0).getStoreId());
             secondStore.setSecondStatus(Authentication.UserState.PASS.getState());
         }
+        return builder.body(ResponseUtils.getResponseBody(0));
+    }
+
+    @RequestMapping(path = "/enterStoreList", method = RequestMethod.GET)
+    @ApiOperation(value = "入驻商家列表", notes = "入驻商家列表")
+
+    public ResponseEntity<JSONObject> enterStoreList(
+    ) throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
+        SecondStoreExample secondStoreExample = new SecondStoreExample();
+        secondStoreExample.createCriteria().andStoreTypeEqualTo(Authentication.StoreType.STORE.getState())
+                .andSecondStatusEqualTo(Authentication.UserState.PASS.getState())
+                .andIsDeletedEqualTo((short) 0);
+        List<SecondStore> secondStores = secondStoreMapper.selectByExample(secondStoreExample);
+        List<EnterStoreList> enterStoreLists = new ArrayList<>();
+        secondStores.forEach(secondStore -> {
+            EnterStoreList enterStoreList = new EnterStoreList();
+            enterStoreList.setStoreId(secondStore.getId());
+            enterStoreList.setUserId(secondStore.getUserId());
+            enterStoreList.setPhone(secondStore.getPhoneNumber());
+            enterStoreList.setStoreName(secondStore.getStoreName());
+            enterStoreList.setStoreAddress(secondStore.getSecondAddress());
+            SecondUser secondUser = secondUserMapper.selectByPrimaryKey(secondStore.getUserId());
+            enterStoreList.setNickName(secondUser.getNickName());
+            enterStoreLists.add(enterStoreList);
+        });
+        return builder.body(ResponseUtils.getResponseBody(enterStoreLists));
+    }
+    @RequestMapping(path = "/enterStoreDelete", method = RequestMethod.POST)
+    @ApiOperation(value = "删除入驻商家", notes = "删除入驻商家")
+
+    public ResponseEntity<JSONObject> enterStoreDelete(
+            Integer storeId
+    ) throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
+        SecondStore secondStore = new SecondStore();
+        secondStore.setId(storeId);
+        secondStore.setIsDeleted((short) 0);
+        secondStore.setModifyDate(LocalDateTime.now());
+        secondStoreMapper.updateByPrimaryKeySelective(secondStore);
         return builder.body(ResponseUtils.getResponseBody(0));
     }
 }

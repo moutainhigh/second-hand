@@ -327,5 +327,13 @@
             <generatedKey column="id" sqlStatement="mysql"
                           identity="true"/>
         </table>
+        <!--商品地址 second_product_address-->
+        <table schema="user_center" tableName="second_product_address"
+               domainObjectName="SecondProductAddress">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="mysql"
+                          identity="true"/>
+        </table>
+
     </context>
 </generatorConfiguration>
