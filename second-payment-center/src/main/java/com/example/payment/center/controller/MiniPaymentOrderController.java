@@ -3,9 +3,7 @@ package com.example.payment.center.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.example.payment.center.config.MiniProgramConfig;
 import com.example.payment.center.dao.*;
-import com.example.payment.center.manual.Authentication;
-import com.example.payment.center.manual.PaymentTypeEnum;
-import com.example.payment.center.manual.TansactionFlowStatusEnum;
+import com.example.payment.center.manual.*;
 import com.example.payment.center.model.*;
 import com.example.payment.center.util.PayUtil;
 import com.github.wxpay.sdk.WXPay;
@@ -22,10 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -61,6 +56,9 @@ public class MiniPaymentOrderController {
     //订单
     @Autowired
     private SecondOrderMapper secondOrderMapper;
+    //订单详情
+    @Autowired
+    private SecondOrderDetailMapper secondOrderDetailMapper;
     //支付配置
     @Autowired
     private SecondBossSettingMapper secondBossSettingMapper;
@@ -80,6 +78,7 @@ public class MiniPaymentOrderController {
                 .andBossTypeEqualTo(Authentication.LoginType.USERWX.getState());
         List<SecondBossSetting> secondBossSettings =//商家支付配置
         secondBossSettingMapper.selectByExample(secondBossSettingExample);
+//        MiniProgramConfig miniProgramConfig = new MiniProgramConfig();
         miniProgramConfig.setAppId(secondBossSettings.get(0).getAppId());
         miniProgramConfig.setPath(secondBossSettings.get(0).getApiclientCert());
         miniProgramConfig.setPayKey(secondBossSettings.get(0).getPayKey());
@@ -95,15 +94,17 @@ public class MiniPaymentOrderController {
 
         Map<String, String> resp = null;
         if (PaymentTypeEnum.getPaymentTypeEnum(secondOrderMapper.selectByExample(hfOrderExample).get(0).getPaymentName()).equals(PaymentTypeEnum.WECHART)) {
-            resp = wxPay(secondAuth.get(0), payOrder);
+            resp = wxPay(miniProgramConfig,secondAuth.get(0), payOrder);
         }
         System.out.println(resp);
         return builder.body(ResponseUtils.getResponseBody(resp));
     }
     //微信小程序支付
-    private Map<String, String> wxPay(SecondAuth hfUser, SecondPayOrder payOrder) throws Exception {
+    private Map<String, String> wxPay(MiniProgramConfig miniProgramConfig,SecondAuth hfUser, SecondPayOrder payOrder) throws Exception {
 //		MiniProgramConfig config = new MiniProgramConfig();
-        Map<String, String> data = getWxPayData(miniProgramConfig, hfUser.getAuthKey(), payOrder.getPayCode(),payOrder.getAmount());
+        System.out.println(miniProgramConfig.getAppID());
+        Map<String, String> data = getWxPayData(miniProgramConfig, hfUser.getAuthKey(), String.valueOf(payOrder.getId()),payOrder.getAmount());
+
         logger.info(JSONObject.toJSONString(data));
         WXPay wxpay = new WXPay(miniProgramConfig);
         Map<String, String> resp = wxpay.unifiedOrder(data);
@@ -196,7 +197,53 @@ public class MiniPaymentOrderController {
         t.setWechartPackage("package");
         return t;
     }
-
+/**
+ * 完成支付订单
+ */
+@ApiOperation(value = "完成支付", notes = "")
+@RequestMapping(value = "/complete", method = RequestMethod.GET)
+@ApiImplicitParams({
+//			@ApiImplicitParam(paramType = "query", name = "outTradeNo", value = "订单id", required = true, type = "String"),
+        @ApiImplicitParam(paramType = "query", name = "transactionType", value = "订单id", required = true, type = "String"),
+        })
+public ResponseEntity<JSONObject> completePaymentAfter(
+        Integer payOrderId)
+        throws Exception {
+    ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
+    SecondPayOrder payOrder = secondPayOrderMapper.selectByPrimaryKey(payOrderId);
+    SecondOrderExample secondOrderExample = new SecondOrderExample();
+    secondOrderExample.createCriteria().andPayOrderIdEqualTo(payOrderId);
+    List<SecondOrder> secondOrders= secondOrderMapper.selectByExample(secondOrderExample);
+    for (SecondOrder secondOrder:secondOrders){
+        if (PaymentTypeEnum.getPaymentTypeEnum(secondOrder.getPaymentName()).equals(PaymentTypeEnum.WECHART)) {
+            SecondTransactionFlowExample e = new SecondTransactionFlowExample();
+            e.createCriteria().andOutTradeNoEqualTo(String.valueOf(payOrder.getId()));
+            List<SecondTransactionFlow> secondTransactionFlows = secondTransactionFlowMapper.selectByExample(e);
+            if (!secondTransactionFlows.isEmpty()) {
+                SecondTransactionFlow hfTansactionFlow = secondTransactionFlows.get(0);
+                hfTansactionFlow.setModifyDate(LocalDateTime.now());
+                hfTansactionFlow.setHfStatus(TansactionFlowStatusEnum.COMPLETE.getStatus());
+                secondTransactionFlowMapper.updateByPrimaryKeySelective(hfTansactionFlow);
+                SecondOrderExample secondOrderExample1 = new SecondOrderExample();
+                secondOrderExample1.createCriteria().andOrderCodeEqualTo(secondOrder.getOrderCode());
+                SecondOrder secondOrder1 = new SecondOrder();
+                secondOrder1.setOrderStatus(OrderEnum.OrderStatus.PROCESS.getOrderStatus());
+                secondOrder1.setModifyTime(LocalDateTime.now());
+                secondOrder1.setPayStatus(1);
+                secondOrderMapper.updateByExampleSelective(secondOrder1,secondOrderExample1);
+                    SecondOrderDetail secondOrderDetail = new SecondOrderDetail();
+                    secondOrderDetail.setDetailStatus(OrderEnum.OrderStatus.PROCESS.getOrderStatus());
+                    SecondOrderDetailExample example = new SecondOrderDetailExample();
+                    example.createCriteria().andOrderIdEqualTo(secondOrder.getId());
+                    secondOrderDetailMapper.updateByExampleSelective(secondOrderDetail,example);
+					return builder.body(ResponseUtils.getResponseBody(hfTansactionFlow));
+            } else {
+                throw new Exception("交易柳树不存在, 或者已完成支付");
+            }
+        }
+    }
+    return builder.body(ResponseUtils.getResponseBody(0));
+}
     /**
      * 退款
      * @param
@@ -215,6 +262,7 @@ public class MiniPaymentOrderController {
                 .andBossTypeEqualTo(Authentication.LoginType.USERWX.getState());
         List<SecondBossSetting> secondBossSettings =//商家支付配置
                 secondBossSettingMapper.selectByExample(secondBossSettingExample);
+//        MiniProgramConfig miniProgramConfig = new MiniProgramConfig();
         miniProgramConfig.setAppId(secondBossSettings.get(0).getAppId());
         miniProgramConfig.setPath(secondBossSettings.get(0).getApiclientCert());
         miniProgramConfig.setPayKey(secondBossSettings.get(0).getPayKey());
@@ -288,7 +336,7 @@ public class MiniPaymentOrderController {
     @RequestMapping(value = "/handleWxpay", method = RequestMethod.GET)
     public void refund(HttpServletRequest request, HttpServletResponse response) throws Exception {
 //		MiniProgramConfig config = new MiniProgramConfig();
-
+//        MiniProgramConfig miniProgramConfig = new MiniProgramConfig();
         BufferedReader br = new BufferedReader(new InputStreamReader((ServletInputStream) request.getInputStream()));
         String line = null;
         StringBuilder sb = new StringBuilder();
@@ -335,17 +383,17 @@ public class MiniPaymentOrderController {
         out.flush();
         out.close();
     }
-    @ApiOperation(value = "测试", notes = "")
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public ResponseEntity<JSONObject> payment() throws Exception {
-        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
-        miniProgramConfig.setAppId("123456");
-        miniProgramConfig.setMchId("1234567");
-        miniProgramConfig.setPath("12345678");
-        miniProgramConfig.setPayKey("123456789");
-        System.out.println(miniProgramConfig.getAppID());
-        System.out.println(miniProgramConfig.getMchID());
-        return builder.body(ResponseUtils.getResponseBody(0));
-    }
+//    @ApiOperation(value = "测试", notes = "")
+//    @RequestMapping(value = "/test", method = RequestMethod.GET)
+//    public ResponseEntity<JSONObject> payment() throws Exception {
+//        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
+//        miniProgramConfig.setAppId("123456");
+//        miniProgramConfig.setMchId("1234567");
+//        miniProgramConfig.setPath("12345678");
+//        miniProgramConfig.setPayKey("123456789");
+//        System.out.println(miniProgramConfig.getAppID());
+//        System.out.println(miniProgramConfig.getMchID());
+//        return builder.body(ResponseUtils.getResponseBody(0));
+//    }
 
 }

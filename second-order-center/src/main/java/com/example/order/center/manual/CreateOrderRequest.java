@@ -15,10 +15,8 @@ public class CreateOrderRequest {
     private String goodsList;
     @ApiModelProperty(required = true, value = "订单备注")
     private String remark;
-    @ApiModelProperty(required = true, value = "订单类型")
-    private String orderType;
-    @ApiModelProperty(required = true, value = "支付类型")
-    private String paymentName;
+//    @ApiModelProperty(required = true, value = "支付类型名称")
+//    private String paymentName;
     @ApiModelProperty(required = false, value = "描述")
     private String hfDesc;
     @ApiModelProperty(required = false, value = "用户id")
@@ -48,22 +46,6 @@ public class CreateOrderRequest {
 
     public void setHfRemark(String hfRemark) {
         this.remark = hfRemark;
-    }
-
-    public String getOrderType() {
-        return orderType;
-    }
-
-    public void setOrderType(String orderType) {
-        this.orderType = orderType;
-    }
-
-    public String getPaymentName() {
-        return paymentName;
-    }
-
-    public void setPaymentName(String paymentName) {
-        this.paymentName = paymentName;
     }
 
     public String getHfDesc() {

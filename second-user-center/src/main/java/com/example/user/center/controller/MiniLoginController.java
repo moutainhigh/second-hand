@@ -5,6 +5,8 @@ import com.example.user.center.config.WxLoginConfig;
 import com.example.user.center.dao.*;
 import com.example.user.center.manual.Authentication;
 import com.example.user.center.manual.AuthenticationList;
+import com.example.user.center.manual.OrderEnum;
+import com.example.user.center.manual.UserList;
 import com.example.user.center.model.*;
 import com.second.common.service.FileMangeService;
 import com.second.common.utils.Encrypt;
@@ -75,6 +77,12 @@ public class MiniLoginController {
 //店铺
 @Autowired
 private SecondStoreMapper secondStoreMapper;
+//商品
+    @Autowired
+    private SecondProductMapper secondProductMapper;
+    //订单
+    @Autowired
+    private SecondOrderMapper secondOrderMapper;
     @RequestMapping(path = "/wechart", method = RequestMethod.GET)
     @ApiOperation(value = "微信登录", notes = "微信登录")
     public ResponseEntity<JSONObject> wxLogin(@RequestParam(value = "code", required = false) String code,
@@ -321,6 +329,82 @@ private SecondStoreMapper secondStoreMapper;
             secondStore.setSecondStatus(Authentication.UserState.PASS.getState());
         }
         return builder.body(ResponseUtils.getResponseBody(0));
+    }
+
+    @RequestMapping(path = "/UserList", method = RequestMethod.GET)
+    @ApiOperation(value = "用户列表", notes = "用户列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "IsAuthentication", value = "是否认证,0是，1否", required = true, type = "Integer"),
+    })
+    public ResponseEntity<JSONObject> UserList(
+            Integer IsAuthentication
+    ) throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
+        SecondUserExample secondUserExample = new SecondUserExample();
+        secondUserExample.createCriteria().andIsAuthenticationEqualTo(IsAuthentication)
+        .andUserTypeEqualTo(Authentication.LoginType.USERWX.getState());
+        List<SecondUser> secondUsers =
+        secondUserMapper.selectByExample(secondUserExample);
+        List<UserList> userLists = new ArrayList<>();
+        secondUsers.forEach(secondUser -> {
+            UserList userList = new UserList();
+            userList.setUserId(secondUser.getId());
+            userList.setUserFIle(secondUser.getFile());
+            userList.setNickName(secondUser.getNickName());
+            SecondAuthenticationExample secondAuthenticationExample = new SecondAuthenticationExample();
+            secondAuthenticationExample.createCriteria().andUserIdEqualTo(secondUser.getId())
+                    .andAuthenticationStateEqualTo(Authentication.State.PASS.getState())
+            .andIsDeletedEqualTo((byte) 0);
+            List<SecondAuthentication> secondAuthentication =
+                    secondAuthenticationMapper.selectByExample(secondAuthenticationExample);
+            if (secondAuthentication.size()!=0){
+                userList.setCollege(secondAuthentication.get(0).getCollegesName());
+            }
+            SecondStoreExample secondStoreExample = new SecondStoreExample();
+            secondStoreExample.createCriteria().andUserIdEqualTo(secondUser.getId())
+                    .andIsDeletedEqualTo((short) 0)
+                    .andSecondStatusEqualTo(Authentication.UserState.PASS.getState());
+            List<SecondStore> secondStores = secondStoreMapper.selectByExample(secondStoreExample);
+            //默认一个用户一个店铺
+            SecondProductExample secondProductExample = new SecondProductExample();
+            secondProductExample.createCriteria().andStoreIdEqualTo(secondStores.get(0).getId());
+            List<SecondProduct> secondProducts =
+            secondProductMapper.selectByExample(secondProductExample);
+            //发布数量
+            userList.setProductNum(secondProducts.size());
+            //购买数量
+            SecondOrderExample secondOrderExample = new SecondOrderExample();
+            secondOrderExample.createCriteria().andUserIdEqualTo(secondUser.getId());
+            List<SecondOrder> orders =
+            secondOrderMapper.selectByExample(secondOrderExample);
+            userList.setBuyProductNum(orders.size());//购买数量
+            secondOrderExample.clear();
+            secondOrderExample.createCriteria().andStoneIdEqualTo(secondStores.get(0).getId())
+                    .andOrderStatusEqualTo(OrderEnum.OrderStatus.EVALUATE.getOrderStatus())
+                    .andOrderStatusEqualTo(OrderEnum.OrderStatus.CONTROVERSIAL.getOrderStatus());
+            List<SecondOrder> secondOrders = secondOrderMapper.selectByExample(secondOrderExample);
+            if (secondOrders.size()!=0){
+                Integer Income = secondOrders.stream().mapToInt(SecondOrder::getAmount).sum();
+                userList.setIncome(Income);//收入
+            }else {
+                userList.setIncome(0);//收入
+            }
+            secondOrderExample.clear();
+            secondOrderExample.createCriteria().andUserIdEqualTo(secondUser.getId())
+                    .andOrderStatusEqualTo(OrderEnum.OrderStatus.EVALUATE.getOrderStatus())
+                    .andOrderStatusEqualTo(OrderEnum.OrderStatus.CONTROVERSIAL.getOrderStatus());
+            List<SecondOrder> secondOrders1 = secondOrderMapper.selectByExample(secondOrderExample);
+            if (secondOrders1.size()!=0){
+                Integer Expend= secondOrders1.stream().mapToInt(SecondOrder::getAmount).sum();
+                userList.setExpend(Expend);//支出
+            } else {
+                userList.setExpend(0);//支出
+            }
+            userList.setPhone(secondStores.get(0).getPhoneNumber());
+            userList.setCreateTime(secondUser.getCreateDate());
+            userLists.add(userList);
+        });
+        return builder.body(ResponseUtils.getResponseBody(userLists));
     }
     @InitBinder
     public void initBinder(WebDataBinder binder, WebRequest request) {
