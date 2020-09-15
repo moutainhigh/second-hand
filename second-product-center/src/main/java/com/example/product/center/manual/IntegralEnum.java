@@ -33,4 +33,52 @@ public class IntegralEnum {
         }
 
     }
+    //积分换购状态
+    public static enum State {
+        USE("use"),//已使用
+        NOUSE("noUse");//未使用
+        private String state;
+
+        State(String state) {
+            this.state = state;
+        }
+
+        public String getState(){
+            return this.state;
+        }
+
+        public static State getState(String state) {
+            for(State type1: State.values()) {
+                if (type1.getState().equals(state)) {
+                    return type1;
+                }
+            }
+            return NOUSE;
+        }
+
+    }
+    //积分二维码
+    public static enum Code {
+        INTEGRAL("integral"),//积分换购商品核销二维码
+        PRODUCT("product");//普通商品核销二维码
+        private String state;
+
+        Code(String state) {
+            this.state = state;
+        }
+
+        public String getState(){
+            return this.state;
+        }
+
+        public static Code getState(String state) {
+            for(Code type1: Code.values()) {
+                if (type1.getState().equals(state)) {
+                    return type1;
+                }
+            }
+            return PRODUCT;
+        }
+
+    }
 }

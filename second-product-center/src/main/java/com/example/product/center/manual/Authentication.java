@@ -61,7 +61,7 @@ public class Authentication {
 
     //用户登录方式
     public static enum LoginType {
-        USERWX("userwx"),//用户端微信登录
+        USERWX("user"),//用户端微信登录
         BOSS("boss"),//平台后台登录
         STOREWX("store"),//店铺小程序端口登录
         SON("son");//子站点后台登录

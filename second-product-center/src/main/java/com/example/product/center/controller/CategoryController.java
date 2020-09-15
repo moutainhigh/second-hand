@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.product.center.dao.SecondCategoryMapper;
 import com.example.product.center.dao.SecondFileMapper;
 import com.example.product.center.dao.SecondProductMapper;
+import com.example.product.center.manual.CategoryEnum;
 import com.example.product.center.manual.CategoryInfo;
 import com.example.product.center.model.*;
 import com.second.common.service.FileMangeService;
@@ -53,16 +54,19 @@ public class CategoryController {
             @ApiImplicitParam(paramType = "query", name = "categoryName", value = "类目名称", required = true, type = "String"),
             @ApiImplicitParam(paramType = "query", name = "parentCategoryId", value = "上级类目id", required = true, type = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "levelId", value = "级别", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "categoryType", value = "分类类型", required = true, type = "String"),
     })
     public ResponseEntity<JSONObject> addCategory(
             @RequestParam(value = "fileId", required = false) String fileId,
             @RequestParam(value = "categoryName", required = false) String categoryName,
             @RequestParam(value = "parentCategoryId", required = false) Integer parentCategoryId,
+            @RequestParam(value = "categoryType", required = false) String categoryType,
             @RequestParam(value = "levelId", required = false) Integer levelId
     ) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
         SecondCategory secondCategory = new SecondCategory();
         secondCategory.setLevelId(levelId);
+        secondCategory.setCategoryType(CategoryEnum.Relation.getState(categoryType).getState());
         secondCategory.setSecondName(categoryName);
         secondCategory.setParentCategoryId(parentCategoryId);
         secondCategory.setCreateTime(LocalDateTime.now());
@@ -160,10 +164,13 @@ public class CategoryController {
     @ApiOperation(value = "获取类目", notes = "添加类目时获取类目列表")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "parentCategoryId", value = "上级的类目id", required = false, type = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "levelId", value = "类目级别", required = false, type = "Integer")})
+            @ApiImplicitParam(paramType = "query", name = "levelId", value = "类目级别", required = false, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "categoryType", value = "类目类型", required = false, type = "String")
+    })
     @RequestMapping(value = "/category", method = RequestMethod.GET)
     public ResponseEntity<JSONObject> listCategory(
             @RequestParam(name = "parentCategoryId", required = false) Integer parentCategoryId,
+            @RequestParam(name = "categoryType", required = false) String categoryType,
             @RequestParam(name = "levelId", required = false) Integer levelId
            )
             throws Exception {
@@ -178,20 +185,28 @@ public class CategoryController {
 //        查询某一级别下所有类目
         if (levelId!=null){
             SecondCategoryExample secondCategoryExample = new SecondCategoryExample();
-            secondCategoryExample.createCriteria().andLevelIdEqualTo(levelId).andIsDeletedEqualTo((short) 0);
+            secondCategoryExample.createCriteria().andLevelIdEqualTo(levelId)
+                    .andIsDeletedEqualTo((short) 0)
+            .andCategoryTypeEqualTo(CategoryEnum.Relation.getState(categoryType).getState());
             secondCategories = secondCategoryMapper.selectByExample(secondCategoryExample);
         }
         return builder.body(ResponseUtils.getResponseBody(secondCategories));
     }
     @ApiOperation(value = "获取所有类目", notes = "获取所有类目")
     @RequestMapping(value = "/categoryList", method = RequestMethod.GET)
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "categoryType", value = "类目类型", required = false, type = "String")
+    })
     public ResponseEntity<JSONObject> categoryList(
+            @RequestParam(name = "categoryType", required = false) String categoryType,
             HttpServletRequest request)
             throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
 //        查询所有一级类目
         SecondCategoryExample secondCategoryExample = new SecondCategoryExample();
-        secondCategoryExample.createCriteria().andLevelIdEqualTo(0).andIsDeletedEqualTo((short) 0);
+        secondCategoryExample.createCriteria().andLevelIdEqualTo(0)
+                .andIsDeletedEqualTo((short) 0)
+        .andCategoryTypeEqualTo(CategoryEnum.Relation.getState(categoryType).getState());
         List<SecondCategory> secondCategorys = secondCategoryMapper.selectByExample(secondCategoryExample);
         List<CategoryInfo> categoryInfos = new ArrayList<>();
         secondCategorys.forEach(secondCategory -> {
