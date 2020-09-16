@@ -383,8 +383,6 @@ public class IntegralController {
         String orderId123 = String.valueOf(IntegralRecordId);
         //加密
         String encrypt = PageTool.encrypt(orderId123, key);
-        //解密
-        System.out.println("orderId:" + encrypt);
         response.setContentType("image/jpg");
         response.setHeader("Pragma", "no-cache");
         response.setHeader("Cache-Control", "no-cache");
@@ -398,10 +396,8 @@ public class IntegralController {
         list.add(map);
         String str1 = JSON.toJSONString(list);
         System.out.println(str1);
-//        String content ="http://192.168.1.125:9901/testCancel?goodsId%E5%95%86%E5%93%81Id="+goodsId+"&orderId%E8%AE%A2%E5%8D%95Id="+orderId+"&%E7%94%A8%E6%88%B7%E5%94%AF%E4%B8%80%E6%A0%87%E8%AF%86=1";
         //            //获取一个二维码图片
         BitMatrix bitMatrix = QRCodeUtils.createCode(str1);
-//                BitMatrix bitMatrix = com.hanfu.cancel.controller.QRCodeUtils.createCode(content);
         //以流的形式输出到前端
         MatrixToImageWriter.writeToStream(bitMatrix, "jpg", stream);
     }

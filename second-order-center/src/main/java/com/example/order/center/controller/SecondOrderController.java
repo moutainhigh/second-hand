@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.order.center.dao.*;
 import com.example.order.center.manual.*;
 import com.example.order.center.model.*;
+import com.example.order.center.service.Impl.PayOrderServiceImpl;
+import com.example.order.center.service.PayOrderService;
 import com.second.utils.response.handler.ResponseEntity;
 import com.second.utils.response.handler.ResponseUtils;
 import io.swagger.annotations.Api;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -81,16 +84,29 @@ public class SecondOrderController {
     //用户
     @Autowired
     private SecondUserMapper secondUserMapper;
+    //扣减库存
+    @Autowired
+    private PayOrderService payOrderService;
     @RequestMapping(path = "/addOrder", method = RequestMethod.POST)
     @ApiOperation(value = "创建订单", notes = "创建订单")
     @Transactional(rollbackFor = {RuntimeException.class, Error.class})
     public ResponseEntity<JSONObject> addCategory(CreateOrderRequest request, HttpServletRequest requests, HttpServletResponse response) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
         List list = checkResp(request.getGoodsList());
+
+        System.out.println(list);
                 if(list.size()!=0){
                     response.sendError(HttpStatus.FORBIDDEN.value(), "库存不足");
                     return builder.body(ResponseUtils.getResponseBody(list));
                 }
+        //
+        JSONArray jsonArray= JSONArray.parseArray(request.getGoodsList());
+        List<goods> list1 = JSONObject.parseArray(jsonArray.toJSONString(), goods.class);
+                //扣减库存
+        list1.forEach(good->{
+           int a=  payOrderService.stock(good.getQuantity(),good.getGoodsId());
+            System.out.println(a);
+        });
                 //支付订单
         SecondPayOrder secondPayOrder = new SecondPayOrder();
         secondPayOrder.setPayCode(UUID.randomUUID().toString());
@@ -101,9 +117,7 @@ public class SecondOrderController {
         secondPayOrder.setModifyTime(LocalDateTime.now());
         secondPayOrder.setIsDeleted((byte) 0);
         secondPayOrderMapper.insertSelective(secondPayOrder);
-        //
-        JSONArray jsonArray= JSONArray.parseArray(request.getGoodsList());
-        List<goods> list1 = JSONObject.parseArray(jsonArray.toJSONString(), goods.class);
+
         //店铺
         Set<Integer> stoneIds = list1.stream().map(goods::getStoneId).collect(Collectors.toSet());
         for (Integer storeId : stoneIds){
@@ -192,6 +206,7 @@ public class SecondOrderController {
                 goods goods1 = new goods();
                 goods1.setGoodsId(lists.getGoodsId());
                 goods1.setStoneId(lists.getStoneId());
+                goods.add(goods1);
             }
         });
         return goods;

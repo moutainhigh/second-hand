@@ -6,6 +6,7 @@ import com.example.payment.center.dao.*;
 import com.example.payment.center.manual.*;
 import com.example.payment.center.model.*;
 import com.example.payment.center.util.PayUtil;
+import com.example.payment.service.AddStockService;
 import com.github.wxpay.sdk.WXPay;
 import com.github.wxpay.sdk.WXPayUtil;
 import com.second.utils.response.handler.ResponseEntity;
@@ -67,6 +68,12 @@ public class MiniPaymentOrderController {
     private SecondTransactionFlowMapper secondTransactionFlowMapper;
     @Autowired
     HttpServletRequest req;
+    //物品
+    @Autowired
+    private SecondGoodsMapper secondGoodsMapper;
+    //添加库存
+    @Autowired
+    private AddStockService addStockService;
     @ApiOperation(value = "支付订单", notes = "")
     @RequestMapping(value = "/order", method = RequestMethod.GET)
     @ApiImplicitParams({
@@ -204,7 +211,7 @@ public class MiniPaymentOrderController {
 @RequestMapping(value = "/complete", method = RequestMethod.GET)
 @ApiImplicitParams({
 //			@ApiImplicitParam(paramType = "query", name = "outTradeNo", value = "订单id", required = true, type = "String"),
-        @ApiImplicitParam(paramType = "query", name = "transactionType", value = "订单id", required = true, type = "String"),
+//        @ApiImplicitParam(paramType = "query", name = "transactionType", value = "订单id", required = true, type = "String"),
         })
 public ResponseEntity<JSONObject> completePaymentAfter(
         Integer payOrderId)
@@ -244,6 +251,29 @@ public ResponseEntity<JSONObject> completePaymentAfter(
     }
     return builder.body(ResponseUtils.getResponseBody(0));
 }
+    /**
+     * 未完成支付
+     */
+    @ApiOperation(value = "未完成支付", notes = "")
+    @RequestMapping(value = "/noComplete", method = RequestMethod.GET)
+    public ResponseEntity<JSONObject> noComplete(
+            Integer payOrderId)
+            throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
+        SecondOrderExample secondOrderExample = new SecondOrderExample();
+        secondOrderExample.createCriteria().andPayOrderIdEqualTo(payOrderId);
+        List<SecondOrder> secondOrders= secondOrderMapper.selectByExample(secondOrderExample);
+        secondOrders.forEach(secondOrder -> {
+            SecondOrderDetailExample secondOrderDetailExample = new SecondOrderDetailExample();
+            secondOrderDetailExample.createCriteria().andOrderIdEqualTo(secondOrder.getId());
+            List<SecondOrderDetail> secondOrderDetails =
+            secondOrderDetailMapper.selectByExample(secondOrderDetailExample);
+            secondOrderDetails.forEach(secondOrderDetail -> {
+                addStockService.addStock(secondOrderDetail.getGoodsId());
+            });
+        });
+        return builder.body(ResponseUtils.getResponseBody(0));
+    }
     /**
      * 退款
      * @param
