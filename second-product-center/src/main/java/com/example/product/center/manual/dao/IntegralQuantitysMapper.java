@@ -1,10 +1,9 @@
-package com.example.product.center.dao;
+package com.example.product.center.manual.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-@Mapper
-public interface IntegralQuantityMapper {
+public interface IntegralQuantitysMapper {
     /**
      *
      * @param integralId
@@ -36,3 +35,4 @@ public interface IntegralQuantityMapper {
      */
     Integer addBalance(@Param("balanceType")String balanceType, @Param("balance") Integer balance,@Param("userId")Integer userId,@Param("storeId")Integer storeId);
 }
+

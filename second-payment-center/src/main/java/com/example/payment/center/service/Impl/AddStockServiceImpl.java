@@ -1,8 +1,7 @@
-package com.example.payment.service.Impl;
+package com.example.payment.center.service.Impl;
 
-import com.example.payment.center.dao.AddStockMapper;
-import com.example.payment.service.AddStockService;
-import org.apache.ibatis.annotations.Param;
+import com.example.payment.center.manual.dao.AddStockMapper;
+import com.example.payment.center.service.AddStockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +18,7 @@ public class AddStockServiceImpl implements AddStockService {
     @Autowired
     private AddStockMapper addStockMapper;
     @Override
-    public Integer addStock(Integer goodsId) {
-        return addStockMapper.addStock(goodsId);
+    public Integer addStock(Integer goodsId,Integer quantity) {
+        return addStockMapper.addStock(goodsId,quantity);
     }
 }

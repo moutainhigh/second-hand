@@ -1,4 +1,4 @@
-package com.example.payment.service;
+package com.example.payment.center.service;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -15,5 +15,5 @@ public interface AddStockService {
      * 添加库存
      * @return
      */
-    Integer addStock(@Param("goodsId")Integer goodsId);
+    Integer addStock(@Param("goodsId")Integer goodsId,@Param("quantity")Integer quantity);
 }

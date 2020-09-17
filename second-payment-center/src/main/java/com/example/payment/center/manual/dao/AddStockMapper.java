@@ -1,4 +1,4 @@
-package com.example.payment.center.dao;
+package com.example.payment.center.manual.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -9,5 +9,5 @@ public interface AddStockMapper {
      * 添加库存
      * @return
      */
-    Integer addStock(@Param("goodsId")Integer goodsId);
+    Integer addStock(@Param("goodsId")Integer goodsId,@Param("quantity")Integer quantity);
 }

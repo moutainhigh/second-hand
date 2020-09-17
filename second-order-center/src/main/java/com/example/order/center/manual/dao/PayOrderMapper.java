@@ -1,4 +1,4 @@
-package com.example.order.center.dao;
+package com.example.order.center.manual.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

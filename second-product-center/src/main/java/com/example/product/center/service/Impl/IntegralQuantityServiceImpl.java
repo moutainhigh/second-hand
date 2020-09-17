@@ -1,6 +1,6 @@
 package com.example.product.center.service.Impl;
 
-import com.example.product.center.dao.IntegralQuantityMapper;
+import com.example.product.center.manual.dao.IntegralQuantitysMapper;
 import com.example.product.center.service.IntegralQuantityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class IntegralQuantityServiceImpl implements IntegralQuantityService {
     @Autowired
-    private IntegralQuantityMapper integralQuantityServiceMapper;
+    private IntegralQuantitysMapper integralQuantityServiceMapper;
     @Override
     public Integer updateQuantity(Integer integralId,Integer quantity) {
         return integralQuantityServiceMapper.updateQuantity(integralId,quantity);

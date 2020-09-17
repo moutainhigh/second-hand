@@ -6,7 +6,7 @@ import com.example.payment.center.dao.*;
 import com.example.payment.center.manual.*;
 import com.example.payment.center.model.*;
 import com.example.payment.center.util.PayUtil;
-import com.example.payment.service.AddStockService;
+import com.example.payment.center.service.AddStockService;
 import com.github.wxpay.sdk.WXPay;
 import com.github.wxpay.sdk.WXPayUtil;
 import com.second.utils.response.handler.ResponseEntity;
@@ -19,8 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletInputStream;
@@ -269,7 +267,7 @@ public ResponseEntity<JSONObject> completePaymentAfter(
             List<SecondOrderDetail> secondOrderDetails =
             secondOrderDetailMapper.selectByExample(secondOrderDetailExample);
             secondOrderDetails.forEach(secondOrderDetail -> {
-                addStockService.addStock(secondOrderDetail.getGoodsId());
+                addStockService.addStock(secondOrderDetail.getGoodsId(),secondOrderDetail.getQuantity());
             });
         });
         return builder.body(ResponseUtils.getResponseBody(0));

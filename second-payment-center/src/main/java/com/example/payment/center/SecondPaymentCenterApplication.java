@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication
 @EnableFeignClients
 @EnableEurekaClient
-@MapperScans({@MapperScan("com.example.payment.center.dao")})
+@MapperScans({@MapperScan("com.example.payment.center.dao"),@MapperScan("com.example.payment.center.manual.dao")})
 @EnableTransactionManagement//shiwu
 public class SecondPaymentCenterApplication {
 

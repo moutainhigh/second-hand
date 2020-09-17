@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication
 @EnableFeignClients
 @EnableEurekaClient
-@MapperScans({@MapperScan("com.example.order.center.dao")})
+@MapperScans({@MapperScan("com.example.order.center.dao"),@MapperScan("com.example.order.center.manual.dao")})
 @EnableTransactionManagement//shiwu
 public class SecondOrderCenterApplication {
 

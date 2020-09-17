@@ -1,6 +1,6 @@
 package com.example.order.center.service.Impl;
 
-import com.example.order.center.dao.PayOrderMapper;
+import com.example.order.center.manual.dao.PayOrderMapper;
 import com.example.order.center.service.PayOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
