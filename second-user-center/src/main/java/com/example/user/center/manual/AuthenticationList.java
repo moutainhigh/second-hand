@@ -57,6 +57,17 @@ public class AuthenticationList {
      */
     private List<String> secondPictures;
 
+    /**
+     * 子站点名称
+     * @return
+     */
+    private String sonName;
+
+    /**
+     * 子站点id
+     * @return
+     */
+    private Integer sonId;
     public Integer getId() {
         return id;
     }
@@ -145,6 +156,22 @@ public class AuthenticationList {
         this.secondPictures = secondPictures;
     }
 
+    public String getSonName() {
+        return sonName;
+    }
+
+    public void setSonName(String sonName) {
+        this.sonName = sonName;
+    }
+
+    public Integer getSonId() {
+        return sonId;
+    }
+
+    public void setSonId(Integer sonId) {
+        this.sonId = sonId;
+    }
+
     @Override
     public String toString() {
         return "AuthenticationList{" +
@@ -156,9 +183,11 @@ public class AuthenticationList {
                 ", entranceTime=" + entranceTime +
                 ", studentNumber='" + studentNumber + '\'' +
                 ", collegesRecord='" + collegesRecord + '\'' +
-                ", authenticationState='" + authenticationState + '\'' +
+                ", authenticationState=" + authenticationState +
                 ", createDate=" + createDate +
                 ", secondPictures=" + secondPictures +
+                ", sonName='" + sonName + '\'' +
+                ", sonId=" + sonId +
                 '}';
     }
 }

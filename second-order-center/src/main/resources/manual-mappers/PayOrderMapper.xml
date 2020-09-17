@@ -3,6 +3,6 @@
 <mapper namespace="com.example.order.center.manual.dao.PayOrderMapper">
 
     <update id="stock">
-    update second_goods set goods_resp = goods_resp - #{quantity} where goods_resp - #{quantity}>=0 and id=#{goodsId}
+    update second_goods set goods_resp = goods_resp - #{quantity} where goods_resp - #{quantity}>=0 and id=#{goodsId} and is_deleted=0
     </update>
 </mapper>

@@ -83,6 +83,12 @@ private SecondStoreMapper secondStoreMapper;
     //订单
     @Autowired
     private SecondOrderMapper secondOrderMapper;
+    //
+    @Autowired
+    private SecondUserSonMapper secondUserSonMapper;
+    //子站点
+    @Autowired
+    private SecondSonMapper secondSonMapper;
     @RequestMapping(path = "/wechart", method = RequestMethod.GET)
     @ApiOperation(value = "微信登录", notes = "微信登录")
     public ResponseEntity<JSONObject> wxLogin(@RequestParam(value = "code", required = false) String code,
@@ -290,6 +296,12 @@ private SecondStoreMapper secondStoreMapper;
             authenticationList1.setCollegesRecord(secondAuthentication.getCollegesRecord());//学校类别
             authenticationList1.setAuthenticationState(secondAuthentication.getAuthenticationState());//认证状态
             authenticationList1.setCreateDate(secondAuthentication.getCreateDate());//创建时间
+            //学校
+            SecondColleges secondColleges = collegesMapper.selectByPrimaryKey(secondAuthentication.getCollegesId());
+            //子站点
+            SecondSon secondSon = secondSonMapper.selectByPrimaryKey(secondColleges.getSonId());
+            authenticationList1.setSonId(secondSon.getId());
+            authenticationList1.setSonName(secondSon.getSonName());
             authenticationList.add(authenticationList1);
         });
         return builder.body(ResponseUtils.getResponseBody(authenticationList));
@@ -301,10 +313,12 @@ private SecondStoreMapper secondStoreMapper;
             @ApiImplicitParam(paramType = "query", name = "StartAuthenticationState", value = "开始审核状态", required = true, type = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "AuthenticationId", value = "审核id", required = true, type = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "EndAuthenticationState", value = "审核id", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "sonId", value = "子站点id", required = true, type = "Integer"),
     })
     public ResponseEntity<JSONObject> authenticationDispose(
             @RequestParam(value = "AuthenticationId", required = false) Integer AuthenticationId,
             @RequestParam(value = "StartAuthenticationState", required = false) Integer StartAuthenticationState,
+            @RequestParam(value = "sonId", required = false) Integer sonId,
             @RequestParam(value = "EndAuthenticationState", required = false) Integer EndAuthenticationState
     ) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
@@ -323,10 +337,18 @@ private SecondStoreMapper secondStoreMapper;
             secondUser.setId(secondAuthentications.get(0).getUserId());
             secondUser.setIsAuthentication(Authentication.UserState.PASS.getState());
             secondUserMapper.updateByPrimaryKeySelective(secondUser);
-            secondUserMapper.updateByPrimaryKeySelective(secondUser);
             SecondStore secondStore = new SecondStore();
             secondStore.setId(secondAuthentications.get(0).getStoreId());
             secondStore.setSecondStatus(Authentication.UserState.PASS.getState());
+            secondStoreMapper.updateByPrimaryKeySelective(secondStore);
+            SecondUserSon secondUserSon = new SecondUserSon();
+            secondUserSon.setStoreId(secondAuthentications.get(0).getStoreId());
+            secondUserSon.setUserId(secondAuthentications.get(0).getUserId());
+            secondUserSon.setSonId(sonId);
+            secondUserSon.setCreateDate(LocalDateTime.now());
+            secondUserSon.setModifyDate(LocalDateTime.now());
+            secondUserSon.setIsDeleted((byte) 0);
+            secondUserSonMapper.insertSelective(secondUserSon);
         }
         return builder.body(ResponseUtils.getResponseBody(0));
     }
