@@ -8,6 +8,7 @@ import com.second.utils.response.handler.ResponseEntity;
 import com.second.utils.response.handler.ResponseUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -20,6 +21,8 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.LocalDateTime;
 
@@ -41,6 +44,12 @@ public class FileController {
 
     private static final String LOCK = "LOCK";
 
+    /**图片上传
+     *
+     * @param file 图片
+     * @return
+     * @throws Exception
+     */
     @ApiOperation(value = "上传图片", notes = "上传图片")
     @RequestMapping(value = "/fileUpLoad", method = RequestMethod.POST)
     public ResponseEntity<JSONObject> fileUpLoad(MultipartFile file) throws Exception {
@@ -57,8 +66,10 @@ public class FileController {
         fileDesc.setModifyTime(LocalDateTime.now());
         fileDesc.setIsDeleted((short) 0);
         secondFileMapper.insert(fileDesc);
-        return builder.body(ResponseUtils.getResponseBody(fileDesc.getId()));
+        String s = "http://localhost:7004/user/File/getPicture?id=";
+        return builder.body(ResponseUtils.getResponseBody(s+String.valueOf(fileDesc.getId())));
     }
+    //压缩过
     @ApiOperation(value = "获取图片", notes = "获取图片")
     @RequestMapping(value = "/getPicture", method = RequestMethod.GET)
     public void getPicture(Integer id, HttpServletResponse response) throws Exception {
@@ -70,12 +81,16 @@ public class FileController {
         FileMangeService fileManageService = new FileMangeService();
         synchronized (LOCK) {
             byte[] file = fileManageService.downloadFile(fileDesc.getGroupName(), fileDesc.getRemoteFilename());
+            InputStream sbs = new ByteArrayInputStream(file);
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            Thumbnails.of(sbs).scale(0.8f).outputFormat("jpg").outputQuality(0.1).toOutputStream(os);
+            file = os.toByteArray();
             ByteArrayInputStream stream = new ByteArrayInputStream(file);
             BufferedImage readImg = ImageIO.read(stream);
             stream.reset();
             OutputStream outputStream = response.getOutputStream();
             ImageIO.write(readImg, "png", outputStream);
-            outputStream.close();
+//            outputStream.close();
         }
     }
 
