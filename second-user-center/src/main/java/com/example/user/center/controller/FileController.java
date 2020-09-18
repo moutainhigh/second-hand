@@ -104,8 +104,7 @@ public class FileController {
             fileManageService.deleteFile(fileDesc.getGroupName(), fileDesc.getRemoteFilename());
         }
         secondFileMapper.deleteByPrimaryKey(fileId);
-        String s = "http://localhost:7004/user/File/getPicture?id=";
-        return builder.body(ResponseUtils.getResponseBody(s+String.valueOf(fileId)));
+        return builder.body(ResponseUtils.getResponseBody(fileId));
     }
 
     @ApiOperation(value = "删除图片2", notes = "删除")
