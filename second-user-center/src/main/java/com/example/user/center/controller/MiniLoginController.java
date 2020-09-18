@@ -45,6 +45,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author shihao
@@ -89,6 +90,9 @@ private SecondStoreMapper secondStoreMapper;
     //子站点
     @Autowired
     private SecondSonMapper secondSonMapper;
+    //boss
+    @Autowired
+    private SecondBossMapper secondBossMapper;
     @RequestMapping(path = "/wechart", method = RequestMethod.GET)
     @ApiOperation(value = "微信登录", notes = "微信登录")
     public ResponseEntity<JSONObject> wxLogin(@RequestParam(value = "code", required = false) String code,
@@ -135,6 +139,17 @@ private SecondStoreMapper secondStoreMapper;
                 .andIsDeletedEqualTo((short) 0).andSecondStatusEqualTo(0);
         List<SecondStore> secondStores = secondStoreMapper.selectByExample(secondStoreExample);
         map.put("storeId",secondStores.get(0).getId());
+        SecondUserSonExample secondUserSonExample = new SecondUserSonExample();
+        secondUserSonExample.createCriteria().andUserIdEqualTo(secondUser.getId())
+                .andStoreIdEqualTo(secondStores.get(0).getId())
+                .andIsDeletedEqualTo((byte) 0);
+        List<SecondUserSon> secondUserSons =
+        secondUserSonMapper.selectByExample(secondUserSonExample);
+        SecondSon secondSon = new SecondSon();
+        if (secondUserSons.size()!=0){
+            secondSon = secondSonMapper.selectByPrimaryKey(secondUserSons.get(0).getSonId());
+        }
+        map.put("sonId", secondSon.getId());
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
         return builder.body(ResponseUtils.getResponseBody(map));
     }
@@ -169,6 +184,7 @@ private SecondStoreMapper secondStoreMapper;
         }
 
         SecondStore secondStore = new SecondStore();
+        secondStore.setSecondBalance(0);
         secondStore.setStoreType(Authentication.StoreType.USER.getState());
         secondStore.setUserId(secondUser.getId());
         secondStore.setConcernCount(0);
@@ -262,8 +278,11 @@ private SecondStoreMapper secondStoreMapper;
 
     @RequestMapping(path = "/authenticationList", method = RequestMethod.GET)
     @ApiOperation(value = "学生认证列表", notes = "学生认证列表")
-
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "sonId", value = "子站点id", required = true, type = "Integer"),
+    })
     public ResponseEntity<JSONObject> authenticationList(
+            @RequestParam(value = "sonId", required = false) Integer sonId
     ) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
 //审核列表
@@ -304,6 +323,11 @@ private SecondStoreMapper secondStoreMapper;
             authenticationList1.setSonName(secondSon.getSonName());
             authenticationList.add(authenticationList1);
         });
+        if (sonId != null){
+            List<AuthenticationList> authenticationList1 =
+            authenticationList.stream().filter(a->a.getSonId()==sonId).collect(Collectors.toList());
+            return builder.body(ResponseUtils.getResponseBody(authenticationList1));
+        }
         return builder.body(ResponseUtils.getResponseBody(authenticationList));
     }
 
@@ -340,6 +364,9 @@ private SecondStoreMapper secondStoreMapper;
             SecondStore secondStore = new SecondStore();
             secondStore.setId(secondAuthentications.get(0).getStoreId());
             secondStore.setSecondStatus(Authentication.UserState.PASS.getState());
+            //用户店铺积分
+            SecondBoss secondBoss = secondBossMapper.selectByPrimaryKey(1);
+            secondStore.setSecondBalance(secondBoss.getNewUserIntegral());
             secondStoreMapper.updateByPrimaryKeySelective(secondStore);
             SecondUserSon secondUserSon = new SecondUserSon();
             secondUserSon.setStoreId(secondAuthentications.get(0).getStoreId());

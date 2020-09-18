@@ -21,6 +21,7 @@ public class OrderList {
     private LocalDateTime createTime;//创建时间
     private Integer userId;//用户id
     private String nickName;//用户昵称
+    private Integer sonId;//子站点id
 
     private List<OrderProductList> orderProductLists;
 
@@ -86,5 +87,13 @@ public class OrderList {
 
     public void setStoreId(Integer storeId) {
         this.storeId = storeId;
+    }
+
+    public Integer getSonId() {
+        return sonId;
+    }
+
+    public void setSonId(Integer sonId) {
+        this.sonId = sonId;
     }
 }

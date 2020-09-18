@@ -1,11 +1,17 @@
 package com.example.product.center.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.example.product.center.dao.*;
 import com.example.product.center.manual.Authentication;
 import com.example.product.center.manual.ProductEnum;
 import com.example.product.center.manual.ProductList;
+import com.example.product.center.manual.WantEnum;
 import com.example.product.center.model.*;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.second.common.service.FileMangeService;
 import com.second.utils.response.handler.ResponseEntity;
 import com.second.utils.response.handler.ResponseUtils;
@@ -13,11 +19,15 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import net.sf.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.RedisSystemException;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +46,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/SecondProduct")
 @CrossOrigin
 public class SecondProductController {
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
     @Autowired
     private SecondProductMapper secondProductMapper;
 //物品
@@ -72,6 +84,15 @@ public class SecondProductController {
     private SecondProductAddressMapper secondProductAddressMapper;
     @Autowired
     private SecondStoreAddressMapper secondStoreAddressMapper;
+    //子站点和店铺
+    @Autowired
+    private SecondUserSonMapper secondUserSonMapper;
+    //子站点
+    @Autowired
+    private SecondSonMapper secondSonMapper;
+    //商品的浏览收藏点赞想要
+    @Autowired
+    private SecondProductWantMapper secondProductWantMapper;
     @RequestMapping(path = "/addProduct", method = RequestMethod.POST)
     @ApiOperation(value = "用户添加商品", notes = "用户添加商品")
     @ApiImplicitParams({
@@ -106,6 +127,7 @@ public class SecondProductController {
 
     ) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
+        //
         SecondProduct secondProduct = new SecondProduct();
         secondProduct.setProductType(ProductEnum.Relation.GENERAL.getState());//普通商品
         secondProduct.setShowType(ProductEnum.ShowType.getState(showType).getState());//普通商品展示
@@ -120,6 +142,15 @@ public class SecondProductController {
         secondProduct.setModifyTime(LocalDateTime.now());
         secondProduct.setFile(file1);
         secondProductMapper.insertSelective(secondProduct);
+        //删除redis数据保证数据一致
+        deleted(String.valueOf(categoryId)+"ProductCategory");
+        SecondUserSonExample secondUserSonExample = new SecondUserSonExample();
+        secondUserSonExample.createCriteria().andStoreIdEqualTo(storeId)
+                .andIsDeletedEqualTo((byte) 0);
+        List<SecondUserSon> secondUserSons =
+                secondUserSonMapper.selectByExample(secondUserSonExample);
+        deleted(String.valueOf(secondUserSons.get(0).getSonId())+"ProductSon");
+        deleted(String.valueOf(secondProduct.getId())+"detail");
         //地址
         SecondStoreAddress secondStoreAddress = secondStoreAddressMapper.selectByPrimaryKey(addressId);
         SecondProductAddress secondProductAddress = new SecondProductAddress();
@@ -148,7 +179,7 @@ public class SecondProductController {
         secondGoods.setModifyTime(LocalDateTime.now());
         secondGoodsMapper.insertSelective(secondGoods);
         //商品图片
-        if (file.length!=0){
+        if (file!=null){
             for (String fie : file){
                 SecondProductPictrue secondProductPictrue = new SecondProductPictrue();
                 secondProductPictrue.setProductId(secondProduct.getId());
@@ -177,17 +208,17 @@ public class SecondProductController {
     @RequestMapping(path = "/updateProduct", method = RequestMethod.POST)
     @ApiOperation(value = "修改商品", notes = "修改商品")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "productId", value = "商品id", required = true, type = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "productName", value = "商品名称", required = true, type = "String"),
-            @ApiImplicitParam(paramType = "query", name = "productDesc", value = "商品描述", required = true, type = "String"),
-            @ApiImplicitParam(paramType = "query", name = "showType", value = "商品展示类型,卡券,普通商品", required = true, type = "String"),
-            @ApiImplicitParam(paramType = "query", name = "addressId", value = "地址id", required = true, type = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "isPutaway", value = "是否上架", required = true, type = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "categoryId", value = "类目id", required = true, type = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "storeId", value = "店铺id", required = true, type = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "sellPrice", value = "售卖价格", required = true, type = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "linePrice", value = "划线价格", required = true, type = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "goodsResp", value = "库存", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "productId", value = "商品id", required = false, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "productName", value = "商品名称", required = false, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "productDesc", value = "商品描述", required = false, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "showType", value = "商品展示类型,卡券,普通商品", required = false, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "addressId", value = "地址id", required = false, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "isPutaway", value = "是否上架", required = false, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "categoryId", value = "类目id", required = false, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "storeId", value = "店铺id", required = false, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "sellPrice", value = "售卖价格", required = false, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "linePrice", value = "划线价格", required = false, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "goodsResp", value = "库存", required = false, type = "Integer"),
 //            @ApiImplicitParam(paramType = "query", name = "labelIds", value = "标签id", required = true, type = "Integer"),
     })
     @Transactional(rollbackFor = {RuntimeException.class, Error.class})
@@ -227,25 +258,42 @@ public class SecondProductController {
         secondProduct.setModifyTime(LocalDateTime.now());
         secondProduct.setFile(file1);
         secondProductMapper.updateByPrimaryKeySelective(secondProduct);
+        SecondProduct secondProduct1=
+        secondProductMapper.selectByPrimaryKey(secondProduct.getId());
+//        System.out.println(secondProduct);
+        //删除redis数据保证数据一致
+        deleted(String.valueOf(secondProduct1.getCategoryId())+"ProductCategory");
+        SecondUserSonExample secondUserSonExample = new SecondUserSonExample();
+        secondUserSonExample.createCriteria().andStoreIdEqualTo(secondProduct1.getStoreId())
+                .andIsDeletedEqualTo((byte) 0);
+        List<SecondUserSon> secondUserSons =
+                secondUserSonMapper.selectByExample(secondUserSonExample);
+        if (secondUserSons.size()!=0){
+            deleted(String.valueOf(secondUserSons.get(0).getSonId())+"ProductSon");
+        }
+        deleted(String.valueOf(secondProduct1.getId())+"detail");
         //地址
         SecondStoreAddress secondStoreAddress = secondStoreAddressMapper.selectByPrimaryKey(addressId);
-        SecondProductAddress secondProductAddress = new SecondProductAddress();
+        if (secondStoreAddress!=null){
+            SecondProductAddress secondProductAddress = new SecondProductAddress();
 //        secondProductAddress.setProductId(secondProduct.getId());
-        secondProductAddress.setSecondProvince(secondStoreAddress.getSecondProvince());
-        secondProductAddress.setSecondCity(secondStoreAddress.getSecondCity());
-        secondProductAddress.setSecondConty(secondStoreAddress.getSecondConty());
-        secondProductAddress.setSecondAddressDetail(secondStoreAddress.getSecondAddressDetail());
-        secondProductAddress.setLongitude(secondStoreAddress.getLongitude());
-        secondProductAddress.setLatitude(secondStoreAddress.getLatitude());
-        secondProductAddress.setContact(secondStoreAddress.getContact());
-        secondProductAddress.setPhoneNumber(secondStoreAddress.getPhoneNumber());
-        secondProductAddress.setSecondDesc(secondStoreAddress.getSecondDesc());
-        secondProductAddress.setCreateTime(LocalDateTime.now());
-        secondProductAddress.setModifyTime(LocalDateTime.now());
-        secondProductAddress.setIsDeleted((short) 0);
-        SecondProductAddressExample secondProductAddressExample = new SecondProductAddressExample();
-        secondProductAddressExample.createCriteria().andProductIdEqualTo(productId);
-        secondProductAddressMapper.updateByExampleSelective(secondProductAddress,secondProductAddressExample);
+            secondProductAddress.setSecondProvince(secondStoreAddress.getSecondProvince());
+            secondProductAddress.setSecondCity(secondStoreAddress.getSecondCity());
+            secondProductAddress.setSecondConty(secondStoreAddress.getSecondConty());
+            secondProductAddress.setSecondAddressDetail(secondStoreAddress.getSecondAddressDetail());
+            secondProductAddress.setLongitude(secondStoreAddress.getLongitude());
+            secondProductAddress.setLatitude(secondStoreAddress.getLatitude());
+            secondProductAddress.setContact(secondStoreAddress.getContact());
+            secondProductAddress.setPhoneNumber(secondStoreAddress.getPhoneNumber());
+            secondProductAddress.setSecondDesc(secondStoreAddress.getSecondDesc());
+            secondProductAddress.setCreateTime(LocalDateTime.now());
+            secondProductAddress.setModifyTime(LocalDateTime.now());
+            secondProductAddress.setIsDeleted((short) 0);
+            SecondProductAddressExample secondProductAddressExample = new SecondProductAddressExample();
+            secondProductAddressExample.createCriteria().andProductIdEqualTo(productId);
+            secondProductAddressMapper.updateByExampleSelective(secondProductAddress,secondProductAddressExample);
+        }
+
         //物品
         SecondGoodsExample secondGoodsExample = new SecondGoodsExample();
         secondGoodsExample.createCriteria().andIsDeletedEqualTo((short) 0)
@@ -257,7 +305,7 @@ public class SecondProductController {
         secondGoods.setModifyTime(LocalDateTime.now());
         secondGoodsMapper.updateByExampleSelective(secondGoods,secondGoodsExample);
         //商品图片
-        if (file.length!=0){
+        if (file!=null){
             for (String fie : file){
                 SecondProductPictrue secondProductPictrue = new SecondProductPictrue();
                 secondProductPictrue.setProductId(secondProduct.getId());
@@ -269,7 +317,7 @@ public class SecondProductController {
             }
         }
         //标签
-        if (labelIds.length!=0){
+        if (labelIds!=null){
             for (Integer labelId : labelIds){
                 SecondProductLabelExample secondProductLabelExample = new SecondProductLabelExample();
                 secondProductLabelExample.createCriteria().andProductIdEqualTo(productId)
@@ -294,33 +342,156 @@ public class SecondProductController {
             @RequestParam(value = "productId", required = false) Integer productId
     ) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
+        //删除redis数据保证数据一致
+        SecondProduct secondProduct1 = secondProductMapper.selectByPrimaryKey(productId);
+        deleted(String.valueOf(secondProduct1.getCategoryId())+"ProductCategory");
+        SecondUserSonExample secondUserSonExample = new SecondUserSonExample();
+        secondUserSonExample.createCriteria().andStoreIdEqualTo(secondProduct1.getStoreId())
+                .andIsDeletedEqualTo((byte) 0);
+        List<SecondUserSon> secondUserSons =
+                secondUserSonMapper.selectByExample(secondUserSonExample);
+        if (secondUserSons.size()!=0){
+            deleted(String.valueOf(secondUserSons.get(0).getSonId())+"ProductSon");
+        }
+        deleted(String.valueOf(secondProduct1.getId())+"detail");
+        //
         SecondProduct secondProduct = new SecondProduct();
         secondProduct.setId(productId);
-        secondProduct.setIsDeleted((short) 0);
+        secondProduct.setIsDeleted((short) 1);
         secondProductMapper.updateByPrimaryKeySelective(secondProduct);
         return builder.body(ResponseUtils.getResponseBody(0));
     }
-    @ApiOperation(value = "获取商品", notes = "获取商品")
+    @ApiOperation(value = "获取商品列表", notes = "获取商品列表")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "parentCategoryId", value = "上级的类目id", required = false, type = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "levelId", value = "类目级别", required = false, type = "Integer")})
+            @ApiImplicitParam(paramType = "query", name = "sonId", value = "子站点id", required = false, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "categoryId", value = "类目id", required = false, type = "Integer"),
+    })
     @RequestMapping(value = "/selectProduct", method = RequestMethod.GET)
     public ResponseEntity<JSONObject> selectProduct(
-            @RequestParam(name = "parentCategoryId", required = false) Integer parentCategoryId,
-            @RequestParam(name = "levelId", required = false) Integer levelId
+            Integer pageNum, Integer pageSize,
+            @RequestParam(name = "sonId", required = false) Integer sonId,
+            @RequestParam(name = "categoryId", required = false) Integer categoryId
     )
             throws Exception {
+        if (pageNum == null) {
+            pageNum = 0;
+        }
+        if (pageSize == null) {
+            pageSize = 0;
+        }
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
+        /**
+         * redis取子站点商品
+         */
+        if (sonId!=null){
+            Object sonList = redisTemplate.opsForValue().get(String.valueOf(sonId)+"ProductSon");
+            if (sonList!=null){
+                System.out.println("走redis");
+
+        List<ProductList> list = JSON.parseObject(String.valueOf(sonList), new TypeReference<List<ProductList>>(){});
+                if (pageNum==0){
+                    pageNum=1;
+                }
+                if (pageSize==0){
+                    pageSize=list.size();
+                }
+        //                PageInfo<ProductList> page = new PageInfo<ProductList>(list);
+                Page<Object> pages = PageHelper.startPage(pageNum, pageSize);
+                int total = list.size();
+                pages.setTotal(total);int startIndex = (pageNum - 1) * pageSize;
+                int endIndex = Math.min(startIndex + pageSize,total);
+                pages.addAll(list.subList(startIndex,endIndex));
+                PageInfo pageInfo = new PageInfo<>(pages);
+                return builder.body(ResponseUtils.getResponseBody(pageInfo));
+            }
+        }
+        if (categoryId!=null){
+           Object categoryList = redisTemplate.opsForValue().get(String.valueOf(categoryId)+"ProductCategory");
+           if (categoryList!=null){
+               System.out.println("走redis类目");
+
+               List<ProductList> list = JSON.parseObject(String.valueOf(categoryList), new TypeReference<List<ProductList>>(){});
+//               PageInfo<ProductList> page1 = new PageInfo<ProductList>(list);
+               if (pageNum==0){
+                   pageNum=1;
+               }
+               if (pageSize==0){
+                   pageSize=list.size();
+               }
+               Page<Object> pages =PageHelper.startPage(pageNum, pageSize);
+               int total = list.size();
+               pages.setTotal(total);int startIndex = (pageNum - 1) * pageSize;
+               int endIndex = Math.min(startIndex + pageSize,total);
+               pages.addAll(list.subList(startIndex,endIndex));
+               PageInfo pageInfo = new PageInfo<>(pages);
+               return builder.body(ResponseUtils.getResponseBody(pageInfo));
+           }
+        }
+
+
         //商品列表
         List<SecondProduct> secondProducts = new ArrayList<>();
         SecondProductExample secondProductExample = new SecondProductExample();
         secondProductExample.createCriteria().andIsDeletedEqualTo((short) 0)
                 .andIsPutawayEqualTo(ProductEnum.IsPutaway.PUTAWAY.getState())
                 .andProductTypeEqualTo(ProductEnum.Relation.GENERAL.getState());
+        if (categoryId!=null){
+            secondProductExample.createCriteria().andCategoryIdEqualTo(categoryId);
+        }
+        PageHelper.startPage(pageNum, pageSize);
         secondProducts = secondProductMapper.selectByExample(secondProductExample);
         List<ProductList> productLists = new ArrayList<>();
         secondProducts.forEach(secondProduct -> {
+            SecondUserSonExample secondUserSonExample = new SecondUserSonExample();
+            secondUserSonExample.createCriteria().andStoreIdEqualTo(secondProduct.getStoreId())
+                    .andIsDeletedEqualTo((byte) 0);
+            List<SecondUserSon> secondUserSons =
+                    secondUserSonMapper.selectByExample(secondUserSonExample);
+            //站点
+            SecondSon secondSon = new SecondSon();
+            if (secondUserSons.size()!=0){
+                secondSon = secondSonMapper.selectByPrimaryKey(secondUserSons.get(0).getSonId());
+            }
             ProductList productList = new ProductList();
+            if (secondSon.getId()!=null){
+                productList.setSonId(secondSon.getId());
+            } else {
+                productList.setSonId(0);
+            }
+            //收藏
+            SecondProductWantExample secondProductWantExample = new SecondProductWantExample();
+            secondProductWantExample.createCriteria().andProductIdEqualTo(secondProduct.getId())
+                    .andTypeEqualTo(WantEnum.Relation.COLLECT.getState())
+                    .andIsDeletedEqualTo((short) 0);
+            List<SecondProductWant> secondProductWants =
+            secondProductWantMapper.selectByExample(secondProductWantExample);
+            productList.setCollect(secondProductWants.size());
+            //点赞
+            secondProductWantExample.clear();
+            secondProductWantExample.createCriteria()
+                    .andTypeEqualTo(WantEnum.Relation.PRAISE.getState())
+                    .andProductIdEqualTo(secondProduct.getId())
+                    .andIsDeletedEqualTo((short) 0);
+            secondProductWants = secondProductWantMapper.selectByExample(secondProductWantExample);
+            productList.setPraise(secondProductWants.size());
+            //浏览
+            secondProductWantExample.clear();
+            secondProductWantExample.createCriteria()
+                    .andTypeEqualTo(WantEnum.Relation.LOOK.getState())
+                    .andProductIdEqualTo(secondProduct.getId())
+                    .andIsDeletedEqualTo((short) 0);
+            secondProductWants = secondProductWantMapper.selectByExample(secondProductWantExample);
+            productList.setLook(secondProductWants.size());
+            //想要
+            secondProductWantExample.clear();
+            secondProductWantExample.createCriteria()
+                    .andTypeEqualTo(WantEnum.Relation.WANT.getState())
+                    .andProductIdEqualTo(secondProduct.getId())
+                    .andIsDeletedEqualTo((short) 0);
+            secondProductWants = secondProductWantMapper.selectByExample(secondProductWantExample);
+            productList.setWant(secondProductWants.size());
+
+
             productList.setId(secondProduct.getId());//商品id
             productList.setProductName(secondProduct.getProductName());//商品名称
             productList.setProductDesc(secondProduct.getProductDesc());//描述
@@ -365,15 +536,18 @@ public class SecondProductController {
              * 地址
              */
             SecondProductAddress secondProductAddress = secondProductAddressMapper.selectByPrimaryKey(secondProduct.getAddressId());
-            productList.setAddressId(secondProduct.getAddressId());
-            productList.setProvince(secondProductAddress.getSecondProvince());//省
-            productList.setCity(secondProductAddress.getSecondCity());//市
-            productList.setConty(secondProductAddress.getSecondConty());//区/县
-            productList.setAddressDetail(secondProductAddress.getSecondAddressDetail());//地址详情
-            productList.setLongitude(secondProductAddress.getLongitude());//经度
-            productList.setLatitude(secondProductAddress.getLatitude());//纬度
-            productList.setPhone(secondProductAddress.getContact());//电话
-            productList.setAddressDesc(secondProductAddress.getSecondDesc());//描述
+            if (secondProductAddress!=null){
+                productList.setAddressId(secondProduct.getAddressId());
+                productList.setProvince(secondProductAddress.getSecondProvince());//省
+                productList.setCity(secondProductAddress.getSecondCity());//市
+                productList.setConty(secondProductAddress.getSecondConty());//区/县
+                productList.setAddressDetail(secondProductAddress.getSecondAddressDetail());//地址详情
+                productList.setLongitude(secondProductAddress.getLongitude());//经度
+                productList.setLatitude(secondProductAddress.getLatitude());//纬度
+                productList.setPhone(secondProductAddress.getPhoneNumber());//电话
+                productList.setAddressDesc(secondProductAddress.getSecondDesc());//描述
+            }
+
             /**
              * 学校
              * 根据用户id查询认证
@@ -411,7 +585,22 @@ public class SecondProductController {
         List<ProductList> productLists1 = new ArrayList<>();
         productLists1 = productLists.stream().filter(a->a.getIsStoreDeleted()==0&&a.getSecondStatus()==0)
                 .collect(Collectors.toList());
-        return builder.body(ResponseUtils.getResponseBody(productLists1));
+        String json = JSONObject.toJSONString(productLists1);
+        if (sonId!=null&&categoryId==null){
+            productLists1 = productLists1.stream().filter(a->a.getSonId().equals(sonId)).collect(Collectors.toList());
+            redisTemplate.opsForValue().set(String.valueOf(sonId)+"ProductSon",json);
+        }
+        if (sonId==null&&categoryId!=null){
+            redisTemplate.opsForValue().set(String.valueOf(categoryId)+"ProductCategory",json);
+        }
+//        String json = JSONArray.fromObject(productLists1).toString();
+//        String besnString = JSONObject.toJSONString(productLists1);
+//        redisTemplate.opsForValue().set("product");
+//        System.out.println(besnString);
+//        PageHelper.startPage(pageNum, pageSize);
+//        List<ProductList> list = JSON.parseObject(besnString, new TypeReference<List<ProductList>>(){});
+        PageInfo<ProductList> page = new PageInfo<ProductList>(productLists1);
+        return builder.body(ResponseUtils.getResponseBody(page));
     }
     public ResponseEntity<JSONObject> fileDelete2(String file) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
@@ -440,5 +629,190 @@ public class SecondProductController {
         secondProductPictrueMapper.updateByExampleSelective(secondProductPictrue,secondProductPictrueExample);
         fileDelete2(file);
         return builder.body(ResponseUtils.getResponseBody(0));
+    }
+    /**
+     * 商品详情
+     */
+    @ApiOperation(value = "获取商品详情", notes = "获取商品详情")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "productId", value = "商品id", required = false, type = "Integer"),
+    })
+    @RequestMapping(value = "/selectProductDetail", method = RequestMethod.GET)
+    public ResponseEntity<JSONObject> selectProductDetail(
+            @RequestParam(name = "productId", required = false) Integer productId
+    )
+            throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
+        Object productString = redisTemplate.opsForValue().get(String.valueOf(productId)+"detail");
+        if (productString!=null){
+            System.out.println("走redis");
+            List<ProductList> list = JSON.parseObject(String.valueOf(productString), new TypeReference<List<ProductList>>(){});
+            return builder.body(ResponseUtils.getResponseBody(list));
+        } else {
+            //商品列表
+            List<SecondProduct> secondProducts = new ArrayList<>();
+            SecondProductExample secondProductExample = new SecondProductExample();
+            secondProductExample.createCriteria().andIsDeletedEqualTo((short) 0)
+                    .andIdEqualTo(productId);
+            secondProducts = secondProductMapper.selectByExample(secondProductExample);
+            List<ProductList> productLists = new ArrayList<>();
+            secondProducts.forEach(secondProduct -> {
+                SecondUserSonExample secondUserSonExample = new SecondUserSonExample();
+                secondUserSonExample.createCriteria().andStoreIdEqualTo(secondProduct.getStoreId())
+                        .andIsDeletedEqualTo((byte) 0);
+                List<SecondUserSon> secondUserSons =
+                        secondUserSonMapper.selectByExample(secondUserSonExample);
+                //站点
+                SecondSon secondSon = new SecondSon();
+                if (secondUserSons.size()!=0){
+                    secondSon = secondSonMapper.selectByPrimaryKey(secondUserSons.get(0).getSonId());
+                }
+                ProductList productList = new ProductList();
+                if (secondSon.getId()!=null){
+                    productList.setSonId(secondSon.getId());
+                } else {
+                    productList.setSonId(0);
+                }
+                //收藏
+                SecondProductWantExample secondProductWantExample = new SecondProductWantExample();
+                secondProductWantExample.createCriteria().andProductIdEqualTo(secondProduct.getId())
+                        .andTypeEqualTo(WantEnum.Relation.COLLECT.getState())
+                        .andIsDeletedEqualTo((short) 0);
+                List<SecondProductWant> secondProductWants =
+                        secondProductWantMapper.selectByExample(secondProductWantExample);
+                productList.setCollect(secondProductWants.size());
+                //点赞
+                secondProductWantExample.clear();
+                secondProductWantExample.createCriteria()
+                        .andTypeEqualTo(WantEnum.Relation.PRAISE.getState())
+                        .andProductIdEqualTo(secondProduct.getId())
+                        .andIsDeletedEqualTo((short) 0);
+                secondProductWants = secondProductWantMapper.selectByExample(secondProductWantExample);
+                productList.setPraise(secondProductWants.size());
+                //浏览
+                secondProductWantExample.clear();
+                secondProductWantExample.createCriteria()
+                        .andTypeEqualTo(WantEnum.Relation.LOOK.getState())
+                        .andProductIdEqualTo(secondProduct.getId())
+                        .andIsDeletedEqualTo((short) 0);
+                secondProductWants = secondProductWantMapper.selectByExample(secondProductWantExample);
+                productList.setLook(secondProductWants.size());
+                //想要
+                secondProductWantExample.clear();
+                secondProductWantExample.createCriteria()
+                        .andTypeEqualTo(WantEnum.Relation.WANT.getState())
+                        .andProductIdEqualTo(secondProduct.getId())
+                        .andIsDeletedEqualTo((short) 0);
+                secondProductWants = secondProductWantMapper.selectByExample(secondProductWantExample);
+                productList.setWant(secondProductWants.size());
+
+
+                productList.setId(secondProduct.getId());//商品id
+                productList.setProductName(secondProduct.getProductName());//商品名称
+                productList.setProductDesc(secondProduct.getProductDesc());//描述
+                productList.setProductType(secondProduct.getProductType());//商品类型
+                productList.setShowType(secondProduct.getShowType());//展示类型
+                productList.setIsPutaway(secondProduct.getIsPutaway());//是否上架
+                productList.setCreateTime(secondProduct.getCreateTime());//商品创建时间
+                /**
+                 * 商品图片
+                 */
+                SecondProductPictrueExample secondProductPictrueExample = new SecondProductPictrueExample();
+                secondProductPictrueExample.createCriteria().andIsDeletedEqualTo((short) 0)
+                        .andProductIdEqualTo(secondProduct.getId());
+                List<SecondProductPictrue> secondProductPictrues =
+                        secondProductPictrueMapper.selectByExample(secondProductPictrueExample);
+                if (secondProductPictrues.size()!=0){
+                    List<String> files = new ArrayList<>();
+                    secondProductPictrues.forEach(secondProductPictrue -> {
+                        files.add(secondProductPictrue.getFile());
+                    });
+                    productList.setFiles(files);
+                }
+                /**
+                 * 店铺
+                 */
+                SecondStore secondStore = secondStoreMapper.selectByPrimaryKey(secondProduct.getStoreId());
+                productList.setStoreId(secondProduct.getId());//店铺id
+                productList.setStoreType(secondStore.getStoreType());//店铺类型
+                productList.setStoreName(secondStore.getStoreName());//店铺名称
+                productList.setConcernCount(secondStore.getConcernCount());//店铺关注人数
+                productList.setSecondStatus(secondStore.getSecondStatus());//店铺状态
+                productList.setIsStoreDeleted(secondStore.getIsDeleted());//
+                /**
+                 * 用户
+                 */
+                SecondUser secondUser = secondUserMapper.selectByPrimaryKey(secondStore.getUserId());
+                productList.setUserId(secondStore.getUserId());
+                productList.setNickName(secondUser.getNickName());
+                productList.setIsAuthentication(secondUser.getIsAuthentication());
+                productList.setUserFile(secondUser.getFile());
+                /**
+                 * 地址
+                 */
+                SecondProductAddress secondProductAddress = secondProductAddressMapper.selectByPrimaryKey(secondProduct.getAddressId());
+                if (secondProductAddress!=null){
+                    productList.setAddressId(secondProduct.getAddressId());
+                    productList.setProvince(secondProductAddress.getSecondProvince());//省
+                    productList.setCity(secondProductAddress.getSecondCity());//市
+                    productList.setConty(secondProductAddress.getSecondConty());//区/县
+                    productList.setAddressDetail(secondProductAddress.getSecondAddressDetail());//地址详情
+                    productList.setLongitude(secondProductAddress.getLongitude());//经度
+                    productList.setLatitude(secondProductAddress.getLatitude());//纬度
+                    productList.setPhone(secondProductAddress.getPhoneNumber());//电话
+                    productList.setAddressDesc(secondProductAddress.getSecondDesc());//描述
+                }
+
+                /**
+                 * 学校
+                 * 根据用户id查询认证
+                 */
+                SecondAuthenticationExample secondAuthenticationExample = new SecondAuthenticationExample();
+                secondAuthenticationExample.createCriteria().andUserIdEqualTo(secondUser.getId())
+                        .andAuthenticationStateEqualTo(Authentication.State.PASS.getState())
+                        .andIsDeletedEqualTo((byte) 0);
+                List<SecondAuthentication> secondAuthentications =
+                        secondAuthenticationMapper.selectByExample(secondAuthenticationExample);
+                if (secondAuthentications.size()!=0){
+                    SecondColleges secondColleges =
+                            secondCollegesMapper.selectByPrimaryKey(secondAuthentications.get(0).getCollegesId());
+                    productList.setColleges(secondColleges.getName());
+                    productList.setRecord(secondColleges.getRecord());
+                }
+                /**
+                 * 标签 根据商品id获取商品标签
+                 */
+                SecondProductLabelExample secondProductLabelExample = new SecondProductLabelExample();
+                secondProductLabelExample.createCriteria().andIsDeletedEqualTo((short) 0)
+                        .andProductIdEqualTo(secondProduct.getId());
+                List<SecondProductLabel> secondProductLabels =
+                        secondProductLabelMapper.selectByExample(secondProductLabelExample);
+                if (secondProductLabels.size() != 0){
+                    List<String> files = new ArrayList<>();
+                    secondProductLabels.forEach(secondProductLabel -> {
+                        SecondLabel secondLabel = secondLabelMapper.selectByPrimaryKey(secondProductLabel.getLabelId());
+                        files.add(secondLabel.getLabelName());
+                    });
+                    productList.setLabelName(files);
+                }
+                productLists.add(productList);
+            });
+            List<ProductList> productLists1 =
+                    productLists.stream().filter(a->a.getIsStoreDeleted()==0&&a.getSecondStatus()==0)
+                            .collect(Collectors.toList());
+            String besnString = JSONObject.toJSONString(productLists1);
+            redisTemplate.opsForValue().set(String.valueOf(productId)+"detail",besnString);
+            return builder.body(ResponseUtils.getResponseBody(productLists1));
+        }
+    }
+    @RequestMapping(path = "/deleted", method = RequestMethod.POST)
+    @ApiOperation(value = "删除redis", notes = "删除redis")
+    public void deleted(
+            @RequestParam(name = "key", required = false) String key
+    ){
+        //String.valueOf(productId)+"detail" 商品详情key
+        //String.valueOf(sonId)+"ProductSon" 子站点商品列表
+        //String.valueOf(categoryId)+"ProductCategory" 分类商品列表
+        redisTemplate.delete(key);
     }
 }

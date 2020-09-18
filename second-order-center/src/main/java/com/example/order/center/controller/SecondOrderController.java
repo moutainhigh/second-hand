@@ -87,6 +87,12 @@ public class SecondOrderController {
     //扣减库存
     @Autowired
     private PayOrderService payOrderService;
+    //站点和用户
+    @Autowired
+    private SecondUserSonMapper secondUserSonMapper;
+    //站点
+    @Autowired
+    private SecondSonMapper secondSonMapper;
     @RequestMapping(path = "/addOrder", method = RequestMethod.POST)
     @ApiOperation(value = "创建订单", notes = "创建订单")
     @Transactional(rollbackFor = {RuntimeException.class, Error.class})
@@ -214,7 +220,12 @@ public class SecondOrderController {
 
     @RequestMapping(path = "/selectOrder", method = RequestMethod.GET)
     @ApiOperation(value = "查询订单", notes = "查询订单")
-    public ResponseEntity<JSONObject> selectOrder(String orderType,String OrderStatus) throws Exception {
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "orderType", value = "订单类型,user,store", required = true, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "OrderStatus", value = "订单状态", required = true, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "sonId", value = "子站点id", required = true, type = "Integer"),
+    })
+    public ResponseEntity<JSONObject> selectOrder(String orderType,String OrderStatus,Integer sonId) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
         SecondOrderExample secondOrderExample = new SecondOrderExample();
         if (OrderStatus.equals(OrderEnum.OrderStatus.ALL.getOrderStatus())){
@@ -225,11 +236,26 @@ public class SecondOrderController {
                     .andOrderTypeEqualTo(orderType)
             .andOrderStatusEqualTo(OrderStatus);
         }
-
         List<SecondOrder> secondOrders = secondOrderMapper.selectByExample(secondOrderExample);
         List<OrderList> orderLists = new ArrayList<>();
         secondOrders.forEach(secondOrder -> {
+            SecondUserSonExample secondUserSonExample = new SecondUserSonExample();
+            secondUserSonExample.createCriteria().andStoreIdEqualTo(secondOrder.getStoneId())
+            .andIsDeletedEqualTo((byte) 0);
+            List<SecondUserSon> secondUserSons =
+            secondUserSonMapper.selectByExample(secondUserSonExample);
+            //站点
+            SecondSon secondSon = new SecondSon();
+            if (secondUserSons.size()!=0){
+                secondSon = secondSonMapper.selectByPrimaryKey(secondUserSons.get(0).getSonId());
+            }
+
             OrderList orderList = new OrderList();
+            if (secondSon.getId()!=null){
+                orderList.setSonId(secondSon.getId());
+            } else {
+                orderList.setSonId(0);
+            }
             orderList.setOrderCode(secondOrder.getOrderCode());
             orderList.setOrderId(secondOrder.getId());
             orderList.setStoreId(secondOrder.getStoneId());
@@ -263,6 +289,12 @@ public class SecondOrderController {
             orderList.setOrderProductLists(orderProductLists);
             orderLists.add(orderList);
         });
+        //删选站点订单
+        if (sonId!=null){
+            List<OrderList> orderLists1
+                    = orderLists.stream().filter(a-> a.getSonId().equals(sonId)).collect(Collectors.toList());
+            return builder.body(ResponseUtils.getResponseBody(orderLists1));
+        }
         return builder.body(ResponseUtils.getResponseBody(orderLists));
     }
 }

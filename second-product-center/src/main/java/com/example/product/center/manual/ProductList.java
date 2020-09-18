@@ -60,12 +60,22 @@ public class ProductList {
      */
     private String colleges;//学校名称
     private String record;//学校层次
+    private Integer sonId;//子站点id
     /**
      * 分类
      */
+    //点赞数
+    private Integer praise;
+    //想要数
+    private Integer want;
+    //收藏数
+    private Integer collect;
+    //浏览数
+    private Integer look;
     /**
      * 标签
      */
+
     private List<String> labelName;//标签名称
 
     public Integer getId() {
@@ -314,5 +324,45 @@ public class ProductList {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public Integer getSonId() {
+        return sonId;
+    }
+
+    public void setSonId(Integer sonId) {
+        this.sonId = sonId;
+    }
+
+    public Integer getPraise() {
+        return praise;
+    }
+
+    public void setPraise(Integer praise) {
+        this.praise = praise;
+    }
+
+    public Integer getWant() {
+        return want;
+    }
+
+    public void setWant(Integer want) {
+        this.want = want;
+    }
+
+    public Integer getCollect() {
+        return collect;
+    }
+
+    public void setCollect(Integer collect) {
+        this.collect = collect;
+    }
+
+    public Integer getLook() {
+        return look;
+    }
+
+    public void setLook(Integer look) {
+        this.look = look;
     }
 }

@@ -334,5 +334,19 @@
             <generatedKey column="id" sqlStatement="mysql"
                           identity="true"/>
         </table>
+        <!--second_message 消息-->
+        <table schema="user_center" tableName="second_message"
+               domainObjectName="SecondMessage">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="mysql"
+                          identity="true"/>
+        </table>
+        <!--站点和用户-->
+        <table schema="user_center" tableName="second_user_son"
+               domainObjectName="SecondUserSon">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="mysql"
+                          identity="true"/>
+        </table>
     </context>
 </generatorConfiguration>

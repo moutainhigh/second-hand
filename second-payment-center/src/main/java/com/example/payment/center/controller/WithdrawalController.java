@@ -19,6 +19,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.time.FastDateFormat;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -96,6 +97,10 @@ public class WithdrawalController {
     //取款方法
     @Autowired
     private SecondWithdrawalMethodMapper secondWithdrawalMethodMapper;
+    //审批提现记录
+    @Autowired
+    private SecondWithdrawalAuditMapper secondWithdrawalAuditMapper;
+
     @RequestMapping(path = "/addWithdrawal", method = RequestMethod.POST)
     @ApiOperation(value = "申请提现", notes = "申请提现")
     @Transactional(rollbackFor = {RuntimeException.class, Error.class})
@@ -214,7 +219,7 @@ public class WithdrawalController {
         }
         return builder.body(ResponseUtils.getResponseBody(0));
     }
-    @RequestMapping(path = "/selectWithdrawal", method = RequestMethod.POST)
+    @RequestMapping(path = "/selectWithdrawal", method = RequestMethod.GET)
     @ApiOperation(value = "查看提现列表", notes = "查看提现列表")
     @Transactional(rollbackFor = {RuntimeException.class, Error.class})
     @ApiImplicitParams({
@@ -267,6 +272,41 @@ public class WithdrawalController {
             secondWithdrawalLists.add(secondWithdrawalList);
         });
         return builder.body(ResponseUtils.getResponseBody(secondWithdrawalLists));
+    }
+    @ApiOperation(value = "处理取款申请", notes = "处理取款申请")
+    @RequestMapping(value = "/disposeWithdrawalApply", method = RequestMethod.POST)
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "WithdrawalId", value = "取款申请id", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "type", value = "处理状态类型", required = true, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "originalType", value = "原始状态类型", required = true, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "userId", value = "处理人用户id", required = true, type = "String"),
+    })
+    public ResponseEntity<JSONObject> disposeWithdrawalApply(Integer WithdrawalId, String type,
+                                                             String originalType,
+                                                             Integer userId)
+            throws JSONException {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
+        SecondWithdrawalExample secondWithdrawalExample = new SecondWithdrawalExample();
+        secondWithdrawalExample.createCriteria().andIdEqualTo(WithdrawalId)
+                .andWithdrawalTypeEqualTo(originalType);
+        List<SecondWithdrawal> secondWithdrawals =
+                secondWithdrawalMapper.selectByExample(secondWithdrawalExample);
+        if (secondWithdrawals.size()!=0){
+            SecondWithdrawal secondWithdrawal = secondWithdrawals.get(0);
+            secondWithdrawal.setWithdrawalState(WithdrawalEnum.WithdrawalState.getWithdrawalState(type).getWithdrawalState());
+            secondWithdrawalMapper.updateByPrimaryKeySelective(secondWithdrawal);
+            //审批记录
+            SecondWithdrawalAudit secondWithdrawalAudit = new SecondWithdrawalAudit();
+            secondWithdrawalAudit.setWithdrawalId(secondWithdrawal.getId());
+            secondWithdrawalAudit.setApprover(userId);
+            secondWithdrawalAudit.setAuditState(WithdrawalEnum.WithdrawalState.getWithdrawalState(type).getWithdrawalState());
+            secondWithdrawalAudit.setCreateDate(LocalDateTime.now());
+            secondWithdrawalAudit.setModifyDate(LocalDateTime.now());
+            secondWithdrawalAudit.setIsDeleted((byte) 0);
+            secondWithdrawalAuditMapper.insertSelective(secondWithdrawalAudit);
+        }
+        return builder.body(ResponseUtils.getResponseBody(0));
+
     }
     public static void main(String[] args) {
         Integer money = 10100;
