@@ -23,9 +23,11 @@ public class ProductList {
     private String productDesc;//商品描述
     private String productType;//商品类型
     private String showType;//商品展示类型
+    private Integer price;//价格
     private Integer isPutaway;//是否上架
     private LocalDateTime createTime;//创建时间
     private List<String> files;//商品图
+    private String file;//列表图
     /**
      * 店铺
      */
@@ -364,5 +366,21 @@ public class ProductList {
 
     public void setLook(Integer look) {
         this.look = look;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+
+    public String getFile() {
+        return file;
+    }
+
+    public void setFile(String file) {
+        this.file = file;
     }
 }
