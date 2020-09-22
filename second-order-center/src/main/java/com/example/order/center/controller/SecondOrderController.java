@@ -264,6 +264,7 @@ public class SecondOrderController {
             } else {
                 orderList.setSonId(0);
             }
+            orderList.setOrderStatus(secondOrder.getOrderStatus());
             orderList.setOrderCode(secondOrder.getOrderCode());
             orderList.setOrderId(secondOrder.getId());
             orderList.setStoreId(secondOrder.getStoneId());

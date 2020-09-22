@@ -14,6 +14,7 @@ import java.util.List;
  * @Version: $
  */
 public class OrderList {
+    private String orderStatus;//订单状态
     private Integer orderId;//订单id
     private String orderCode;//订单号
     private String storeName;//店铺名称
@@ -95,5 +96,13 @@ public class OrderList {
 
     public void setSonId(Integer sonId) {
         this.sonId = sonId;
+    }
+
+    public String getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
     }
 }
