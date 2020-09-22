@@ -24,6 +24,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.time.LocalDateTime;
 
 /**
@@ -66,7 +67,11 @@ public class FileController {
         fileDesc.setModifyTime(LocalDateTime.now());
         fileDesc.setIsDeleted((short) 0);
         secondFileMapper.insert(fileDesc);
-        String s = "http://localhost:7004/user/File/getPicture?id=";
+        InetAddress ip = null;
+        ip=ip.getLocalHost();
+//        String localname=ip.getHostName();
+        String localip=ip.getHostAddress();
+        String s = "http://"+localip+"/:7004/user/File/getPicture?id=";
         return builder.body(ResponseUtils.getResponseBody(s+String.valueOf(fileDesc.getId())));
     }
     //压缩过

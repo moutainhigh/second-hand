@@ -244,7 +244,9 @@ public class SecondProductController {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
 
         if (file1!=null){
-            fileDelete2(secondProductMapper.selectByPrimaryKey(productId).getFile());
+            if (secondProductMapper.selectByPrimaryKey(productId).getFile()!=null){
+                fileDelete2(secondProductMapper.selectByPrimaryKey(productId).getFile());
+            }
         }
         SecondProduct secondProduct = new SecondProduct();
         secondProduct.setId(productId);
@@ -264,7 +266,11 @@ public class SecondProductController {
         secondProductMapper.selectByPrimaryKey(secondProduct.getId());
 //        System.out.println(secondProduct);
         //删除redis数据保证数据一致
-        deleted(String.valueOf(secondProduct1.getCategoryId())+"ProductCategory");
+        System.out.println(secondProduct.getId());
+        System.out.println(secondProduct1.getCategoryId());
+        if (secondProduct1.getCategoryId()!=null){
+            deleted(String.valueOf(secondProduct1.getCategoryId())+"ProductCategory");
+        }
         SecondUserSonExample secondUserSonExample = new SecondUserSonExample();
         secondUserSonExample.createCriteria().andStoreIdEqualTo(secondProduct1.getStoreId())
                 .andIsDeletedEqualTo((byte) 0);

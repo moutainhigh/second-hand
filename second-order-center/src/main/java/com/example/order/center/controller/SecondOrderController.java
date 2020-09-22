@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -224,17 +225,24 @@ public class SecondOrderController {
             @ApiImplicitParam(paramType = "query", name = "orderType", value = "订单类型,user,store", required = true, type = "String"),
             @ApiImplicitParam(paramType = "query", name = "OrderStatus", value = "订单状态", required = true, type = "String"),
             @ApiImplicitParam(paramType = "query", name = "sonId", value = "子站点id", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, type = "Integer"),
     })
-    public ResponseEntity<JSONObject> selectOrder(String orderType,String OrderStatus,Integer sonId) throws Exception {
+    public ResponseEntity<JSONObject> selectOrder(String orderType,String OrderStatus,Integer sonId,Integer userId) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
         SecondOrderExample secondOrderExample = new SecondOrderExample();
         if (OrderStatus.equals(OrderEnum.OrderStatus.ALL.getOrderStatus())){
             secondOrderExample.createCriteria().andIsDeletedEqualTo((byte) 0)
                     .andOrderTypeEqualTo(orderType);
-        }else {
+            if (userId!=null){
+                secondOrderExample.createCriteria().andUserIdEqualTo(userId);
+            }
+        }else{
             secondOrderExample.createCriteria().andIsDeletedEqualTo((byte) 0)
                     .andOrderTypeEqualTo(orderType)
             .andOrderStatusEqualTo(OrderStatus);
+            if (userId!=null){
+                secondOrderExample.createCriteria().andUserIdEqualTo(userId);
+            }
         }
         List<SecondOrder> secondOrders = secondOrderMapper.selectByExample(secondOrderExample);
         List<OrderList> orderLists = new ArrayList<>();
@@ -296,5 +304,64 @@ public class SecondOrderController {
             return builder.body(ResponseUtils.getResponseBody(orderLists1));
         }
         return builder.body(ResponseUtils.getResponseBody(orderLists));
+    }
+
+    /**
+     * 修改订单状态
+     * @param orderId
+     * @param orderCode
+     * @param originalOrderStatus
+     * @param targetOrderStatus
+     * @return
+     * @throws JSONException
+     */
+    @ApiOperation(value = "修改订单状态", notes = "修改订单状态")
+    @RequestMapping(value = "/updateOrder", method = RequestMethod.POST)
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "orderId", value = "订单id", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "orderCode", value = "订单号", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "originalOrderStatus", value = "原始订单状态", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "targetOrderStatus", value = "目标的订单状态", required = true, type = "Integer"),
+    })
+    public ResponseEntity<JSONObject> updateOrder(Integer orderId,
+                                                  String orderCode,
+                                                  String originalOrderStatus,
+                                                  String targetOrderStatus
+    )
+            throws JSONException {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
+        SecondOrderExample secondOrderExample = new SecondOrderExample();
+        secondOrderExample.createCriteria()
+                .andIdEqualTo(orderId)
+                .andOrderCodeEqualTo(orderCode)
+                .andOrderStatusEqualTo(originalOrderStatus)
+                .andIsDeletedEqualTo((byte) 0);
+        List<SecondOrder> secondOrders
+                = secondOrderMapper.selectByExample(secondOrderExample);
+
+        SecondOrder secondOrder = new SecondOrder();
+        if (secondOrders.size()!=0){
+            secondOrder.setOrderStatus(targetOrderStatus);
+            secondOrder.setCreateTime(LocalDateTime.now());
+            secondOrderMapper.updateByExampleSelective(secondOrder,secondOrderExample);
+            return builder.body(ResponseUtils.getResponseBody(0));
+        }
+
+
+        return builder.body(ResponseUtils.getResponseBody(1));
+    }
+
+    public static void main(String[] args) {
+        InetAddress ip = null;
+               try {
+                   ip=ip.getLocalHost();
+                        String localname=ip.getHostName();
+                        String localip=ip.getHostAddress();
+                        System.out.println("本机名称是："+ localname);
+                        System.out.println("本机的ip是 ："+localip);
+                   } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                     }
     }
 }
