@@ -8,6 +8,7 @@ import com.example.user.center.dao.SecondChatMapper;
 import com.example.user.center.dao.SecondMessageMapper;
 import com.example.user.center.dao.SecondUserMapper;
 import com.example.user.center.manual.Authentication;
+import com.example.user.center.manual.ChatEnum;
 import com.example.user.center.manual.Message;
 import com.example.user.center.manual.MessageEnum;
 import com.example.user.center.model.SecondChat;
@@ -26,6 +27,7 @@ import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -245,7 +247,14 @@ private static SecondMessageMapper secondMessageMapper;
         List<Message> list = JSONObject.parseArray(jsonArray.toJSONString(), Message.class);
         list.forEach(ls->{
             SecondChat secondChat = new SecondChat();
-            secondChat.setToId();
+            secondChat.setToId(ls.getByUserId());
+            secondChat.setFromId(ls.getUserId());
+            secondChat.setSendTime(LocalDateTime.now());
+            secondChat.setContent(ls.getMessage());
+//            secondChat.setReadStatus(ChatEnum.ChatStatus.YET.getMessageStatus());
+            secondChat.setCreateTime(LocalDateTime.now());
+            secondChat.setModifyTime(LocalDateTime.now());
+            secondChat.setIsDeleted((byte) 0);
         });
     }
 

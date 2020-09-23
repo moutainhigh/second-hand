@@ -705,6 +705,7 @@ public class SecondProductController {
                 List<SecondGoods> secondGoods =
                         secondGoodsMapper.selectByExample(secondGoodsExample);
                 productList.setPrice(secondGoods.get(0).getSellPrice());
+                productList.setGoodsId(secondGoods.get(0).getId());
                 //收藏
                 SecondProductWantExample secondProductWantExample = new SecondProductWantExample();
                 secondProductWantExample.createCriteria().andProductIdEqualTo(secondProduct.getId())

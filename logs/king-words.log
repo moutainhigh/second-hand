@@ -471,3 +471,39 @@
 2020-09-23 11:46:26.019  INFO 17568 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
 2020-09-23 11:51:26.022  INFO 17568 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
 2020-09-23 11:56:26.024  INFO 17568 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-23 12:01:26.027  INFO 17568 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-23 12:06:27.287  INFO 17568 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-23 12:11:27.290  INFO 17568 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-23 12:16:27.293  INFO 17568 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-23 12:21:27.295  INFO 17568 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-23 12:26:27.298  INFO 17568 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-23 12:31:27.301  INFO 17568 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-23 12:34:15.720  WARN 17568 --- [AMQP Connection 39.100.237.144:5672] c.r.c.impl.ForgivingExceptionHandler     : An unexpected connection driver error occured (Exception message: Connection reset)
+2020-09-23 12:34:15.745 ERROR 17568 --- [AMQP Connection 39.100.237.144:5672] o.s.a.r.c.CachingConnectionFactory       : Channel shutdown: connection error
+2020-09-23 12:34:16.665  INFO 17568 --- [SimpleAsyncTaskExecutor-1] o.s.a.r.l.SimpleMessageListenerContainer : Restarting Consumer@3eb4fdd5: tags=[[amq.ctag-arZk9rz2HU8fQh1BnMaUYw]], channel=Cached Rabbit Channel: AMQChannel(amqp://sw@39.100.237.144:5672/,1), conn: Proxy@75392381 Shared Rabbit Connection: SimpleConnection@1912ba29 [delegate=amqp://sw@39.100.237.144:5672/, localPort= 50705], acknowledgeMode=AUTO local queue size=0
+2020-09-23 12:34:16.676  INFO 17568 --- [SimpleAsyncTaskExecutor-2] o.s.a.r.c.CachingConnectionFactory       : Attempting to connect to: [39.100.237.144:5672]
+2020-09-23 12:34:16.786  INFO 17568 --- [SimpleAsyncTaskExecutor-2] o.s.a.r.c.CachingConnectionFactory       : Created new connection: rabbitConnectionFactory#1b5cf611:1/SimpleConnection@32b30f27 [delegate=amqp://sw@39.100.237.144:5672/, localPort= 55991]
+2020-09-23 12:35:35.902  WARN 17568 --- [AMQP Connection 39.100.237.144:5672] c.r.c.impl.ForgivingExceptionHandler     : An unexpected connection driver error occured (Exception message: Connection reset)
+2020-09-23 12:35:35.903 ERROR 17568 --- [AMQP Connection 39.100.237.144:5672] o.s.a.r.c.CachingConnectionFactory       : Channel shutdown: connection error
+2020-09-23 12:35:35.904 ERROR 17568 --- [AMQP Connection 39.100.237.144:5672] o.s.a.r.c.CachingConnectionFactory       : Channel shutdown: connection error
+2020-09-23 12:35:36.192  INFO 17568 --- [SimpleAsyncTaskExecutor-2] o.s.a.r.l.SimpleMessageListenerContainer : Restarting Consumer@cb9d4ed: tags=[[amq.ctag-pRvo1WfVFXJjP5hCGnsrkg]], channel=Cached Rabbit Channel: AMQChannel(amqp://sw@39.100.237.144:5672/,2), conn: Proxy@75392381 Shared Rabbit Connection: SimpleConnection@32b30f27 [delegate=amqp://sw@39.100.237.144:5672/, localPort= 55991], acknowledgeMode=AUTO local queue size=0
+2020-09-23 12:35:36.194  INFO 17568 --- [SimpleAsyncTaskExecutor-3] o.s.a.r.c.CachingConnectionFactory       : Attempting to connect to: [39.100.237.144:5672]
+2020-09-23 12:35:36.287  INFO 17568 --- [SimpleAsyncTaskExecutor-3] o.s.a.r.c.CachingConnectionFactory       : Created new connection: rabbitConnectionFactory#1b5cf611:2/SimpleConnection@6d64860c [delegate=amqp://sw@39.100.237.144:5672/, localPort= 56067]
+2020-09-23 12:36:27.304  INFO 17568 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-23 12:41:27.333  INFO 17568 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-23 12:46:27.335  INFO 17568 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-23 12:51:27.338  INFO 17568 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-23 12:56:27.340  INFO 17568 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-23 13:01:27.343  INFO 17568 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-23 13:06:27.345  INFO 17568 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-23 13:11:27.348  INFO 17568 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-23 13:16:27.351  INFO 17568 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-23 13:21:27.352  INFO 17568 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-23 13:26:27.354  INFO 17568 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-23 13:31:27.356  INFO 17568 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-23 13:36:27.358  INFO 17568 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-23 13:41:27.361  INFO 17568 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-23 13:46:27.363  INFO 17568 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-23 13:51:27.366  INFO 17568 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-23 13:56:27.369  INFO 17568 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-23 14:01:27.371  INFO 17568 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
