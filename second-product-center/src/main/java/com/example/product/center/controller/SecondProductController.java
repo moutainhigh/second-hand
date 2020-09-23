@@ -766,7 +766,7 @@ public class SecondProductController {
                  * 店铺
                  */
                 SecondStore secondStore = secondStoreMapper.selectByPrimaryKey(secondProduct.getStoreId());
-                productList.setStoreId(secondProduct.getId());//店铺id
+                productList.setStoreId(secondProduct.getStoreId());//店铺id
                 productList.setStoreType(secondStore.getStoreType());//店铺类型
                 productList.setStoreName(secondStore.getStoreName());//店铺名称
                 productList.setConcernCount(secondStore.getConcernCount());//店铺关注人数

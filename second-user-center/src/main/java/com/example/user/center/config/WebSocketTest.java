@@ -255,6 +255,7 @@ private static SecondMessageMapper secondMessageMapper;
             secondChat.setCreateTime(LocalDateTime.now());
             secondChat.setModifyTime(LocalDateTime.now());
             secondChat.setIsDeleted((byte) 0);
+            secondChatMapper.insertSelective(secondChat);
         });
     }
 

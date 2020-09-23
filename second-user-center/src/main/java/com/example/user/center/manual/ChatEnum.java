@@ -13,13 +13,13 @@ public class ChatEnum {
      * 已读未读
      */
     public static enum ChatStatus {
-        YET((short) 1),//已读
-        NOYET((short) 0);//未读
-        private short messageStatus;
-        ChatStatus(short messageStatus) {
+        YET((byte) 1),//已读
+        NOYET((byte) 0);//未读
+        private byte messageStatus;
+        ChatStatus(byte messageStatus) {
             this.messageStatus = messageStatus;
         }
-        public short getMessageStatus() {
+        public byte getMessageStatus() {
             return this.messageStatus;
         }
     }
