@@ -72,7 +72,7 @@ public class FileController {
 //        String localname=ip.getHostName();
         String localip=ip.getHostAddress();
 //        String s = "http://"+localip+"/:7004/user/File/getPicture?id=";
-        String s = "http://39.100.237.144/:7004/user/File/getPicture?id=";
+        String s = "http://39.100.237.144:7004/user/File/getPicture?id=";
         return builder.body(ResponseUtils.getResponseBody(s+String.valueOf(fileDesc.getId())));
     }
     //压缩过
