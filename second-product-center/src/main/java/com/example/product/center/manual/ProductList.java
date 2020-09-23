@@ -23,6 +23,7 @@ public class ProductList {
     private String productDesc;//商品描述
     private String productType;//商品类型
     private String showType;//商品展示类型
+    private Integer goodsId;
     private Integer price;//价格
     private Integer isPutaway;//是否上架
     private LocalDateTime createTime;//创建时间
@@ -391,5 +392,13 @@ public class ProductList {
 
     public void setProductState(String productState) {
         this.productState = productState;
+    }
+
+    public Integer getGoodsId() {
+        return goodsId;
+    }
+
+    public void setGoodsId(Integer goodsId) {
+        this.goodsId = goodsId;
     }
 }

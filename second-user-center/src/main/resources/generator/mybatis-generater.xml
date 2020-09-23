@@ -348,5 +348,12 @@
         <generatedKey column="id" sqlStatement="mysql"
         identity="true"/>
         </table>
+        <!--聊天-->
+        <table schema="user_center" tableName="second_chat"
+               domainObjectName="SecondChat">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="mysql"
+                          identity="true"/>
+        </table>
     </context>
 </generatorConfiguration>

@@ -4,11 +4,13 @@ package com.example.user.center.config;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.user.center.dao.SecondBossSettingMapper;
+import com.example.user.center.dao.SecondChatMapper;
 import com.example.user.center.dao.SecondMessageMapper;
 import com.example.user.center.dao.SecondUserMapper;
 import com.example.user.center.manual.Authentication;
 import com.example.user.center.manual.Message;
 import com.example.user.center.manual.MessageEnum;
+import com.example.user.center.model.SecondChat;
 import com.example.user.center.model.SecondMessage;
 import com.example.user.center.model.SecondUser;
 import com.example.user.center.model.SecondUserExample;
@@ -62,6 +64,12 @@ private static SecondMessageMapper secondMessageMapper;
     @Autowired
     public void setSecondUserMapper(SecondUserMapper secondUserMapper){
         WebSocketTest.secondUserMapper = secondUserMapper;
+    }
+    //聊天
+    private static SecondChatMapper secondChatMapper;
+    @Autowired
+    public void setSecondChatMapper(SecondChatMapper secondChatMapper){
+        WebSocketTest.secondChatMapper = secondChatMapper;
     }
     /**
      * 连接建立成功调用的方法
@@ -226,6 +234,19 @@ private static SecondMessageMapper secondMessageMapper;
     public void sendMessage(String message) throws IOException {
         this.session.getBasicRemote().sendText(message);
         //this.session.getAsyncRemote().sendText(message);
+    }
+
+    /**
+     * 保存聊天
+     * @return
+     */
+    public void addMessages(String messages){
+        JSONArray jsonArray= JSONArray.parseArray(messages);
+        List<Message> list = JSONObject.parseArray(jsonArray.toJSONString(), Message.class);
+        list.forEach(ls->{
+            SecondChat secondChat = new SecondChat();
+            secondChat.setToId();
+        });
     }
 
     public static synchronized int getOnlineCount() {
