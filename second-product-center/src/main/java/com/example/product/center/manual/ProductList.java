@@ -28,6 +28,7 @@ public class ProductList {
     private LocalDateTime createTime;//创建时间
     private List<String> files;//商品图
     private String file;//列表图
+    private String productState;//商品状态
     /**
      * 店铺
      */
@@ -382,5 +383,13 @@ public class ProductList {
 
     public void setFile(String file) {
         this.file = file;
+    }
+
+    public String getProductState() {
+        return productState;
+    }
+
+    public void setProductState(String productState) {
+        this.productState = productState;
     }
 }

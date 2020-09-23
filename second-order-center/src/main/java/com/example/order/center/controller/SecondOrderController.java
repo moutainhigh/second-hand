@@ -163,6 +163,10 @@ public class SecondOrderController {
             //地址，不支持购物车情况每次一件商品
             SecondGoods secondGoods = secondGoodsMapper.selectByPrimaryKey(goodsList.get(0).getGoodsId());
             SecondProduct secondProduct = secondProductMapper.selectByPrimaryKey(secondGoods.getProductId());
+            if (secondGoods.getGoodsResp()==0){
+                secondProduct.setProductState(ProductEnum.ProductState.SELLOUT.getState());
+                secondProductMapper.updateByPrimaryKeySelective(secondProduct);
+            }
             SecondProductAddressExample secondProductAddressExample = new SecondProductAddressExample();
             secondProductAddressExample.createCriteria().andProductIdEqualTo(secondProduct.getId())
                     .andIsDeletedEqualTo((short) 0);
@@ -198,7 +202,7 @@ public class SecondOrderController {
         secondPayOrder.setAmount(sum);
         secondPayOrder.setActualPrice(sum);
         secondPayOrderMapper.updateByPrimaryKeySelective(secondPayOrder);
-        return builder.body(ResponseUtils.getResponseBody(0));
+        return builder.body(ResponseUtils.getResponseBody(secondPayOrder));
     }
     @ApiOperation(value = "校检库存", notes = "校检库存")
     @RequestMapping(value = "/checkResp", method = RequestMethod.POST)

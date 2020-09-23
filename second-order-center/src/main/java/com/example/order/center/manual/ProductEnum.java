@@ -1,4 +1,4 @@
-package com.example.product.center.manual;
+package com.example.order.center.manual;
 
 /**
  * @author shihao

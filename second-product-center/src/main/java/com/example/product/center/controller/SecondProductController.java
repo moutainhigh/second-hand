@@ -131,6 +131,7 @@ public class SecondProductController {
         System.out.println(productName);
         //
         SecondProduct secondProduct = new SecondProduct();
+        secondProduct.setProductState(ProductEnum.ProductState.SELL.getState());
         secondProduct.setProductType(ProductEnum.Relation.GENERAL.getState());//普通商品
         secondProduct.setShowType(ProductEnum.ShowType.getState(showType).getState());//普通商品展示
         secondProduct.setAddressId(addressId);//地址
@@ -463,6 +464,8 @@ public class SecondProductController {
                 secondSon = secondSonMapper.selectByPrimaryKey(secondUserSons.get(0).getSonId());
             }
             ProductList productList = new ProductList();
+            //商品状态
+            productList.setProductState(secondProduct.getProductState());
             //列表图
             productList.setFile(secondProduct.getFile());
             //wuping

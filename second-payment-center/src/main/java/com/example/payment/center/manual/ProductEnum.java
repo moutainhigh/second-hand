@@ -1,4 +1,4 @@
-package com.example.product.center.manual;
+package com.example.payment.center.manual;
 
 /**
  * @author shihao

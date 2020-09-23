@@ -5,18 +5,26 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.user.center.dao.SecondBossSettingMapper;
 import com.example.user.center.dao.SecondMessageMapper;
+import com.example.user.center.dao.SecondUserMapper;
+import com.example.user.center.manual.Authentication;
 import com.example.user.center.manual.Message;
 import com.example.user.center.manual.MessageEnum;
 import com.example.user.center.model.SecondMessage;
+import com.example.user.center.model.SecondUser;
+import com.example.user.center.model.SecondUserExample;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -43,6 +51,18 @@ private static SecondMessageMapper secondMessageMapper;
     public void setSecondMessageMapper(SecondMessageMapper secondMessageMapper) {
         WebSocketTest.secondMessageMapper = secondMessageMapper;
     }
+    //redis
+    private static RedisTemplate<String, Object> redisTemplate;
+    @Resource
+    public void setRedisTemplate(RedisTemplate<String, Object> redisTemplate){
+        WebSocketTest.redisTemplate = redisTemplate;
+    }
+    //用户
+    private static SecondUserMapper secondUserMapper;
+    @Autowired
+    public void setSecondUserMapper(SecondUserMapper secondUserMapper){
+        WebSocketTest.secondUserMapper = secondUserMapper;
+    }
     /**
      * 连接建立成功调用的方法
      *
@@ -55,6 +75,20 @@ private static SecondMessageMapper secondMessageMapper;
         this.session = session;
         webSocketSet.put(param, this);//加入map中
         addOnlineCount();           //在线数加1
+        Object object = redisTemplate.opsForValue().get(param+"sendAll");
+        System.out.println(object);
+        if (object!=null){
+            JSONArray jsonArray= JSONArray.parseArray(String.valueOf(object));
+            List<Message> list = JSONObject.parseArray(jsonArray.toJSONString(), Message.class);
+            list.forEach(ls->{
+                ls.setByUserId(Integer.valueOf(param));
+                ls.setType(MessageEnum.MessageStatus.SOLO.getMessageStatus());
+            });
+            Gson gson = new Gson();
+            onMessage(gson.toJson(list));
+            redisTemplate.delete(param+"sendAll");
+            System.out.println(gson.toJson(list));
+        }
         System.out.println("有新连接加入！当前在线人数为" + getOnlineCount());
     }
 
@@ -84,18 +118,22 @@ private static SecondMessageMapper secondMessageMapper;
 //        session.get
         //群发消息
         if (MessageEnum.MessageStatus.Group.getMessageStatus().equals(list.get(0).getType())) {
-            sendAll(list.get(0).getMessage());
+            sendAll(list.get(0).getMessage(),message);
         } else {
             //给指定的人发消息
-            sendToUser(list.get(0).getMessage(), String.valueOf(list.get(0).getByUserId()));
+            sendToUser(list.get(0).getMessage(), String.valueOf(list.get(0).getByUserId())
+                    , String.valueOf(list.get(0).getUserId()));
         }
     }
 
     /**
      * 给指定的人发送消息
      * @param message
+     * @param byUserId //接收人
+     * @param userId  //发送人
+     *
      */
-    private void sendToUser(String message,String byUserId) {
+    private void sendToUser(String message,String byUserId,String userId) {
 
 //        String sendUserno = message.split("[|]")[1];
 //        String sendMessage = message.split("[|]")[0];
@@ -104,7 +142,7 @@ private static SecondMessageMapper secondMessageMapper;
         String now = getNowTime();
         try {
             if (webSocketSet.get(sendUserno) != null) {
-                webSocketSet.get(sendUserno).sendMessage(now + "用户" + userno + "发来消息：" + " <br/> " + sendMessage);
+                webSocketSet.get(sendUserno).sendMessage(now + "用户" + userId + "发来消息：" + " <br/> " + sendMessage);
             } else {
                 System.out.println("当前用户不在线");
             }
@@ -115,9 +153,10 @@ private static SecondMessageMapper secondMessageMapper;
 
     /**
      * 给所有人发消息
-     * @param message
+     * @param message //发送的消息
+     * @param messages //原本的消息
      */
-    private void sendAll(String message) {
+    private void sendAll(String message,String messages) {
 //        SecondMessage secondMessage  = new SecondMessage();
 //        secondMessage.setHeadline("测试");
 //        int a =  secondMessageMapper.insertSelective(secondMessage);
@@ -126,10 +165,19 @@ private static SecondMessageMapper secondMessageMapper;
 //        String sendMessage = message.split("[|]")[0];
         String sendMessage = message;
         //遍历HashMap
+        SecondUserExample secondUserExample = new SecondUserExample();
+        secondUserExample.createCriteria()
+                .andUserTypeEqualTo(Authentication.LoginType.USERWX.getState())
+                .andIdDeletedEqualTo((byte) 0);
+        List<SecondUser> secondUsers =
+        secondUserMapper.selectByExample(secondUserExample);
+        System.out.println(secondUsers);
+        List<String> keys = new ArrayList<>();
         for (String key : webSocketSet.keySet()) {
             try {
                 //判断接收用户是否是当前发消息的用户
                 if (!userno.equals(key)) {
+                    keys.add(key);
                     webSocketSet.get(key).sendMessage(now + "用户" + userno + "发来消息：" + " <br/> " + sendMessage);
                     System.out.println("key = " + key);
                 }
@@ -137,6 +185,12 @@ private static SecondMessageMapper secondMessageMapper;
                 e.printStackTrace();
             }
         }
+        secondUsers.forEach(secondUser -> {
+            boolean result = keys.contains(String.valueOf(secondUser.getId()));
+            if (!result){
+                redisTemplate.opsForValue().set(String.valueOf(secondUser.getId())+"sendAll",messages);
+            }
+        });
     }
 
 

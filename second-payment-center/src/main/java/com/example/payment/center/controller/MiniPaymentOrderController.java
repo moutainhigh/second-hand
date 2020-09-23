@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletInputStream;
@@ -72,8 +73,12 @@ public class MiniPaymentOrderController {
     //添加库存
     @Autowired
     private AddStockService addStockService;
+    //商品
+    @Autowired
+    private SecondProductMapper secondProductMapper;
     @ApiOperation(value = "支付订单", notes = "")
     @RequestMapping(value = "/order", method = RequestMethod.GET)
+    @Transactional(rollbackFor = {RuntimeException.class, Error.class})
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, type = "Integer") })
     public ResponseEntity<JSONObject> payment(Integer userId, Integer payOrderId) throws Exception {
@@ -211,6 +216,7 @@ public class MiniPaymentOrderController {
 //			@ApiImplicitParam(paramType = "query", name = "outTradeNo", value = "订单id", required = true, type = "String"),
 //        @ApiImplicitParam(paramType = "query", name = "transactionType", value = "订单id", required = true, type = "String"),
         })
+@Transactional(rollbackFor = {RuntimeException.class, Error.class})
 public ResponseEntity<JSONObject> completePaymentAfter(
         Integer payOrderId)
         throws Exception {
@@ -254,6 +260,7 @@ public ResponseEntity<JSONObject> completePaymentAfter(
      */
     @ApiOperation(value = "未完成支付", notes = "")
     @RequestMapping(value = "/noComplete", method = RequestMethod.GET)
+    @Transactional(rollbackFor = {RuntimeException.class, Error.class})
     public ResponseEntity<JSONObject> noComplete(
             Integer payOrderId)
             throws Exception {
@@ -268,6 +275,10 @@ public ResponseEntity<JSONObject> completePaymentAfter(
             secondOrderDetailMapper.selectByExample(secondOrderDetailExample);
             secondOrderDetails.forEach(secondOrderDetail -> {
                 addStockService.addStock(secondOrderDetail.getGoodsId(),secondOrderDetail.getQuantity());
+                SecondGoods secondGoods = secondGoodsMapper.selectByPrimaryKey(secondOrderDetail.getGoodsId());
+                SecondProduct secondProduct = secondProductMapper.selectByPrimaryKey(secondGoods.getProductId());
+                secondProduct.setProductState(ProductEnum.ProductState.SELL.getState());
+                secondProductMapper.updateByPrimaryKeySelective(secondProduct);
             });
         });
         return builder.body(ResponseUtils.getResponseBody(0));
@@ -280,6 +291,7 @@ public ResponseEntity<JSONObject> completePaymentAfter(
      */
     @ApiOperation(value = "退款订单", notes = "")
     @RequestMapping(value = "/refund", method = RequestMethod.GET)
+    @Transactional(rollbackFor = {RuntimeException.class, Error.class})
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "outTradeNo", value = "订单id", required = true, type = "orderCode"),
             @ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, type = "Integer") })
