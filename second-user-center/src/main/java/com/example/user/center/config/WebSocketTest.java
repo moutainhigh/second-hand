@@ -133,6 +133,8 @@ private static SecondMessageMapper secondMessageMapper;
             //给指定的人发消息
             sendToUser(list.get(0).getMessage(), String.valueOf(list.get(0).getByUserId())
                     , String.valueOf(list.get(0).getUserId()));
+            //保存聊天
+            addMessages(message);
         }
     }
 
@@ -251,7 +253,7 @@ private static SecondMessageMapper secondMessageMapper;
             secondChat.setFromId(ls.getUserId());
             secondChat.setSendTime(LocalDateTime.now());
             secondChat.setContent(ls.getMessage());
-//            secondChat.setReadStatus(ChatEnum.ChatStatus.YET.getMessageStatus());
+            secondChat.setReadStatus(ChatEnum.ChatStatus.YET.getMessageStatus());
             secondChat.setCreateTime(LocalDateTime.now());
             secondChat.setModifyTime(LocalDateTime.now());
             secondChat.setIsDeleted((byte) 0);

@@ -10,7 +10,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication
 @EnableFeignClients
 @EnableEurekaClient
-@MapperScans({@MapperScan("com.example.user.center.dao")})
+@MapperScans({@MapperScan("com.example.user.center.dao"),@MapperScan("com.example.user.center.manual.dao")})
 public class SecondUserCenterApplication {
 
     public static void main(String[] args) {

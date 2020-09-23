@@ -374,11 +374,13 @@ public class SecondProductController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "sonId", value = "子站点id", required = false, type = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "categoryId", value = "类目id", required = false, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "storeId", value = "店铺id", required = false, type = "Integer"),
     })
     @RequestMapping(value = "/selectProduct", method = RequestMethod.GET)
     public ResponseEntity<JSONObject> selectProduct(
             Integer pageNum, Integer pageSize,
             @RequestParam(name = "sonId", required = false) Integer sonId,
+            @RequestParam(name = "storeId", required = false) Integer storeId,
             @RequestParam(name = "categoryId", required = false) Integer categoryId
     )
             throws Exception {
@@ -542,7 +544,7 @@ public class SecondProductController {
              * 店铺
              */
             SecondStore secondStore = secondStoreMapper.selectByPrimaryKey(secondProduct.getStoreId());
-            productList.setStoreId(secondProduct.getId());//店铺id
+            productList.setStoreId(secondStore.getId());//店铺id
             productList.setStoreType(secondStore.getStoreType());//店铺类型
             productList.setStoreName(secondStore.getStoreName());//店铺名称
             productList.setConcernCount(secondStore.getConcernCount());//店铺关注人数
@@ -616,6 +618,9 @@ public class SecondProductController {
         }
         if (sonId==null&&categoryId!=null){
             redisTemplate.opsForValue().set(String.valueOf(categoryId)+"ProductCategory",json);
+        }
+        if (storeId!=null){
+            productLists1 = productLists1.stream().filter(a->a.getStoreId().equals(storeId)).collect(Collectors.toList());
         }
 //        String json = JSONArray.fromObject(productLists1).toString();
 //        String besnString = JSONObject.toJSONString(productLists1);

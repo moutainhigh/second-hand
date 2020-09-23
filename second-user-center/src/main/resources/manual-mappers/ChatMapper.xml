@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.user.center.manual.dao.ChatMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.user.center.manual.model.Chat">
+        <result column="id" jdbcType="INTEGER" property="id"/>
+        <result column="to_id" jdbcType="INTEGER" property="toId"/>
+        <result column="from_id" jdbcType="INTEGER" property="fromId"/>
+        <result column="send_time" jdbcType="TIMESTAMP" property="sendTime"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="type" jdbcType="TINYINT" property="type"/>
+        <result column="read_status" jdbcType="TINYINT" property="readStatus"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime"/>
+        <result column="is_deleted" jdbcType="TINYINT" property="isDeleted"/>
+    </resultMap>
+
+    <select id="select" resultMap="BaseResultMap">
+SELECT
+	*
+FROM
+	`second_chat`
+WHERE
+	to_id = 1
+	AND from_id = 2
+	OR to_id = 2
+	AND from_id = 1
+ORDER BY
+	send_time DESC
+    </select>
+</mapper>
