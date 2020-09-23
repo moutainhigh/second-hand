@@ -853,4 +853,20 @@ public class SecondProductController {
         //String.valueOf(categoryId)+"ProductCategory" 分类商品列表
         redisTemplate.delete(key);
     }
+    /**
+     * 上下架宝贝
+     */
+    @ApiOperation(value = "上下架宝贝", notes = "上下架宝贝")
+    @RequestMapping(value = "/IsPutaway", method = RequestMethod.POST)
+    public ResponseEntity<JSONObject> IsPutaway(Integer[] productsId,Integer isPutaway) throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
+        for (Integer productId:productsId){
+            SecondProduct secondProduct = new SecondProduct();
+            secondProduct.setId(productId);
+            secondProduct.setIsPutaway(isPutaway);
+            secondProduct.setModifyTime(LocalDateTime.now());
+            secondProductMapper.updateByPrimaryKeySelective(secondProduct);
+        }
+        return builder.body(ResponseUtils.getResponseBody(0));
+    }
 }

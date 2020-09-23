@@ -2493,3 +2493,14 @@ java.io.NotSerializableException: com.example.user.center.manual.ChatWindow
 2020-09-23 16:17:01.977  INFO 4584 --- [http-nio-7004-exec-3] com.zaxxer.hikari.HikariDataSource       : dataSource - Starting...
 2020-09-23 16:17:05.302  INFO 4584 --- [http-nio-7004-exec-3] com.zaxxer.hikari.HikariDataSource       : dataSource - Start completed.
 2020-09-23 16:21:25.976  INFO 4584 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-23 16:26:25.978  INFO 4584 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-23 16:31:25.980  INFO 4584 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-23 16:36:25.995  INFO 4584 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-23 16:41:25.998  INFO 4584 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-23 16:46:26.002  INFO 4584 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-23 16:51:26.004  INFO 4584 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-23 16:56:26.006  INFO 4584 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-23 17:01:26.009  INFO 4584 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-23 17:06:26.012  INFO 4584 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-23 17:11:26.015  INFO 4584 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-23 17:16:26.018  INFO 4584 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration

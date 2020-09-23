@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.order.center.dao.*;
 import com.example.order.center.manual.*;
 import com.example.order.center.model.*;
+import com.example.order.center.service.BalanceService;
 import com.example.order.center.service.Impl.PayOrderServiceImpl;
 import com.example.order.center.service.PayOrderService;
 import com.second.utils.response.handler.ResponseEntity;
@@ -94,6 +95,9 @@ public class SecondOrderController {
     //站点
     @Autowired
     private SecondSonMapper secondSonMapper;
+    //余额管理
+    @Autowired
+    private BalanceService balanceService;
     @RequestMapping(path = "/addOrder", method = RequestMethod.POST)
     @ApiOperation(value = "创建订单", notes = "创建订单")
     @Transactional(rollbackFor = {RuntimeException.class, Error.class})
@@ -324,9 +328,9 @@ public class SecondOrderController {
     @RequestMapping(value = "/updateOrder", method = RequestMethod.POST)
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "orderId", value = "订单id", required = true, type = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "orderCode", value = "订单号", required = true, type = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "originalOrderStatus", value = "原始订单状态", required = true, type = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "targetOrderStatus", value = "目标的订单状态", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "orderCode", value = "订单号", required = true, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "originalOrderStatus", value = "原始订单状态", required = true, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "targetOrderStatus", value = "目标的订单状态", required = true, type = "String"),
     })
     public ResponseEntity<JSONObject> updateOrder(Integer orderId,
                                                   String orderCode,
@@ -349,9 +353,18 @@ public class SecondOrderController {
             secondOrder.setOrderStatus(targetOrderStatus);
             secondOrder.setCreateTime(LocalDateTime.now());
             secondOrderMapper.updateByExampleSelective(secondOrder,secondOrderExample);
+            /**
+             * 确认收货
+             */
+            if (originalOrderStatus.equals(OrderEnum.OrderStatus.TRANSPORT.getOrderStatus())
+                    && targetOrderStatus.equals(OrderEnum.OrderStatus.EVALUATE.getOrderStatus())){
+                balanceService.addBalance(secondOrders.get(0).getUserId(),
+                        secondOrders.get(0).getStoneId(),
+                        BanlaceEnum.Relation.MONEY.getState(),
+                        secondOrders.get(0).getAmount());
+            }
             return builder.body(ResponseUtils.getResponseBody(0));
         }
-
 
         return builder.body(ResponseUtils.getResponseBody(1));
     }
