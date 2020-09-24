@@ -92,6 +92,17 @@ public class SonLoginController {
             response.sendError(HttpStatus.UNAUTHORIZED.value(), "用户名存在");
             return builder.body(ResponseUtils.getResponseBody(1));
         }
+        //创建用户
+        SecondUser secondUser = new SecondUser();
+        secondUser.setNickName(username);
+        secondUser.setUserStatus((byte) 0);
+        secondUser.setUserType(Authentication.LoginType.BOSS.getState());
+        secondUser.setIsAuthentication(0);
+        secondUser.setCreateDate(LocalDateTime.now());
+        secondUser.setModifyDate(LocalDateTime.now());
+        secondUser.setIdDeleted((byte) 0);
+        secondUserMapper.insertSelective(secondUser);
+        userId = secondUser.getId();
         //创建子站点
         SecondSon secondSon = new SecondSon();
         secondSon.setFile(file);

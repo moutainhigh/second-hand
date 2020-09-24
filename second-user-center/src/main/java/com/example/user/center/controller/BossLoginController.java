@@ -2,10 +2,12 @@ package com.example.user.center.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.user.center.dao.SecondAuthMapper;
+import com.example.user.center.dao.SecondUserMapper;
 import com.example.user.center.manual.Authentication;
 import com.example.user.center.model.SecondAuth;
 import com.example.user.center.model.SecondAuthExample;
 import com.example.user.center.model.SecondAuthenticationPicture;
+import com.example.user.center.model.SecondUser;
 import com.second.common.utils.Encrypt;
 import com.second.utils.response.handler.ResponseEntity;
 import com.second.utils.response.handler.ResponseUtils;
@@ -14,6 +16,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -37,9 +40,12 @@ import java.util.Map;
 public class BossLoginController {
     @Autowired
     private SecondAuthMapper secondAuthMapper;
+    @Autowired
+    private SecondUserMapper secondUserMapper;
 //    总后台登录
 @RequestMapping(path = "/Login", method = RequestMethod.POST)
 @ApiOperation(value = "登录", notes = "登录")
+
     public ResponseEntity<JSONObject> Login(
             @RequestParam(value = "username", required = false) String username,
             @RequestParam(value = "password", required = false) String password,
@@ -68,6 +74,7 @@ public class BossLoginController {
     }
     @RequestMapping(path = "/AddLogin", method = RequestMethod.POST)
     @ApiOperation(value = "添加登录", notes = "添加登录")
+    @Transactional(rollbackFor = {RuntimeException.class, Error.class})
     public ResponseEntity<JSONObject> AddLogin(
             @RequestParam(value = "username", required = false) String username,
             @RequestParam(value = "password", required = false) String password,
@@ -94,6 +101,16 @@ public class BossLoginController {
             response.sendError(HttpStatus.UNAUTHORIZED.value(), "用户名存在");
             return builder.body(ResponseUtils.getResponseBody(1));
         }
+        SecondUser secondUser = new SecondUser();
+        secondUser.setNickName(username);
+        secondUser.setUserStatus((byte) 0);
+        secondUser.setUserType(Authentication.LoginType.BOSS.getState());
+        secondUser.setIsAuthentication(0);
+        secondUser.setCreateDate(LocalDateTime.now());
+        secondUser.setModifyDate(LocalDateTime.now());
+        secondUser.setIdDeleted((byte) 0);
+        secondUserMapper.insertSelective(secondUser);
+        userId = secondUser.getId();
         BCryptPasswordEncoder bcryptPasswordEncoder = new BCryptPasswordEncoder();
         SecondAuth secondAuth = new SecondAuth();
         secondAuth.setUserId(userId);

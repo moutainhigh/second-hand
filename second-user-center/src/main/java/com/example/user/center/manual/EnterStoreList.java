@@ -9,7 +9,7 @@ package com.example.user.center.manual;
  * @Version: $
  */
 public class EnterStoreList {
-    private Integer StoreId;//商家id
+    private Integer storeId;//商家id
     private Integer userId;//用户id
     private String nickName;//用户昵称
     private String storeName;//店铺名称
@@ -17,11 +17,11 @@ public class EnterStoreList {
     private String phone;//联系方式
 
     public Integer getStoreId() {
-        return StoreId;
+        return storeId;
     }
 
     public void setStoreId(Integer storeId) {
-        StoreId = storeId;
+        storeId = storeId;
     }
 
     public Integer getUserId() {
