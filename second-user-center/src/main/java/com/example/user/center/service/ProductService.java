@@ -1,9 +1,12 @@
 package com.example.user.center.service;
 
 
+import com.alibaba.fastjson.JSONObject;
+import com.second.utils.response.handler.ResponseEntity;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * @author YangPeng
@@ -17,6 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @FeignClient(name = "product-center",path ="/product" )
 @Component
 public interface ProductService {
-    @RequestMapping(value = "getProduct")
-    String getProduct();
+    @RequestMapping(value = "/SecondProduct/selectProduct")
+    JSONObject getProduct(@RequestParam("pageNum") Integer pageNum,@RequestParam("pageSize") Integer pageSize);
 }
