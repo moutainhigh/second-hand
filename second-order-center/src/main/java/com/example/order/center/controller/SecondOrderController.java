@@ -289,6 +289,7 @@ public class SecondOrderController {
             List<OrderProductList> orderProductLists = new ArrayList<>();
             secondOrderDetails.forEach(secondOrderDetail -> {
                 OrderProductList orderProductList = new OrderProductList();
+                orderProductList.setOrderDetails(secondOrderDetail.getId());
                 orderProductList.setGoodsId(secondOrderDetail.getGoodsId());
                 SecondGoods secondGoods = secondGoodsMapper.selectByPrimaryKey(secondOrderDetail.getGoodsId());
                 orderProductList.setProductId(secondGoods.getProductId());

@@ -10,6 +10,7 @@ package com.example.order.center.manual;
  */
 public class OrderProductList {
     private Integer goodsId;//物品id
+    private Integer orderDetails;//详情id
     private Integer productId;//商品id
     private String productName;//商品名称
     private String productDesc;//商品描述
@@ -97,5 +98,13 @@ public class OrderProductList {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public Integer getOrderDetails() {
+        return orderDetails;
+    }
+
+    public void setOrderDetails(Integer orderDetails) {
+        this.orderDetails = orderDetails;
     }
 }

@@ -227,11 +227,12 @@ public class AddressController {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
         {
             SecondStoreAddressExample secondStoreAddressExample = new SecondStoreAddressExample();
-            secondStoreAddressExample.createCriteria().andStoreIdEqualTo(storeId)
+            SecondStoreAddressExample.Criteria criteria = secondStoreAddressExample.createCriteria().andStoreIdEqualTo(storeId)
                     .andIsDeletedEqualTo((short) 0);
             if (defaule!=null){
-                secondStoreAddressExample.createCriteria()
-                        .andIsFaultAddressEqualTo(addressEnum.ChatStatus.DEFAULT.getMessageStatus());
+//                secondStoreAddressExample.clear();
+                System.out.println("走了");
+                criteria.andIsFaultAddressEqualTo(0);
             }
             return builder.body(ResponseUtils.getResponseBody(secondStoreAddressMapper.selectByExample(secondStoreAddressExample)));
         }

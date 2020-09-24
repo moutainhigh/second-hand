@@ -455,18 +455,18 @@ private SecondStoreMapper secondStoreMapper;
         });
         return builder.body(ResponseUtils.getResponseBody(userLists));
     }
-//    @RequestMapping(path = "/UserDetails", method = RequestMethod.GET)
-//    @ApiOperation(value = "用户详情", notes = "我的用户详情")
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, type = "Integer"),
-//    })
-//    public ResponseEntity<JSONObject> UserDetails(
-//            Integer userId
-//    ) throws Exception {
-//        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
-//        SecondUser
-//        return builder.body(ResponseUtils.getResponseBody(0));
-//    }
+    @RequestMapping(path = "/UserDetails", method = RequestMethod.GET)
+    @ApiOperation(value = "用户详情", notes = "我的用户详情")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, type = "Integer"),
+    })
+    public ResponseEntity<JSONObject> UserDetails(
+            Integer userId
+    ) throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
+        SecondUser secondUser = secondUserMapper.selectByPrimaryKey(userId);
+        return builder.body(ResponseUtils.getResponseBody(0));
+    }
     @InitBinder
     public void initBinder(WebDataBinder binder, WebRequest request) {
         //转换日期
