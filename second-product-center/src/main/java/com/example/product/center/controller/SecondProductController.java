@@ -93,9 +93,6 @@ public class SecondProductController {
     //商品的浏览收藏点赞想要
     @Autowired
     private SecondProductWantMapper secondProductWantMapper;
-    //地址
-    @Autowired
-    private SecondStoreAddressMapper secondStoreAddressMapper;
     @RequestMapping(path = "/addProduct", method = RequestMethod.POST)
     @ApiOperation(value = "用户添加商品", notes = "用户添加商品")
     @ApiImplicitParams({
