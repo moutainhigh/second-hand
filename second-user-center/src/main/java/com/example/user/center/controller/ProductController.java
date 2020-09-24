@@ -71,6 +71,7 @@ public class ProductController {
 // 调用 发送消息的方法
         this.rabbitTemplate.convertAndSend(EXCHANGE_NAME,"fanout", context);
     }
+
     //监听消息
     @RabbitListener(queuesToDeclare = @Queue("myQueue2"))
     public void process2(String message){

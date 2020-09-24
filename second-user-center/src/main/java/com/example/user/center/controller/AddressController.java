@@ -6,7 +6,9 @@ import com.alibaba.fastjson.TypeReference;
 import com.example.user.center.dao.SecondStoreAddressMapper;
 import com.example.user.center.dao.SecondStoreMapper;
 import com.example.user.center.manual.Address.AddressList;
+import com.example.user.center.manual.Address.addressEnum;
 import com.example.user.center.manual.Authentication;
+import com.example.user.center.manual.ChatEnum;
 import com.example.user.center.model.SecondStore;
 import com.example.user.center.model.SecondStoreAddress;
 import com.example.user.center.model.SecondStoreAddressExample;
@@ -58,12 +60,14 @@ public class AddressController {
             @ApiImplicitParam(paramType = "query", name = "longitude", value = "经度", required = true, type = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "latitude", value = "纬度", required = true, type = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "contact", value = "联系人", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "defaule", value = "是否默认地址", required = true, type = "Boolean"),
             @ApiImplicitParam(paramType = "query", name = "phone", value = "电话", required = true, type = "Integer"),
     })
     @Transactional(rollbackFor = {RuntimeException.class, Error.class})
     public ResponseEntity<JSONObject> addAddress(
             @RequestParam(value = "storeId", required = false) Integer storeId,
             @RequestParam(value = "userId", required = false) Integer userId,
+            @RequestParam(value = "defaule", required = false) Boolean defaule,
             @RequestParam(value = "province", required = false) String province,
             @RequestParam(value = "city", required = false) String city,
             @RequestParam(value = "conty", required = false) String conty,
@@ -77,6 +81,29 @@ public class AddressController {
             SecondStore secondStore = secondStoreMapper.selectByPrimaryKey(storeId);
             if (secondStore.getStoreType().equals(Authentication.StoreType.USER.getState())){
                 SecondStoreAddress secondStoreAddress = new SecondStoreAddress();
+                if (defaule){
+                    secondStoreAddress.setIsFaultAddress(addressEnum.ChatStatus.DEFAULT.getMessageStatus());
+                    SecondStoreAddressExample secondStoreAddressExample = new SecondStoreAddressExample();
+                    secondStoreAddressExample.createCriteria().andStoreIdEqualTo(storeId)
+                            .andIsDeletedEqualTo((short) 0)
+                            .andIsFaultAddressEqualTo(addressEnum.ChatStatus.DEFAULT.getMessageStatus());
+                    List<SecondStoreAddress> secondStoreAddresses =
+                            secondStoreAddressMapper.selectByExample(secondStoreAddressExample);
+                    if (secondStoreAddresses.size()!=0){
+                        SecondStoreAddress secondStoreAddress1 = new SecondStoreAddress();
+                        secondStoreAddress1 = secondStoreAddresses.get(0);
+                        secondStoreAddress1.setIsFaultAddress(addressEnum.ChatStatus.NODEFAULT.getMessageStatus());
+                        secondStoreAddress1.setModifyTime(LocalDateTime.now());
+                        secondStoreAddressMapper.updateByPrimaryKeySelective(secondStoreAddress1);
+
+                    }
+                }else {
+                    secondStoreAddress.setIsFaultAddress(addressEnum.ChatStatus.NODEFAULT.getMessageStatus());
+                }
+
+
+
+
                 secondStoreAddress.setStoreId(storeId);
                 secondStoreAddress.setSecondProvince(province);
                 secondStoreAddress.setSecondCity(city);
@@ -109,10 +136,12 @@ public class AddressController {
             @ApiImplicitParam(paramType = "query", name = "latitude", value = "纬度", required = true, type = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "contact", value = "联系人", required = true, type = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "phone", value = "电话", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "defaule", value = "是否默认地址", required = true, type = "Boolean"),
     })
     @Transactional(rollbackFor = {RuntimeException.class, Error.class})
     public ResponseEntity<JSONObject> updateAddress(
             @RequestParam(value = "addressId", required = false) Integer addressId,
+            @RequestParam(value = "defaule", required = false) Boolean defaule,
             @RequestParam(value = "province", required = false) String province,
             @RequestParam(value = "city", required = false) String city,
             @RequestParam(value = "conty", required = false) String conty,
@@ -122,9 +151,26 @@ public class AddressController {
             @RequestParam(value = "contact", required = false) String contact,
             @RequestParam(value = "phone", required = false) String phone
     ) throws Exception {
-        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
-        {
-                SecondStoreAddress secondStoreAddress = new SecondStoreAddress();
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);{
+            SecondStoreAddress secondStoreAddress = new SecondStoreAddress();
+            if (defaule){
+                secondStoreAddress.setIsFaultAddress(addressEnum.ChatStatus.DEFAULT.getMessageStatus());
+                SecondStoreAddressExample secondStoreAddressExample = new SecondStoreAddressExample();
+                secondStoreAddressExample.createCriteria().andIdEqualTo(addressId)
+                        .andIsDeletedEqualTo((short) 0)
+                        .andIsFaultAddressEqualTo(addressEnum.ChatStatus.DEFAULT.getMessageStatus());
+                List<SecondStoreAddress> secondStoreAddresses =
+                        secondStoreAddressMapper.selectByExample(secondStoreAddressExample);
+                if (secondStoreAddresses.size()!=0){
+                    SecondStoreAddress secondStoreAddress1 = new SecondStoreAddress();
+                    secondStoreAddress1 = secondStoreAddresses.get(0);
+                    secondStoreAddress1.setIsFaultAddress(addressEnum.ChatStatus.NODEFAULT.getMessageStatus());
+                    secondStoreAddress1.setModifyTime(LocalDateTime.now());
+                    secondStoreAddressMapper.updateByPrimaryKeySelective(secondStoreAddress1);
+                }
+            }else {
+                secondStoreAddress.setIsFaultAddress(addressEnum.ChatStatus.NODEFAULT.getMessageStatus());
+            }
                 secondStoreAddress.setId(addressId);
                 secondStoreAddress.setSecondProvince(province);
                 secondStoreAddress.setSecondCity(city);
@@ -170,17 +216,23 @@ public class AddressController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "storeId", value = "店铺id", required = true, type = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "defaule", value = "是否默认地址", required = true, type = "Boolean"),
     })
     @Transactional(rollbackFor = {RuntimeException.class, Error.class})
     public ResponseEntity<JSONObject> selectAddress(
             @RequestParam(value = "storeId", required = false) Integer storeId,
-            @RequestParam(value = "userId", required = false) Integer userId
+            @RequestParam(value = "userId", required = false) Integer userId,
+            @RequestParam(value = "defaule", required = false) Integer defaule
     ) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
         {
             SecondStoreAddressExample secondStoreAddressExample = new SecondStoreAddressExample();
             secondStoreAddressExample.createCriteria().andStoreIdEqualTo(storeId)
                     .andIsDeletedEqualTo((short) 0);
+            if (defaule!=null){
+                secondStoreAddressExample.createCriteria()
+                        .andIsFaultAddressEqualTo(addressEnum.ChatStatus.DEFAULT.getMessageStatus());
+            }
             return builder.body(ResponseUtils.getResponseBody(secondStoreAddressMapper.selectByExample(secondStoreAddressExample)));
         }
     }
