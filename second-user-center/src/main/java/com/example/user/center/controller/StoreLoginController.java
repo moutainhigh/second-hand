@@ -180,9 +180,13 @@ public class StoreLoginController {
             @ApiImplicitParam(paramType = "query", name = "storeId", value = "店铺id", required = true, type = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, type = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "authenticationDesc", value = "认证说明", required = true, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "longitude", value = "经度", required = true, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "latitude", value = "纬度", required = true, type = "String"),
     })
     public ResponseEntity<JSONObject> authenticationStore(
             @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "longitude", required = false) String longitude,
+            @RequestParam(value = "latitude", required = false) String latitude,
             @RequestParam(value = "storeName", required = false) String storeName,
             @RequestParam(value = "province", required = false) String province,
             @RequestParam(value = "city", required = false) String city,
@@ -207,7 +211,10 @@ public class StoreLoginController {
         secondStoreAuthenticationMapper.insertSelective(secondStoreAuthentication);
         //地址
         SecondStoreAddress secondStoreAddress = new SecondStoreAddress();
+        secondStoreAddress.setStoreId(storeId);
         secondStoreAddress.setSecondProvince(province);
+        secondStoreAddress.setLatitude(latitude);
+        secondStoreAddress.setLongitude(longitude);
         secondStoreAddress.setSecondCity(city);
         secondStoreAddress.setSecondConty(conty);
         secondStoreAddress.setSecondAddressDetail(addressDetail);

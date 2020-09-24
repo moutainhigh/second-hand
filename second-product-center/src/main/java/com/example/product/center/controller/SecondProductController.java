@@ -93,6 +93,9 @@ public class SecondProductController {
     //商品的浏览收藏点赞想要
     @Autowired
     private SecondProductWantMapper secondProductWantMapper;
+    //地址
+    @Autowired
+    private SecondStoreAddressMapper secondStoreAddressMapper;
     @RequestMapping(path = "/addProduct", method = RequestMethod.POST)
     @ApiOperation(value = "用户添加商品", notes = "用户添加商品")
     @ApiImplicitParams({
@@ -129,6 +132,16 @@ public class SecondProductController {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
         System.out.println(storeId);
         System.out.println(productName);
+        //地址
+        SecondStore secondStore = secondStoreMapper.selectByPrimaryKey(storeId);
+        if (secondStore.getStoreType().equals(Authentication.StoreType.STORE.getState())){
+            SecondStoreAddressExample secondStoreAddressExample = new SecondStoreAddressExample();
+            secondStoreAddressExample.createCriteria().andIsDeletedEqualTo((short) 0)
+                    .andStoreIdEqualTo(storeId);
+            List<SecondStoreAddress> secondStoreAddresses =
+                    secondStoreAddressMapper.selectByExample(secondStoreAddressExample);
+            addressId = secondStoreAddresses.get(0).getId();
+        }
         //
         SecondProduct secondProduct = new SecondProduct();
         secondProduct.setProductState(ProductEnum.ProductState.SELL.getState());
@@ -154,7 +167,7 @@ public class SecondProductController {
                 secondUserSonMapper.selectByExample(secondUserSonExample);
         deleted(String.valueOf(secondUserSons.get(0).getSonId())+"ProductSon");
         deleted(String.valueOf(secondProduct.getId())+"detail");
-        //地址
+       //
         SecondStoreAddress secondStoreAddress = secondStoreAddressMapper.selectByPrimaryKey(addressId);
         SecondProductAddress secondProductAddress = new SecondProductAddress();
         secondProductAddress.setProductId(secondProduct.getId());
