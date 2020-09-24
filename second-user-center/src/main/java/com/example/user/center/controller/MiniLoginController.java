@@ -3,10 +3,7 @@ package com.example.user.center.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.example.user.center.config.WxLoginConfig;
 import com.example.user.center.dao.*;
-import com.example.user.center.manual.Authentication;
-import com.example.user.center.manual.AuthenticationList;
-import com.example.user.center.manual.OrderEnum;
-import com.example.user.center.manual.UserList;
+import com.example.user.center.manual.*;
 import com.example.user.center.model.*;
 import com.second.common.service.FileMangeService;
 import com.second.common.utils.Encrypt;
@@ -93,6 +90,12 @@ private SecondStoreMapper secondStoreMapper;
     //boss
     @Autowired
     private SecondBossMapper secondBossMapper;
+    //关注
+    @Autowired
+    private SecondAttentionMapper secondAttentionMapper;
+    //评价
+    @Autowired
+    private SecondEvaluateMapper secondEvaluateMapper;
     @RequestMapping(path = "/wechart", method = RequestMethod.GET)
     @ApiOperation(value = "微信登录", notes = "微信登录")
     public ResponseEntity<JSONObject> wxLogin(@RequestParam(value = "code", required = false) String code,
@@ -459,13 +462,70 @@ private SecondStoreMapper secondStoreMapper;
     @ApiOperation(value = "用户详情", notes = "我的用户详情")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "myUserId", value = "用户id", required = true, type = "Integer"),
     })
     public ResponseEntity<JSONObject> UserDetails(
-            Integer userId
+            Integer userId,
+            Integer myUserId
     ) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
+        SecondStoreExample secondStoreExample = new SecondStoreExample();
+        secondStoreExample.createCriteria().andUserIdEqualTo(userId)
+                .andIsDeletedEqualTo((short) 0).andSecondStatusEqualTo(0);
+        List<SecondStore> secondStores = secondStoreMapper.selectByExample(secondStoreExample);
+
         SecondUser secondUser = secondUserMapper.selectByPrimaryKey(userId);
-        return builder.body(ResponseUtils.getResponseBody(0));
+        UserDetails userDetails = new UserDetails();
+        userDetails.setUserId(userId);
+        if (secondStores.size()!=0){
+            userDetails.setStoreId(secondStores.get(0).getId());
+            userDetails.setAuthentication(secondStores.get(0).getSecondStatus());
+        }
+        userDetails.setUserFile(secondUser.getFile());//头像
+        userDetails.setNickName(secondUser.getNickName());//昵称
+        SecondAttentionExample secondAttentionExample = new SecondAttentionExample();
+        secondAttentionExample.createCriteria().andIsDeletedEqualTo((byte) 0)
+                .andUserIdEqualTo(userId);
+        List<SecondAttention> secondAttentions = secondAttentionMapper.selectByExample(secondAttentionExample);
+        userDetails.setAttentionNumber(secondAttentions.size());//关注数量
+        secondAttentionExample.clear();
+        secondAttentionExample.createCriteria().andByUserIdEqualTo(userId)
+                .andIsDeletedEqualTo((byte) 0);
+        List<SecondAttention> secondAttentions1 = secondAttentionMapper.selectByExample(secondAttentionExample);
+        userDetails.setMyFansNumber(secondAttentions1.size());//粉丝数量
+        SecondEvaluateExample secondEvaluateExample = new SecondEvaluateExample();
+        secondEvaluateExample.createCriteria().andUserIdEqualTo(userId)
+                .andIsDeletedEqualTo((short) 0);
+        List<SecondEvaluate> secondEvaluates=
+        secondEvaluateMapper.selectByExample(secondEvaluateExample);
+        userDetails.setEvaluateNumber(secondEvaluates.size());//评价数量
+        if (myUserId!=null){
+            //被关注
+            secondAttentionExample.clear();
+            secondAttentionExample.createCriteria().andUserIdEqualTo(userId)
+                    .andIsDeletedEqualTo((byte) 0)
+                    .andByUserIdEqualTo(myUserId);
+            List<SecondAttention> secondAttentions2 =
+                    secondAttentionMapper.selectByExample(secondAttentionExample);
+            //关注
+            secondAttentionExample.clear();
+            secondAttentionExample.createCriteria().andUserIdEqualTo(myUserId)
+                    .andIsDeletedEqualTo((byte) 0)
+                    .andByUserIdEqualTo(userId);
+            List<SecondAttention> secondAttentions3 =
+                    secondAttentionMapper.selectByExample(secondAttentionExample);
+            if (secondAttentions2.size()!=0 && secondAttentions3.size()==0){
+                userDetails.setAttention(Attention.Relation.BYATTENTION.getState());//关注关系被关注
+            } else if (secondAttentions2.size()==0 && secondAttentions3.size()!=0){
+                userDetails.setAttention(Attention.Relation.YETATTENTION.getState());//关注关系关注
+            } else if (secondAttentions2.size()!=0 && secondAttentions3.size()!=0){
+                userDetails.setAttention(Attention.Relation.EACHOTHER.getState());//关注互相关注
+            } else {
+                userDetails.setAttention(Attention.Relation.NO.getState());//没关系
+            }
+
+        }
+        return builder.body(ResponseUtils.getResponseBody(userDetails));
     }
     @InitBinder
     public void initBinder(WebDataBinder binder, WebRequest request) {

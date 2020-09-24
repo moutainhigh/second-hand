@@ -20,6 +20,8 @@ public class OrderProductList {
     private Integer sellPrice;//售卖价格
     private Integer linePrice;//划线价格
     private Integer quantity;//购买数量
+    private String productType;//商品类型
+    private String showType;//商品展示类型
     public Integer getGoodsId() {
         return goodsId;
     }
@@ -106,5 +108,21 @@ public class OrderProductList {
 
     public void setOrderDetails(Integer orderDetails) {
         this.orderDetails = orderDetails;
+    }
+
+    public String getProductType() {
+        return productType;
+    }
+
+    public void setProductType(String productType) {
+        this.productType = productType;
+    }
+
+    public String getShowType() {
+        return showType;
+    }
+
+    public void setShowType(String showType) {
+        this.showType = showType;
     }
 }

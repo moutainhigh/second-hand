@@ -234,8 +234,9 @@ public class SecondOrderController {
             @ApiImplicitParam(paramType = "query", name = "OrderStatus", value = "订单状态", required = true, type = "String"),
             @ApiImplicitParam(paramType = "query", name = "sonId", value = "子站点id", required = true, type = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "showType", value = "商品展示类型", required = true, type = "String"),
     })
-    public ResponseEntity<JSONObject> selectOrder(String orderType,String OrderStatus,Integer sonId,Integer userId) throws Exception {
+    public ResponseEntity<JSONObject> selectOrder(String orderType,String OrderStatus,Integer sonId,Integer userId,String showType) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
         SecondOrderExample secondOrderExample = new SecondOrderExample();
         if (OrderStatus.equals(OrderEnum.OrderStatus.ALL.getOrderStatus())){
@@ -302,15 +303,18 @@ public class SecondOrderController {
                 orderProductList.setIsPutaway(secondProduct.getIsPutaway());
                 orderProductList.setProductState(secondProduct.getProductState());
                 orderProductList.setQuantity(secondOrderDetail.getQuantity());
+                orderProductList.setShowType(secondProduct.getShowType());
+                orderProductList.setProductType(secondProduct.getProductType());
                 orderProductLists.add(orderProductList);
             });
             orderList.setOrderProductLists(orderProductLists);
             orderLists.add(orderList);
         });
-        //删选站点订单
+        List<OrderList> orderLists2 = orderLists.stream().filter(a-> a.getOrderProductLists().get(0).getShowType().equals(showType)).collect(Collectors.toList());
+        //筛选站点订单
         if (sonId!=null){
             List<OrderList> orderLists1
-                    = orderLists.stream().filter(a-> a.getSonId().equals(sonId)).collect(Collectors.toList());
+                    = orderLists2.stream().filter(a-> a.getSonId().equals(sonId)).collect(Collectors.toList());
             return builder.body(ResponseUtils.getResponseBody(orderLists1));
         }
         return builder.body(ResponseUtils.getResponseBody(orderLists));

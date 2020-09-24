@@ -375,12 +375,14 @@ public class SecondProductController {
             @ApiImplicitParam(paramType = "query", name = "sonId", value = "子站点id", required = false, type = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "categoryId", value = "类目id", required = false, type = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "storeId", value = "店铺id", required = false, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "showType", value = "商品类型", required = false, type = "String"),
     })
     @RequestMapping(value = "/selectProduct", method = RequestMethod.GET)
     public ResponseEntity<JSONObject> selectProduct(
             Integer pageNum, Integer pageSize,
             @RequestParam(name = "sonId", required = false) Integer sonId,
             @RequestParam(name = "storeId", required = false) Integer storeId,
+            @RequestParam(name = "showType", required = false) String showType,
             @RequestParam(name = "categoryId", required = false) Integer categoryId
     )
             throws Exception {
@@ -443,11 +445,13 @@ public class SecondProductController {
         //商品列表
         List<SecondProduct> secondProducts = new ArrayList<>();
         SecondProductExample secondProductExample = new SecondProductExample();
-        secondProductExample.createCriteria().andIsDeletedEqualTo((short) 0)
+        SecondProductExample.Criteria criteria = secondProductExample.createCriteria().andIsDeletedEqualTo((short) 0)
                 .andIsPutawayEqualTo(ProductEnum.IsPutaway.PUTAWAY.getState())
-                .andProductTypeEqualTo(ProductEnum.Relation.GENERAL.getState());
+                .andProductTypeEqualTo(ProductEnum.Relation.GENERAL.getState())
+                .andShowTypeEqualTo(ProductEnum.ShowType.getState(showType).getState());
+
         if (categoryId!=null){
-            secondProductExample.createCriteria().andCategoryIdEqualTo(categoryId);
+            criteria.andCategoryIdEqualTo(categoryId);
         }
         PageHelper.startPage(pageNum, pageSize);
         secondProducts = secondProductMapper.selectByExampleWithBLOBs(secondProductExample);

@@ -13,7 +13,8 @@ public class Attention {
     public static enum Relation {
         EACHOTHER("eachOther"),//互相关注
         YETATTENTION("yetAttention"),//关注
-        BYATTENTION("byAttention");//被关注
+        BYATTENTION("byAttention"),//被关注
+        NO("no");//没关系
         private String state;
 
         Relation(String state) {
