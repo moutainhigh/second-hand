@@ -4,11 +4,13 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.example.product.center.dao.*;
+import com.example.product.center.manual.Address.AddressList;
 import com.example.product.center.manual.Authentication;
 import com.example.product.center.manual.ProductEnum;
 import com.example.product.center.manual.ProductList;
 import com.example.product.center.manual.WantEnum;
 import com.example.product.center.model.*;
+import com.example.product.center.service.AddressService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -73,6 +75,9 @@ public class SecondProductController {
     //学校
     @Autowired
     private SecondCollegesMapper secondCollegesMapper;
+    //学校城市
+    @Autowired
+    private SecondCityMapper secondCityMapper;
     //学生认证
     @Autowired
     private SecondAuthenticationMapper secondAuthenticationMapper;
@@ -93,6 +98,9 @@ public class SecondProductController {
     //商品的浏览收藏点赞想要
     @Autowired
     private SecondProductWantMapper secondProductWantMapper;
+    //地图获取ip
+    @Autowired
+    private AddressService addressService;
     @RequestMapping(path = "/addProduct", method = RequestMethod.POST)
     @ApiOperation(value = "用户添加商品", notes = "用户添加商品")
     @ApiImplicitParams({
@@ -627,15 +635,26 @@ public class SecondProductController {
                 .collect(Collectors.toList());
         String json = JSONObject.toJSONString(productLists1);
         if (sonId!=null&&categoryId==null){
-            productLists1 = productLists1.stream().filter(a->a.getSonId().equals(sonId)).collect(Collectors.toList());
-            redisTemplate.opsForValue().set(String.valueOf(sonId)+"ProductSon",json);
+//            productLists1 = productLists1.stream().filter(a->a.getSonId().equals(sonId)).collect(Collectors.toList());
+            SecondSon secondSon = secondSonMapper.selectByPrimaryKey(sonId);
+            SecondColleges secondColleges = secondCollegesMapper.selectByPrimaryKey(secondSon.getCollegoryId());
+            SecondCityExample secondCityExample = new SecondCityExample();
+            secondCityExample.createCriteria().andCityIdEqualTo(secondColleges.getCityId());
+            List<SecondCity> secondCity =secondCityMapper.selectByExample(secondCityExample);
+            String address = secondCity.get(0).getName()+secondColleges.getName();
+            JSONObject a = addressService.getIngAndLat(address);
+            AddressList list = JSON.parseObject(String.valueOf(a), new TypeReference<AddressList>(){});
+//            Double lat = list
+            System.out.println(list);
+//            redisTemplate.opsForValue().set(String.valueOf(sonId)+"ProductSon",json);
         }
         if (sonId==null&&categoryId!=null){
             redisTemplate.opsForValue().set(String.valueOf(categoryId)+"ProductCategory",json);
         }
-        if (storeId!=null){
-            productLists1 = productLists1.stream().filter(a->a.getStoreId().equals(storeId)).collect(Collectors.toList());
-        }
+//        if (storeId!=null){
+
+//            productLists1 = productLists1.stream().filter(a->a.getStoreId().equals(storeId)).collect(Collectors.toList());
+//        }
 //        String json = JSONArray.fromObject(productLists1).toString();
 //        String besnString = JSONObject.toJSONString(productLists1);
 //        redisTemplate.opsForValue().set("product");
@@ -882,5 +901,34 @@ public class SecondProductController {
             secondProductMapper.updateByPrimaryKeySelective(secondProduct);
         }
         return builder.body(ResponseUtils.getResponseBody(0));
+    }
+
+    /**
+     * 通过经纬度获取距离(单位：米)
+     *
+     * @param lat1 维度
+     * @param lng1 经度
+     * @param lat2
+     * @param lng2
+     * @return 距离
+     */
+    private static double EARTH_RADIUS = 6378.137;
+
+    private static double rad(double d) {
+        return d * Math.PI / 180.0;
+    }
+    public static double getDistance(double lat1, double lng1, double lat2,
+                                     double lng2) {
+        double radLat1 = rad(lat1);
+        double radLat2 = rad(lat2);
+        double a = radLat1 - radLat2;
+        double b = rad(lng1) - rad(lng2);
+        double s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2)
+                + Math.cos(radLat1) * Math.cos(radLat2)
+                * Math.pow(Math.sin(b / 2), 2)));
+        s = s * EARTH_RADIUS;
+        s = Math.round(s * 10000d) / 10000d;
+        s = s * 1000;
+        return s;
     }
 }

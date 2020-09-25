@@ -234,7 +234,7 @@ public class CategoryController {
                     categoryInfo1.setName(secondCategory1.getSecondName());
 //                    三级查询
                     SecondCategoryExample secondCategoryExample2 = new SecondCategoryExample();
-                    secondCategoryExample2.createCriteria().andParentCategoryIdEqualTo(secondCategory.getId()).andIsDeletedEqualTo((short) 0);
+                    secondCategoryExample2.createCriteria().andParentCategoryIdEqualTo(secondCategory1.getId()).andIsDeletedEqualTo((short) 0);
                     List<SecondCategory> secondCategoryList2 = secondCategoryMapper.selectByExample(secondCategoryExample2);
 //                    三级数组
                     List<CategoryInfo> categoryInfos2 = new ArrayList<>();
