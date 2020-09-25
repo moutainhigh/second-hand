@@ -2582,3 +2582,205 @@ io.lettuce.core.RedisCommandTimeoutException: Command timed out after 10 second(
 2020-09-25 18:10:58.221  INFO 3892 --- [PollingServerListUpdater-0] c.netflix.config.ChainedDynamicProperty  : Flipping property: user-center.ribbon.ActiveConnectionsLimit to use NEXT property: niws.loadbalancer.availabilityFilteringRule.activeConnectionsLimit = 2147483647
 2020-09-25 18:11:52.048  INFO 16600 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
 2020-09-25 18:12:18.622  INFO 1084 --- [main] c.e.p.c.SecondProductCenterApplication   : No active profile set, falling back to default profiles: default
+2020-09-25 18:12:21.389  INFO 1084 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode!
+2020-09-25 18:12:21.392  INFO 1084 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data repositories in DEFAULT mode.
+2020-09-25 18:12:22.150  INFO 1084 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 745ms. Found 0 repository interfaces.
+2020-09-25 18:12:22.661  INFO 1084 --- [main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=9043ce5e-e3a7-3071-aa10-73d45b297041
+2020-09-25 18:12:22.708  INFO 1084 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.amqp.rabbit.annotation.RabbitBootstrapConfiguration' of type [org.springframework.amqp.rabbit.annotation.RabbitBootstrapConfiguration$$EnhancerBySpringCGLIB$$2b184cc4] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-09-25 18:12:22.754  INFO 1084 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$64ac8e96] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-09-25 18:12:22.781  INFO 1084 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.autoconfigure.ConfigurationPropertiesRebinderAutoConfiguration' of type [org.springframework.cloud.autoconfigure.ConfigurationPropertiesRebinderAutoConfiguration$$EnhancerBySpringCGLIB$$80c69193] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-09-25 18:12:23.185  INFO 1084 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 7002 (http)
+2020-09-25 18:12:23.216  INFO 1084 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2020-09-25 18:12:23.217  INFO 1084 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.16]
+2020-09-25 18:12:23.226  INFO 1084 --- [main] o.a.catalina.core.AprLifecycleListener   : The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jdk-11.0.6\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\Java\jdk1.8.0_212\bin;C:\Program Files\Java\jdk1.8.0_212\jre\bin;D:\nodejs\;C:\Users\MACHENIKE\AppData\Local\Microsoft\WindowsApps;C:\Users\MACHENIKE\AppData\Roaming\npm;D:\Microsoft VS Code\bin;.]
+2020-09-25 18:12:23.710  INFO 1084 --- [main] o.a.c.c.C.[.[localhost].[/product]       : Initializing Spring embedded WebApplicationContext
+2020-09-25 18:12:23.710  INFO 1084 --- [main] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 5064 ms
+2020-09-25 18:12:25.758  INFO 1084 --- [main] pertySourcedRequestMappingHandlerMapping : Mapped URL path [/v2/api-docs] onto method [public org.springframework.http.ResponseEntity<springfox.documentation.spring.web.json.Json> springfox.documentation.swagger2.web.Swagger2Controller.getDocumentation(java.lang.String,javax.servlet.http.HttpServletRequest)]
+2020-09-25 18:12:25.792  WARN 1084 --- [main] c.n.c.sources.URLConfigurationSource     : No URLs will be polled as dynamic configuration sources.
+2020-09-25 18:12:25.793  INFO 1084 --- [main] c.n.c.sources.URLConfigurationSource     : To enable URLs as dynamic configuration sources, define System property archaius.configurationSource.additionalUrls or make config.properties available on classpath.
+2020-09-25 18:12:25.797  WARN 1084 --- [main] c.n.c.sources.URLConfigurationSource     : No URLs will be polled as dynamic configuration sources.
+2020-09-25 18:12:25.798  INFO 1084 --- [main] c.n.c.sources.URLConfigurationSource     : To enable URLs as dynamic configuration sources, define System property archaius.configurationSource.additionalUrls or make config.properties available on classpath.
+2020-09-25 18:12:26.050  INFO 1084 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-09-25 18:12:28.342  INFO 1084 --- [main] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2020-09-25 18:12:28.375  INFO 1084 --- [main] com.netflix.discovery.DiscoveryClient    : Initializing Eureka in region us-east-1
+2020-09-25 18:12:28.689  INFO 1084 --- [main] c.n.d.provider.DiscoveryJerseyProvider   : Using JSON encoding codec LegacyJacksonJson
+2020-09-25 18:12:28.690  INFO 1084 --- [main] c.n.d.provider.DiscoveryJerseyProvider   : Using JSON decoding codec LegacyJacksonJson
+2020-09-25 18:12:28.972  INFO 1084 --- [main] c.n.d.provider.DiscoveryJerseyProvider   : Using XML encoding codec XStreamXml
+2020-09-25 18:12:28.972  INFO 1084 --- [main] c.n.d.provider.DiscoveryJerseyProvider   : Using XML decoding codec XStreamXml
+2020-09-25 18:12:29.452  INFO 1084 --- [main] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-25 18:12:29.716  INFO 1084 --- [main] com.netflix.discovery.DiscoveryClient    : Disable delta property : false
+2020-09-25 18:12:29.718  INFO 1084 --- [main] com.netflix.discovery.DiscoveryClient    : Single vip registry refresh property : null
+2020-09-25 18:12:29.718  INFO 1084 --- [main] com.netflix.discovery.DiscoveryClient    : Force full registry fetch : false
+2020-09-25 18:12:29.720  INFO 1084 --- [main] com.netflix.discovery.DiscoveryClient    : Application is null : false
+2020-09-25 18:12:29.720  INFO 1084 --- [main] com.netflix.discovery.DiscoveryClient    : Registered Applications size is zero : true
+2020-09-25 18:12:29.721  INFO 1084 --- [main] com.netflix.discovery.DiscoveryClient    : Application version is -1: true
+2020-09-25 18:12:29.721  INFO 1084 --- [main] com.netflix.discovery.DiscoveryClient    : Getting all instance registry info from the eureka server
+2020-09-25 18:12:30.073  INFO 1084 --- [main] com.netflix.discovery.DiscoveryClient    : The response status is 200
+2020-09-25 18:12:30.078  INFO 1084 --- [main] com.netflix.discovery.DiscoveryClient    : Starting heartbeat executor: renew interval is: 30
+2020-09-25 18:12:30.081  INFO 1084 --- [main] c.n.discovery.InstanceInfoReplicator     : InstanceInfoReplicator onDemand update allowed rate per min is 4
+2020-09-25 18:12:30.087  INFO 1084 --- [main] com.netflix.discovery.DiscoveryClient    : Discovery Client initialized at timestamp 1601028750086 with initial instances count: 3
+2020-09-25 18:12:30.089  INFO 1084 --- [main] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application product-center with eureka with status UP
+2020-09-25 18:12:30.089  INFO 1084 --- [main] com.netflix.discovery.DiscoveryClient    : Saw local status change event StatusChangeEvent [timestamp=1601028750089, current=UP, previous=STARTING]
+2020-09-25 18:12:30.093  INFO 1084 --- [DiscoveryClient-InstanceInfoReplicator-0] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_PRODUCT-CENTER/DESKTOP-E4IRNU3:product-center:7002: registering service...
+2020-09-25 18:12:30.096  INFO 1084 --- [main] d.s.w.p.DocumentationPluginsBootstrapper : Context refreshed
+2020-09-25 18:12:30.117  INFO 1084 --- [main] d.s.w.p.DocumentationPluginsBootstrapper : Found 1 custom documentation plugin(s)
+2020-09-25 18:12:30.141  INFO 1084 --- [DiscoveryClient-InstanceInfoReplicator-0] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_PRODUCT-CENTER/DESKTOP-E4IRNU3:product-center:7002 - registration status: 204
+2020-09-25 18:12:30.174  INFO 1084 --- [main] s.d.s.w.s.ApiListingReferenceScanner     : Scanning for api listing references
+2020-09-25 18:12:30.441  WARN 1084 --- [main] s.d.s.w.r.p.ParameterDataTypeReader      : Trying to infer dataType java.lang.Integer[]
+2020-09-25 18:12:30.454  INFO 1084 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: deletedUsingPOST_1
+2020-09-25 18:12:30.474  INFO 1084 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: addProductUsingPOST_1
+2020-09-25 18:12:30.479  INFO 1084 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: deleteProductUsingPOST_1
+2020-09-25 18:12:30.491  INFO 1084 --- [main] o.s.a.r.c.CachingConnectionFactory       : Attempting to connect to: [39.100.237.144:5672]
+2020-09-25 18:12:30.968  INFO 1084 --- [main] o.s.a.r.c.CachingConnectionFactory       : Created new connection: rabbitConnectionFactory#11ca8f71:0/SimpleConnection@51a06fd5 [delegate=amqp://sw@39.100.237.144:5672/, localPort= 58421]
+2020-09-25 18:12:31.590  INFO 1084 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 7002 (http) with context path '/product'
+2020-09-25 18:12:31.594  INFO 1084 --- [main] c.e.p.c.SecondProductCenterApplication   : Started SecondProductCenterApplication in 16.681 seconds (JVM running for 22.713)
+2020-09-25 18:14:38.405  INFO 1084 --- [http-nio-7002-exec-1] o.a.c.c.C.[.[localhost].[/product]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2020-09-25 18:14:38.405  INFO 1084 --- [http-nio-7002-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2020-09-25 18:14:38.418  INFO 1084 --- [http-nio-7002-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 13 ms
+2020-09-25 18:14:38.542  WARN 1084 --- [http-nio-7002-exec-1] com.zaxxer.hikari.HikariConfig           : dataSource - idleTimeout is close to or more than maxLifetime, disabling it.
+2020-09-25 18:14:38.542  INFO 1084 --- [http-nio-7002-exec-1] com.zaxxer.hikari.HikariDataSource       : dataSource - Starting...
+2020-09-25 18:14:38.888  INFO 1084 --- [http-nio-7002-exec-1] com.zaxxer.hikari.HikariDataSource       : dataSource - Start completed.
+2020-09-25 18:14:39.341  INFO 1084 --- [http-nio-7002-exec-1] c.netflix.config.ChainedDynamicProperty  : Flipping property: user-center.ribbon.ActiveConnectionsLimit to use NEXT property: niws.loadbalancer.availabilityFilteringRule.activeConnectionsLimit = 2147483647
+2020-09-25 18:14:39.352  INFO 1084 --- [http-nio-7002-exec-1] c.n.u.concurrent.ShutdownEnabledTimer    : Shutdown hook installed for: NFLoadBalancer-PingTimer-user-center
+2020-09-25 18:14:39.356  INFO 1084 --- [http-nio-7002-exec-1] c.netflix.loadbalancer.BaseLoadBalancer  : Client: user-center instantiated a LoadBalancer: DynamicServerListLoadBalancer:{NFLoadBalancer:name=user-center,current list of Servers=[],Load balancer stats=Zone stats: {},Server stats: []}ServerList:null
+2020-09-25 18:14:39.361  INFO 1084 --- [http-nio-7002-exec-1] c.n.l.DynamicServerListLoadBalancer      : Using serverListUpdater PollingServerListUpdater
+2020-09-25 18:14:39.377  INFO 1084 --- [http-nio-7002-exec-1] c.netflix.config.ChainedDynamicProperty  : Flipping property: user-center.ribbon.ActiveConnectionsLimit to use NEXT property: niws.loadbalancer.availabilityFilteringRule.activeConnectionsLimit = 2147483647
+2020-09-25 18:14:39.380  INFO 1084 --- [http-nio-7002-exec-1] c.n.l.DynamicServerListLoadBalancer      : DynamicServerListLoadBalancer for client user-center initialized: DynamicServerListLoadBalancer:{NFLoadBalancer:name=user-center,current list of Servers=[DESKTOP-E4IRNU3:7004],Load balancer stats=Zone stats: {defaultzone=[Zone:defaultzone;	Instance count:1;	Active connections count: 0;	Circuit breaker tripped count: 0;	Active connections per server: 0.0;]
+},Server stats: [[Server:DESKTOP-E4IRNU3:7004;	Zone:defaultZone;	Total Requests:0;	Successive connection failure:0;	Total blackout seconds:0;	Last connection made:Thu Jan 01 08:00:00 CST 1970;	First connection made: Thu Jan 01 08:00:00 CST 1970;	Active Connections:0;	total failure count in last (1000) msecs:0;	average resp time:0.0;	90 percentile resp time:0.0;	95 percentile resp time:0.0;	min resp time:0.0;	max resp time:0.0;	stddev resp time:0.0]
+]}ServerList:org.springframework.cloud.netflix.ribbon.eureka.DomainExtractingServerList@740b5ef3
+2020-09-25 18:14:40.365  INFO 1084 --- [PollingServerListUpdater-0] c.netflix.config.ChainedDynamicProperty  : Flipping property: user-center.ribbon.ActiveConnectionsLimit to use NEXT property: niws.loadbalancer.availabilityFilteringRule.activeConnectionsLimit = 2147483647
+2020-09-25 18:16:52.058  INFO 16600 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-25 18:17:29.728  INFO 1084 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-25 18:18:47.949 ERROR 1084 --- [http-nio-7002-exec-1] o.a.c.c.C.[.[.[.[dispatcherServlet]      : Servlet.service() for servlet [dispatcherServlet] in context with path [/product] threw exception [Request processing failed; nested exception is java.lang.ClassCastException: class com.example.product.center.manual.ProductList cannot be cast to class com.example.product.center.model.SecondProduct (com.example.product.center.manual.ProductList and com.example.product.center.model.SecondProduct are in unnamed module of loader 'app')] with root cause
+
+java.lang.ClassCastException: class com.example.product.center.manual.ProductList cannot be cast to class com.example.product.center.model.SecondProduct (com.example.product.center.manual.ProductList and com.example.product.center.model.SecondProduct are in unnamed module of loader 'app')
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1540) ~[na:na]
+	at com.example.product.center.controller.SecondProductController.selectProduct(SecondProductController.java:426) ~[classes/:na]
+	at com.example.product.center.controller.SecondProductController$$FastClassBySpringCGLIB$$7c86e3ae.invoke(<generated>) ~[classes/:na]
+	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218) ~[spring-core-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:684) ~[spring-aop-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at com.example.product.center.controller.SecondProductController$$EnhancerBySpringCGLIB$$7ed5cf50.selectProduct(<generated>) ~[classes/:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566) ~[na:na]
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:189) ~[spring-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:138) ~[spring-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:102) ~[spring-webmvc-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:895) ~[spring-webmvc-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:800) ~[spring-webmvc-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1038) ~[spring-webmvc-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:942) ~[spring-webmvc-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1005) ~[spring-webmvc-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:897) ~[spring-webmvc-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:634) ~[tomcat-embed-core-9.0.16.jar:9.0.16]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:882) ~[spring-webmvc-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:741) ~[tomcat-embed-core-9.0.16.jar:9.0.16]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:231) ~[tomcat-embed-core-9.0.16.jar:9.0.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-9.0.16.jar:9.0.16]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53) ~[tomcat-embed-websocket-9.0.16.jar:9.0.16]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-9.0.16.jar:9.0.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-9.0.16.jar:9.0.16]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:99) ~[spring-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) ~[spring-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-9.0.16.jar:9.0.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-9.0.16.jar:9.0.16]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:92) ~[spring-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) ~[spring-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-9.0.16.jar:9.0.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-9.0.16.jar:9.0.16]
+	at org.springframework.web.filter.HiddenHttpMethodFilter.doFilterInternal(HiddenHttpMethodFilter.java:93) ~[spring-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) ~[spring-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-9.0.16.jar:9.0.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-9.0.16.jar:9.0.16]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:200) ~[spring-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) ~[spring-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-9.0.16.jar:9.0.16]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-9.0.16.jar:9.0.16]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:200) ~[tomcat-embed-core-9.0.16.jar:9.0.16]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:96) ~[tomcat-embed-core-9.0.16.jar:9.0.16]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:490) ~[tomcat-embed-core-9.0.16.jar:9.0.16]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:139) ~[tomcat-embed-core-9.0.16.jar:9.0.16]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92) ~[tomcat-embed-core-9.0.16.jar:9.0.16]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-9.0.16.jar:9.0.16]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:343) ~[tomcat-embed-core-9.0.16.jar:9.0.16]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:408) ~[tomcat-embed-core-9.0.16.jar:9.0.16]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66) ~[tomcat-embed-core-9.0.16.jar:9.0.16]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:834) ~[tomcat-embed-core-9.0.16.jar:9.0.16]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1415) ~[tomcat-embed-core-9.0.16.jar:9.0.16]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49) ~[tomcat-embed-core-9.0.16.jar:9.0.16]
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128) ~[na:na]
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628) ~[na:na]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61) ~[tomcat-embed-core-9.0.16.jar:9.0.16]
+	at java.base/java.lang.Thread.run(Thread.java:834) ~[na:na]
+
+2020-09-25 18:21:52.061  INFO 16600 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-25 18:22:42.809  INFO 9548 --- [main] c.e.p.c.SecondProductCenterApplication   : No active profile set, falling back to default profiles: default
+2020-09-25 18:22:45.579  INFO 9548 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode!
+2020-09-25 18:22:45.601  INFO 9548 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data repositories in DEFAULT mode.
+2020-09-25 18:22:46.378  INFO 9548 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 762ms. Found 0 repository interfaces.
+2020-09-25 18:22:46.907  INFO 9548 --- [main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=9043ce5e-e3a7-3071-aa10-73d45b297041
+2020-09-25 18:22:46.959  INFO 9548 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.amqp.rabbit.annotation.RabbitBootstrapConfiguration' of type [org.springframework.amqp.rabbit.annotation.RabbitBootstrapConfiguration$$EnhancerBySpringCGLIB$$26893a99] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-09-25 18:22:47.011  INFO 9548 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$601d7c6b] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-09-25 18:22:47.040  INFO 9548 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.autoconfigure.ConfigurationPropertiesRebinderAutoConfiguration' of type [org.springframework.cloud.autoconfigure.ConfigurationPropertiesRebinderAutoConfiguration$$EnhancerBySpringCGLIB$$7c377f68] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-09-25 18:22:47.401  INFO 9548 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 7002 (http)
+2020-09-25 18:22:47.429  INFO 9548 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2020-09-25 18:22:47.429  INFO 9548 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.16]
+2020-09-25 18:22:47.436  INFO 9548 --- [main] o.a.catalina.core.AprLifecycleListener   : The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jdk-11.0.6\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\Java\jdk1.8.0_212\bin;C:\Program Files\Java\jdk1.8.0_212\jre\bin;D:\nodejs\;C:\Users\MACHENIKE\AppData\Local\Microsoft\WindowsApps;C:\Users\MACHENIKE\AppData\Roaming\npm;D:\Microsoft VS Code\bin;.]
+2020-09-25 18:22:47.795  INFO 9548 --- [main] o.a.c.c.C.[.[localhost].[/product]       : Initializing Spring embedded WebApplicationContext
+2020-09-25 18:22:47.795  INFO 9548 --- [main] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 4959 ms
+2020-09-25 18:22:49.658  INFO 9548 --- [main] pertySourcedRequestMappingHandlerMapping : Mapped URL path [/v2/api-docs] onto method [public org.springframework.http.ResponseEntity<springfox.documentation.spring.web.json.Json> springfox.documentation.swagger2.web.Swagger2Controller.getDocumentation(java.lang.String,javax.servlet.http.HttpServletRequest)]
+2020-09-25 18:22:49.693  WARN 9548 --- [main] c.n.c.sources.URLConfigurationSource     : No URLs will be polled as dynamic configuration sources.
+2020-09-25 18:22:49.694  INFO 9548 --- [main] c.n.c.sources.URLConfigurationSource     : To enable URLs as dynamic configuration sources, define System property archaius.configurationSource.additionalUrls or make config.properties available on classpath.
+2020-09-25 18:22:49.698  WARN 9548 --- [main] c.n.c.sources.URLConfigurationSource     : No URLs will be polled as dynamic configuration sources.
+2020-09-25 18:22:49.699  INFO 9548 --- [main] c.n.c.sources.URLConfigurationSource     : To enable URLs as dynamic configuration sources, define System property archaius.configurationSource.additionalUrls or make config.properties available on classpath.
+2020-09-25 18:22:49.863  INFO 9548 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-09-25 18:22:51.160  INFO 9548 --- [main] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2020-09-25 18:22:51.191  INFO 9548 --- [main] com.netflix.discovery.DiscoveryClient    : Initializing Eureka in region us-east-1
+2020-09-25 18:22:51.372  INFO 9548 --- [main] c.n.d.provider.DiscoveryJerseyProvider   : Using JSON encoding codec LegacyJacksonJson
+2020-09-25 18:22:51.372  INFO 9548 --- [main] c.n.d.provider.DiscoveryJerseyProvider   : Using JSON decoding codec LegacyJacksonJson
+2020-09-25 18:22:51.576  INFO 9548 --- [main] c.n.d.provider.DiscoveryJerseyProvider   : Using XML encoding codec XStreamXml
+2020-09-25 18:22:51.577  INFO 9548 --- [main] c.n.d.provider.DiscoveryJerseyProvider   : Using XML decoding codec XStreamXml
+2020-09-25 18:22:51.828  INFO 9548 --- [main] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-25 18:22:52.002  INFO 9548 --- [main] com.netflix.discovery.DiscoveryClient    : Disable delta property : false
+2020-09-25 18:22:52.003  INFO 9548 --- [main] com.netflix.discovery.DiscoveryClient    : Single vip registry refresh property : null
+2020-09-25 18:22:52.004  INFO 9548 --- [main] com.netflix.discovery.DiscoveryClient    : Force full registry fetch : false
+2020-09-25 18:22:52.004  INFO 9548 --- [main] com.netflix.discovery.DiscoveryClient    : Application is null : false
+2020-09-25 18:22:52.005  INFO 9548 --- [main] com.netflix.discovery.DiscoveryClient    : Registered Applications size is zero : true
+2020-09-25 18:22:52.005  INFO 9548 --- [main] com.netflix.discovery.DiscoveryClient    : Application version is -1: true
+2020-09-25 18:22:52.005  INFO 9548 --- [main] com.netflix.discovery.DiscoveryClient    : Getting all instance registry info from the eureka server
+2020-09-25 18:22:52.206  INFO 9548 --- [main] com.netflix.discovery.DiscoveryClient    : The response status is 200
+2020-09-25 18:22:52.209  INFO 9548 --- [main] com.netflix.discovery.DiscoveryClient    : Starting heartbeat executor: renew interval is: 30
+2020-09-25 18:22:52.219  INFO 9548 --- [main] c.n.discovery.InstanceInfoReplicator     : InstanceInfoReplicator onDemand update allowed rate per min is 4
+2020-09-25 18:22:52.223  INFO 9548 --- [main] com.netflix.discovery.DiscoveryClient    : Discovery Client initialized at timestamp 1601029372222 with initial instances count: 3
+2020-09-25 18:22:52.225  INFO 9548 --- [main] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application product-center with eureka with status UP
+2020-09-25 18:22:52.225  INFO 9548 --- [main] com.netflix.discovery.DiscoveryClient    : Saw local status change event StatusChangeEvent [timestamp=1601029372225, current=UP, previous=STARTING]
+2020-09-25 18:22:52.228  INFO 9548 --- [DiscoveryClient-InstanceInfoReplicator-0] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_PRODUCT-CENTER/DESKTOP-E4IRNU3:product-center:7002: registering service...
+2020-09-25 18:22:52.232  INFO 9548 --- [main] d.s.w.p.DocumentationPluginsBootstrapper : Context refreshed
+2020-09-25 18:22:52.246  INFO 9548 --- [main] d.s.w.p.DocumentationPluginsBootstrapper : Found 1 custom documentation plugin(s)
+2020-09-25 18:22:52.269  INFO 9548 --- [DiscoveryClient-InstanceInfoReplicator-0] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_PRODUCT-CENTER/DESKTOP-E4IRNU3:product-center:7002 - registration status: 204
+2020-09-25 18:22:52.280  INFO 9548 --- [main] s.d.s.w.s.ApiListingReferenceScanner     : Scanning for api listing references
+2020-09-25 18:22:52.456  WARN 9548 --- [main] s.d.s.w.r.p.ParameterDataTypeReader      : Trying to infer dataType java.lang.Integer[]
+2020-09-25 18:22:52.471  INFO 9548 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: deletedUsingPOST_1
+2020-09-25 18:22:52.499  INFO 9548 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: addProductUsingPOST_1
+2020-09-25 18:22:52.507  INFO 9548 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: deleteProductUsingPOST_1
+2020-09-25 18:22:52.522  INFO 9548 --- [main] o.s.a.r.c.CachingConnectionFactory       : Attempting to connect to: [39.100.237.144:5672]
+2020-09-25 18:22:52.683  INFO 9548 --- [main] o.s.a.r.c.CachingConnectionFactory       : Created new connection: rabbitConnectionFactory#4c7f2fdb:0/SimpleConnection@7a4199e5 [delegate=amqp://sw@39.100.237.144:5672/, localPort= 59189]
+2020-09-25 18:22:52.946  INFO 9548 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 7002 (http) with context path '/product'
+2020-09-25 18:22:52.949  INFO 9548 --- [main] c.e.p.c.SecondProductCenterApplication   : Started SecondProductCenterApplication in 12.505 seconds (JVM running for 15.736)
+2020-09-25 18:22:59.491  INFO 9548 --- [http-nio-7002-exec-1] o.a.c.c.C.[.[localhost].[/product]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2020-09-25 18:22:59.492  INFO 9548 --- [http-nio-7002-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2020-09-25 18:22:59.506  INFO 9548 --- [http-nio-7002-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 14 ms
+2020-09-25 18:22:59.685  WARN 9548 --- [http-nio-7002-exec-1] com.zaxxer.hikari.HikariConfig           : dataSource - idleTimeout is close to or more than maxLifetime, disabling it.
+2020-09-25 18:22:59.685  INFO 9548 --- [http-nio-7002-exec-1] com.zaxxer.hikari.HikariDataSource       : dataSource - Starting...
+2020-09-25 18:23:00.076  INFO 9548 --- [http-nio-7002-exec-1] com.zaxxer.hikari.HikariDataSource       : dataSource - Start completed.
+2020-09-25 18:23:00.614  INFO 9548 --- [http-nio-7002-exec-1] c.netflix.config.ChainedDynamicProperty  : Flipping property: user-center.ribbon.ActiveConnectionsLimit to use NEXT property: niws.loadbalancer.availabilityFilteringRule.activeConnectionsLimit = 2147483647
+2020-09-25 18:23:00.625  INFO 9548 --- [http-nio-7002-exec-1] c.n.u.concurrent.ShutdownEnabledTimer    : Shutdown hook installed for: NFLoadBalancer-PingTimer-user-center
+2020-09-25 18:23:00.632  INFO 9548 --- [http-nio-7002-exec-1] c.netflix.loadbalancer.BaseLoadBalancer  : Client: user-center instantiated a LoadBalancer: DynamicServerListLoadBalancer:{NFLoadBalancer:name=user-center,current list of Servers=[],Load balancer stats=Zone stats: {},Server stats: []}ServerList:null
+2020-09-25 18:23:00.639  INFO 9548 --- [http-nio-7002-exec-1] c.n.l.DynamicServerListLoadBalancer      : Using serverListUpdater PollingServerListUpdater
+2020-09-25 18:23:00.659  INFO 9548 --- [http-nio-7002-exec-1] c.netflix.config.ChainedDynamicProperty  : Flipping property: user-center.ribbon.ActiveConnectionsLimit to use NEXT property: niws.loadbalancer.availabilityFilteringRule.activeConnectionsLimit = 2147483647
+2020-09-25 18:23:00.663  INFO 9548 --- [http-nio-7002-exec-1] c.n.l.DynamicServerListLoadBalancer      : DynamicServerListLoadBalancer for client user-center initialized: DynamicServerListLoadBalancer:{NFLoadBalancer:name=user-center,current list of Servers=[DESKTOP-E4IRNU3:7004],Load balancer stats=Zone stats: {defaultzone=[Zone:defaultzone;	Instance count:1;	Active connections count: 0;	Circuit breaker tripped count: 0;	Active connections per server: 0.0;]
+},Server stats: [[Server:DESKTOP-E4IRNU3:7004;	Zone:defaultZone;	Total Requests:0;	Successive connection failure:0;	Total blackout seconds:0;	Last connection made:Thu Jan 01 08:00:00 CST 1970;	First connection made: Thu Jan 01 08:00:00 CST 1970;	Active Connections:0;	total failure count in last (1000) msecs:0;	average resp time:0.0;	90 percentile resp time:0.0;	95 percentile resp time:0.0;	min resp time:0.0;	max resp time:0.0;	stddev resp time:0.0]
+]}ServerList:org.springframework.cloud.netflix.ribbon.eureka.DomainExtractingServerList@150e8b2a
+2020-09-25 18:23:01.649  INFO 9548 --- [PollingServerListUpdater-0] c.netflix.config.ChainedDynamicProperty  : Flipping property: user-center.ribbon.ActiveConnectionsLimit to use NEXT property: niws.loadbalancer.availabilityFilteringRule.activeConnectionsLimit = 2147483647

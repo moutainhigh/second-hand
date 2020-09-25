@@ -423,11 +423,11 @@ public class SecondProductController {
         }
         secondProducts = secondProductMapper.selectByExampleWithBLOBs(secondProductExample);
         List<ProductList> productLists = new ArrayList<>();
-        secondProducts.forEach(secondProduct -> {
+        secondProducts.forEach(secondProduct1 -> {
             //物品
 
             SecondUserSonExample secondUserSonExample = new SecondUserSonExample();
-            secondUserSonExample.createCriteria().andStoreIdEqualTo(secondProduct.getStoreId())
+            secondUserSonExample.createCriteria().andStoreIdEqualTo(secondProduct1.getStoreId())
                     .andIsDeletedEqualTo((byte) 0);
             List<SecondUserSon> secondUserSons =
                     secondUserSonMapper.selectByExample(secondUserSonExample);
@@ -438,13 +438,13 @@ public class SecondProductController {
             }
             ProductList productList = new ProductList();
             //商品状态
-            productList.setProductState(secondProduct.getProductState());
+            productList.setProductState(secondProduct1.getProductState());
             //列表图
-            productList.setFile(secondProduct.getFile());
+            productList.setFile(secondProduct1.getFile());
             //wuping
             SecondGoodsExample secondGoodsExample = new SecondGoodsExample();
             secondGoodsExample.createCriteria()
-                    .andProductIdEqualTo(secondProduct.getId())
+                    .andProductIdEqualTo(secondProduct1.getId())
                     .andIsDeletedEqualTo((short) 0);
             List<SecondGoods> secondGoods =
                     secondGoodsMapper.selectByExample(secondGoodsExample);
@@ -457,7 +457,7 @@ public class SecondProductController {
             }
             //收藏
             SecondProductWantExample secondProductWantExample = new SecondProductWantExample();
-            secondProductWantExample.createCriteria().andProductIdEqualTo(secondProduct.getId())
+            secondProductWantExample.createCriteria().andProductIdEqualTo(secondProduct1.getId())
                     .andTypeEqualTo(WantEnum.Relation.COLLECT.getState())
                     .andIsDeletedEqualTo((short) 0);
             List<SecondProductWant> secondProductWants =
@@ -467,7 +467,7 @@ public class SecondProductController {
             secondProductWantExample.clear();
             secondProductWantExample.createCriteria()
                     .andTypeEqualTo(WantEnum.Relation.PRAISE.getState())
-                    .andProductIdEqualTo(secondProduct.getId())
+                    .andProductIdEqualTo(secondProduct1.getId())
                     .andIsDeletedEqualTo((short) 0);
             secondProductWants = secondProductWantMapper.selectByExample(secondProductWantExample);
             productList.setPraise(secondProductWants.size());
@@ -475,7 +475,7 @@ public class SecondProductController {
             secondProductWantExample.clear();
             secondProductWantExample.createCriteria()
                     .andTypeEqualTo(WantEnum.Relation.LOOK.getState())
-                    .andProductIdEqualTo(secondProduct.getId())
+                    .andProductIdEqualTo(secondProduct1.getId())
                     .andIsDeletedEqualTo((short) 0);
             secondProductWants = secondProductWantMapper.selectByExample(secondProductWantExample);
             productList.setLook(secondProductWants.size());
@@ -483,25 +483,25 @@ public class SecondProductController {
             secondProductWantExample.clear();
             secondProductWantExample.createCriteria()
                     .andTypeEqualTo(WantEnum.Relation.WANT.getState())
-                    .andProductIdEqualTo(secondProduct.getId())
+                    .andProductIdEqualTo(secondProduct1.getId())
                     .andIsDeletedEqualTo((short) 0);
             secondProductWants = secondProductWantMapper.selectByExample(secondProductWantExample);
             productList.setWant(secondProductWants.size());
 
 
-            productList.setId(secondProduct.getId());//商品id
-            productList.setProductName(secondProduct.getProductName());//商品名称
-            productList.setProductDesc(secondProduct.getProductDesc());//描述
-            productList.setProductType(secondProduct.getProductType());//商品类型
-            productList.setShowType(secondProduct.getShowType());//展示类型
-            productList.setIsPutaway(secondProduct.getIsPutaway());//是否上架
-            productList.setCreateTime(secondProduct.getCreateTime());//商品创建时间
+            productList.setId(secondProduct1.getId());//商品id
+            productList.setProductName(secondProduct1.getProductName());//商品名称
+            productList.setProductDesc(secondProduct1.getProductDesc());//描述
+            productList.setProductType(secondProduct1.getProductType());//商品类型
+            productList.setShowType(secondProduct1.getShowType());//展示类型
+            productList.setIsPutaway(secondProduct1.getIsPutaway());//是否上架
+            productList.setCreateTime(secondProduct1.getCreateTime());//商品创建时间
             /**
              * 商品图片
              */
             SecondProductPictrueExample secondProductPictrueExample = new SecondProductPictrueExample();
             secondProductPictrueExample.createCriteria().andIsDeletedEqualTo((short) 0)
-                    .andProductIdEqualTo(secondProduct.getId());
+                    .andProductIdEqualTo(secondProduct1.getId());
             List<SecondProductPictrue> secondProductPictrues =
                     secondProductPictrueMapper.selectByExample(secondProductPictrueExample);
             if (secondProductPictrues.size() != 0) {
@@ -514,7 +514,7 @@ public class SecondProductController {
             /**
              * 店铺
              */
-            SecondStore secondStore = secondStoreMapper.selectByPrimaryKey(secondProduct.getStoreId());
+            SecondStore secondStore = secondStoreMapper.selectByPrimaryKey(secondProduct1.getStoreId());
             productList.setStoreId(secondStore.getId());//店铺id
             productList.setStoreType(secondStore.getStoreType());//店铺类型
             productList.setStoreName(secondStore.getStoreName());//店铺名称
@@ -532,9 +532,9 @@ public class SecondProductController {
             /**
              * 地址
              */
-            SecondProductAddress secondProductAddress = secondProductAddressMapper.selectByPrimaryKey(secondProduct.getAddressId());
+            SecondProductAddress secondProductAddress = secondProductAddressMapper.selectByPrimaryKey(secondProduct1.getAddressId());
             if (secondProductAddress != null) {
-                productList.setAddressId(secondProduct.getAddressId());
+                productList.setAddressId(secondProduct1.getAddressId());
                 productList.setProvince(secondProductAddress.getSecondProvince());//省
                 productList.setCity(secondProductAddress.getSecondCity());//市
                 productList.setConty(secondProductAddress.getSecondConty());//区/县
@@ -580,7 +580,7 @@ public class SecondProductController {
              */
             SecondProductLabelExample secondProductLabelExample = new SecondProductLabelExample();
             secondProductLabelExample.createCriteria().andIsDeletedEqualTo((short) 0)
-                    .andProductIdEqualTo(secondProduct.getId());
+                    .andProductIdEqualTo(secondProduct1.getId());
             List<SecondProductLabel> secondProductLabels =
                     secondProductLabelMapper.selectByExample(secondProductLabelExample);
             if (secondProductLabels.size() != 0) {
