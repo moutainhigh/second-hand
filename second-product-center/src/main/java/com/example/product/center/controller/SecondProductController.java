@@ -164,13 +164,13 @@ public class SecondProductController {
         secondProduct.setFile(file1);
         secondProductMapper.insertSelective(secondProduct);
         //删除redis数据保证数据一致
-        deleted(String.valueOf(categoryId)+"ProductCategory");
+//        deleted(String.valueOf(categoryId)+"ProductCategory");
         SecondUserSonExample secondUserSonExample = new SecondUserSonExample();
         secondUserSonExample.createCriteria().andStoreIdEqualTo(storeId)
                 .andIsDeletedEqualTo((byte) 0);
         List<SecondUserSon> secondUserSons =
                 secondUserSonMapper.selectByExample(secondUserSonExample);
-        deleted(String.valueOf(secondUserSons.get(0).getSonId())+"ProductSon");
+//        deleted(String.valueOf(secondUserSons.get(0).getSonId())+"ProductSon");
         deleted(String.valueOf(secondProduct.getId())+"detail");
        //
         SecondStoreAddress secondStoreAddress = secondStoreAddressMapper.selectByPrimaryKey(addressId);
@@ -287,17 +287,17 @@ public class SecondProductController {
         //删除redis数据保证数据一致
         System.out.println(secondProduct.getId());
         System.out.println(secondProduct1.getCategoryId());
-        if (secondProduct1.getCategoryId()!=null){
-            deleted(String.valueOf(secondProduct1.getCategoryId())+"ProductCategory");
-        }
+//        if (secondProduct1.getCategoryId()!=null){
+//            deleted(String.valueOf(secondProduct1.getCategoryId())+"ProductCategory");
+//        }
         SecondUserSonExample secondUserSonExample = new SecondUserSonExample();
         secondUserSonExample.createCriteria().andStoreIdEqualTo(secondProduct1.getStoreId())
                 .andIsDeletedEqualTo((byte) 0);
         List<SecondUserSon> secondUserSons =
                 secondUserSonMapper.selectByExample(secondUserSonExample);
-        if (secondUserSons.size()!=0){
-            deleted(String.valueOf(secondUserSons.get(0).getSonId())+"ProductSon");
-        }
+//        if (secondUserSons.size()!=0){
+//            deleted(String.valueOf(secondUserSons.get(0).getSonId())+"ProductSon");
+//        }
         deleted(String.valueOf(secondProduct1.getId())+"detail");
         //地址
         SecondStoreAddress secondStoreAddress = secondStoreAddressMapper.selectByPrimaryKey(addressId);
@@ -414,50 +414,50 @@ public class SecondProductController {
         /**
          * redis取子站点商品
          */
-        if (sonId!=null&&categoryId==null){
-            Object sonList = redisTemplate.opsForValue().get(String.valueOf(sonId)+"ProductSon");
-            if (sonList!=null){
-                System.out.println("走redis");
-
-        List<ProductList> list = JSON.parseObject(String.valueOf(sonList), new TypeReference<List<ProductList>>(){});
-                if (pageNum==0){
-                    pageNum=1;
-                }
-                if (pageSize==0){
-                    pageSize=list.size();
-                }
-        //                PageInfo<ProductList> page = new PageInfo<ProductList>(list);
-                Page<Object> pages = PageHelper.startPage(pageNum, pageSize);
-                int total = list.size();
-                pages.setTotal(total);int startIndex = (pageNum - 1) * pageSize;
-                int endIndex = Math.min(startIndex + pageSize,total);
-                pages.addAll(list.subList(startIndex,endIndex));
-                PageInfo pageInfo = new PageInfo<>(pages);
-                return builder.body(ResponseUtils.getResponseBody(pageInfo));
-            }
-        }
-        if (categoryId!=null&&sonId==null){
-           Object categoryList = redisTemplate.opsForValue().get(String.valueOf(categoryId)+"ProductCategory");
-           if (categoryList!=null){
-               System.out.println("走redis类目");
-
-               List<ProductList> list = JSON.parseObject(String.valueOf(categoryList), new TypeReference<List<ProductList>>(){});
-//               PageInfo<ProductList> page1 = new PageInfo<ProductList>(list);
-               if (pageNum==0){
-                   pageNum=1;
-               }
-               if (pageSize==0){
-                   pageSize=list.size();
-               }
-               Page<Object> pages =PageHelper.startPage(pageNum, pageSize);
-               int total = list.size();
-               pages.setTotal(total);int startIndex = (pageNum - 1) * pageSize;
-               int endIndex = Math.min(startIndex + pageSize,total);
-               pages.addAll(list.subList(startIndex,endIndex));
-               PageInfo pageInfo = new PageInfo<>(pages);
-               return builder.body(ResponseUtils.getResponseBody(pageInfo));
-           }
-        }
+//        if (sonId!=null&&categoryId==null){
+//            Object sonList = redisTemplate.opsForValue().get(String.valueOf(sonId)+"ProductSon");
+//            if (sonList!=null){
+//                System.out.println("走redis");
+//
+//        List<ProductList> list = JSON.parseObject(String.valueOf(sonList), new TypeReference<List<ProductList>>(){});
+//                if (pageNum==0){
+//                    pageNum=1;
+//                }
+//                if (pageSize==0){
+//                    pageSize=list.size();
+//                }
+//        //                PageInfo<ProductList> page = new PageInfo<ProductList>(list);
+//                Page<Object> pages = PageHelper.startPage(pageNum, pageSize);
+//                int total = list.size();
+//                pages.setTotal(total);int startIndex = (pageNum - 1) * pageSize;
+//                int endIndex = Math.min(startIndex + pageSize,total);
+//                pages.addAll(list.subList(startIndex,endIndex));
+//                PageInfo pageInfo = new PageInfo<>(pages);
+//                return builder.body(ResponseUtils.getResponseBody(pageInfo));
+//            }
+//        }
+//        if (categoryId!=null&&sonId==null){
+//           Object categoryList = redisTemplate.opsForValue().get(String.valueOf(categoryId)+"ProductCategory");
+//           if (categoryList!=null){
+//               System.out.println("走redis类目");
+//
+//               List<ProductList> list = JSON.parseObject(String.valueOf(categoryList), new TypeReference<List<ProductList>>(){});
+////               PageInfo<ProductList> page1 = new PageInfo<ProductList>(list);
+//               if (pageNum==0){
+//                   pageNum=1;
+//               }
+//               if (pageSize==0){
+//                   pageSize=list.size();
+//               }
+//               Page<Object> pages =PageHelper.startPage(pageNum, pageSize);
+//               int total = list.size();
+//               pages.setTotal(total);int startIndex = (pageNum - 1) * pageSize;
+//               int endIndex = Math.min(startIndex + pageSize,total);
+//               pages.addAll(list.subList(startIndex,endIndex));
+//               PageInfo pageInfo = new PageInfo<>(pages);
+//               return builder.body(ResponseUtils.getResponseBody(pageInfo));
+//           }
+//        }
 
 
         //商品列表
@@ -652,7 +652,7 @@ public class SecondProductController {
         List<ProductList> productLists1 = new ArrayList<>();
         productLists1 = productLists.stream().filter(a->a.getIsStoreDeleted()==0&&a.getSecondStatus()==0)
                 .collect(Collectors.toList());
-        String json = JSONObject.toJSONString(productLists1);
+//        String json = JSONObject.toJSONString(productLists1);
         /**
          * 筛选认证子站点学校2公里商品
          */
@@ -675,12 +675,12 @@ public class SecondProductController {
 //            System.out.println(list.getResult().get(0).getLocation().get(0).getLat());
 //            redisTemplate.opsForValue().set(String.valueOf(sonId)+"ProductSon",json);
         }
-        if (sonId==null&&categoryId!=null){
-            redisTemplate.opsForValue().set(String.valueOf(categoryId)+"ProductCategory",json);
-        }
-        if (sonId!=null&&categoryId==null){
-            redisTemplate.opsForValue().set(String.valueOf(sonId)+"ProductSon",json);
-        }
+//        if (sonId==null&&categoryId!=null){
+//            redisTemplate.opsForValue().set(String.valueOf(categoryId)+"ProductCategory",json);
+//        }
+//        if (sonId!=null&&categoryId==null){
+//            redisTemplate.opsForValue().set(String.valueOf(sonId)+"ProductSon",json);
+//        }
 //        String json = JSONArray.fromObject(productLists1).toString();
 //        String besnString = JSONObject.toJSONString(productLists1);
 //        redisTemplate.opsForValue().set("product");
