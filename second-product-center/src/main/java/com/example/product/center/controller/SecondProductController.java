@@ -414,7 +414,7 @@ public class SecondProductController {
         /**
          * redis取子站点商品
          */
-        if (sonId!=null){
+        if (sonId!=null&&categoryId==null){
             Object sonList = redisTemplate.opsForValue().get(String.valueOf(sonId)+"ProductSon");
             if (sonList!=null){
                 System.out.println("走redis");
@@ -436,7 +436,7 @@ public class SecondProductController {
                 return builder.body(ResponseUtils.getResponseBody(pageInfo));
             }
         }
-        if (categoryId!=null){
+        if (categoryId!=null&&sonId==null){
            Object categoryList = redisTemplate.opsForValue().get(String.valueOf(categoryId)+"ProductCategory");
            if (categoryList!=null){
                System.out.println("走redis类目");
@@ -467,9 +467,13 @@ public class SecondProductController {
                 .andIsPutawayEqualTo(ProductEnum.IsPutaway.PUTAWAY.getState())
                 .andProductTypeEqualTo(ProductEnum.Relation.GENERAL.getState())
                 .andShowTypeEqualTo(ProductEnum.ShowType.getState(showType).getState());
-
+//筛选类目
         if (categoryId!=null){
             criteria.andCategoryIdEqualTo(categoryId);
+        }
+        //筛选店铺
+        if (storeId!=null){
+            criteria.andStoreIdEqualTo(storeId);
         }
         PageHelper.startPage(pageNum, pageSize);
         secondProducts = secondProductMapper.selectByExampleWithBLOBs(secondProductExample);
@@ -590,8 +594,23 @@ public class SecondProductController {
                 productList.setCity(secondProductAddress.getSecondCity());//市
                 productList.setConty(secondProductAddress.getSecondConty());//区/县
                 productList.setAddressDetail(secondProductAddress.getSecondAddressDetail());//地址详情
-                productList.setLongitude(secondProductAddress.getLongitude());//经度
-                productList.setLatitude(secondProductAddress.getLatitude());//纬度
+                if (secondProductAddress.getLongitude()!=null&&secondProductAddress.getLatitude()!=null){
+                    productList.setLatitude(secondProductAddress.getLatitude());//纬度
+                    productList.setLongitude(secondProductAddress.getLongitude());//经度
+                } else {
+                    String add =
+                            secondProductAddress.getSecondProvince()+secondProductAddress.getSecondCity()
+                            +secondProductAddress.getSecondConty()+secondProductAddress.getSecondAddressDetail();
+//                    System.out.println(add);
+                    JSONObject a = addressService.getIngAndLat(add);
+                    AddressList list = JSON.parseObject(String.valueOf(a), new TypeReference<AddressList>(){});
+                    productList.setLongitude(list.getResult().get(0).getLocation().get(0).getLng());
+                    productList.setLatitude(list.getResult().get(0).getLocation().get(0).getLat());
+//                    System.out.println("哈哈"+productList.getLongitude());
+//                    System.out.println("哈哈"+productList.getLatitude());
+                }
+
+
                 productList.setPhone(secondProductAddress.getPhoneNumber());//电话
                 productList.setAddressDesc(secondProductAddress.getSecondDesc());//描述
             }
@@ -634,8 +653,10 @@ public class SecondProductController {
         productLists1 = productLists.stream().filter(a->a.getIsStoreDeleted()==0&&a.getSecondStatus()==0)
                 .collect(Collectors.toList());
         String json = JSONObject.toJSONString(productLists1);
-        if (sonId!=null&&categoryId==null){
-//            productLists1 = productLists1.stream().filter(a->a.getSonId().equals(sonId)).collect(Collectors.toList());
+        /**
+         * 筛选认证子站点学校2公里商品
+         */
+        if (sonId!=null){
             SecondSon secondSon = secondSonMapper.selectByPrimaryKey(sonId);
             SecondColleges secondColleges = secondCollegesMapper.selectByPrimaryKey(secondSon.getCollegoryId());
             SecondCityExample secondCityExample = new SecondCityExample();
@@ -644,17 +665,22 @@ public class SecondProductController {
             String address = secondCity.get(0).getName()+secondColleges.getName();
             JSONObject a = addressService.getIngAndLat(address);
             AddressList list = JSON.parseObject(String.valueOf(a), new TypeReference<AddressList>(){});
-//            Double lat = list
-            System.out.println(list);
+            String lat = list.getResult().get(0).getLocation().get(0).getLat();
+            String lng = list.getResult().get(0).getLocation().get(0).getLng();
+            double distance = 2;
+            productLists1 =
+            productLists1.stream()
+                    .filter(s->getDistance(Double.parseDouble(s.getLatitude()),Double.parseDouble(s.getLongitude()),Double.parseDouble(lat),Double.parseDouble(lng))<distance)
+                    .collect(Collectors.toList());
+//            System.out.println(list.getResult().get(0).getLocation().get(0).getLat());
 //            redisTemplate.opsForValue().set(String.valueOf(sonId)+"ProductSon",json);
         }
         if (sonId==null&&categoryId!=null){
             redisTemplate.opsForValue().set(String.valueOf(categoryId)+"ProductCategory",json);
         }
-//        if (storeId!=null){
-
-//            productLists1 = productLists1.stream().filter(a->a.getStoreId().equals(storeId)).collect(Collectors.toList());
-//        }
+        if (sonId!=null&&categoryId==null){
+            redisTemplate.opsForValue().set(String.valueOf(sonId)+"ProductSon",json);
+        }
 //        String json = JSONArray.fromObject(productLists1).toString();
 //        String besnString = JSONObject.toJSONString(productLists1);
 //        redisTemplate.opsForValue().set("product");
@@ -928,7 +954,9 @@ public class SecondProductController {
                 * Math.pow(Math.sin(b / 2), 2)));
         s = s * EARTH_RADIUS;
         s = Math.round(s * 10000d) / 10000d;
-        s = s * 1000;
+//        s = s * 1000;//单位m
+
+//        System.out.println(s);//单位公里
         return s;
     }
 }
