@@ -9,5 +9,5 @@ public interface BalanceService {
      * storeId: 店铺id
      * @return
      */
-    Integer addBalance(@Param("userId")Integer userId, @Param("storeId")Integer storeId, @Param("type")String type, @Param("money")Integer money);
+    Integer addBalance(@Param("storeId")Integer storeId, @Param("type")String type, @Param("money")Integer money);
 }

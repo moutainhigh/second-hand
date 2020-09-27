@@ -353,6 +353,7 @@ public class StoreLoginController {
         List<SecondStore> secondStores = secondStoreMapper.selectByExample(secondStoreExample);
         List<EnterStoreList> enterStoreLists = new ArrayList<>();
         secondStores.forEach(secondStore -> {
+            System.out.println(secondStore.getId());
             EnterStoreList enterStoreList = new EnterStoreList();
             enterStoreList.setStoreId(secondStore.getId());
             enterStoreList.setUserId(secondStore.getUserId());

@@ -1,6 +1,6 @@
 spring:
   application:
-    name: product-server
+    name: order-server
   main:
     allow-bean-definition-overriding: true
   rabbitmq:

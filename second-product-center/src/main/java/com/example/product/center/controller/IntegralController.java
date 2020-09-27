@@ -83,6 +83,7 @@ public class IntegralController {
     private SecondAuthMapper secondAuthMapper;
     @ApiOperation(value = "添加积分商品", notes = "添加积分商品")
     @RequestMapping(value = "/addIntegralProduct", method = RequestMethod.POST)
+    @Transactional(rollbackFor = {RuntimeException.class, Error.class})
     public ResponseEntity<JSONObject> addIntegralProduct(
             @RequestParam(value = "productName", required = false) String productName,
             @RequestParam(value = "file1", required = false) String file1,
@@ -210,6 +211,7 @@ public class IntegralController {
 
     @ApiOperation(value = "删除积分商品", notes = "删除积分商品")
     @RequestMapping(value = "/deleteIntegralProduct", method = RequestMethod.POST)
+    @Transactional(rollbackFor = {RuntimeException.class, Error.class})
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "integralId", value = "积分商品id", required = true, type = "Integer"),
     })
@@ -374,7 +376,7 @@ public class IntegralController {
      */
     @GetMapping(value = "/activity/create/activity-code")
     @ApiOperation("生成活动详情二维码")
-    public void getCode(HttpServletResponse response, Integer IntegralRecordId) throws Exception {
+    public void getCode(HttpServletResponse response, String type , Integer IntegralRecordId) throws Exception {
         redisTemplate.opsForValue().set(String.valueOf(IntegralRecordId), IntegralRecordId);
         redisTemplate.expire(String.valueOf(IntegralRecordId),300 , TimeUnit.SECONDS);
         //16位
@@ -391,7 +393,7 @@ public class IntegralController {
         //type是1，生成活动详情、报名的二维码，type是2，生成活动签到的二维码
         Map<String,Object> map = new HashMap<>();
         map.put("siwei",encrypt + "思维创造");
-        map.put("siweiType",IntegralEnum.Code.INTEGRAL.getState());
+        map.put("siweiType",IntegralEnum.Code.getState(type).getState());
         List<Map<String,Object>> list = new ArrayList<>();
         list.add(map);
         String str1 = JSON.toJSONString(list);
@@ -404,6 +406,7 @@ public class IntegralController {
 
     @ApiOperation(value = "积分商品二维码核销", notes = "积分商品二维码核销")
     @RequestMapping(value = "/code", method = RequestMethod.POST)
+    @Transactional(rollbackFor = {RuntimeException.class, Error.class})
     public ResponseEntity<JSONObject> code(
             @RequestParam(value = "IntegralRecordId", required = false) String IntegralRecordCode,
             @RequestParam(value = "userId", required = false) Integer userId,

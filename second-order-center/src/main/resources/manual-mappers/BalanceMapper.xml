@@ -3,6 +3,6 @@
 <mapper namespace="com.example.order.center.manual.dao.BalanceMapper">
 
     <update id="addBalance">
-    update second_store_balance set second_balance = second_balance - #{money} where second_balance - #{money}>=0 and user_id=#{userId} and store_id=#{storeId} and is_deleted=0
+    update second_store_balance set second_balance = second_balance + #{money} where store_id=#{storeId} and is_deleted=0 and balance_type = #{type}
     </update>
 </mapper>

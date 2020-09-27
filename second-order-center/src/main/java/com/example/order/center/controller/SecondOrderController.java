@@ -98,6 +98,9 @@ public class SecondOrderController {
     //余额管理
     @Autowired
     private BalanceService balanceService;
+    //余额明细
+    @Autowired
+    private SecondStoreBalanceDetailMapper secondStoreBalanceDetailMapper;
     @RequestMapping(path = "/addOrder", method = RequestMethod.POST)
     @ApiOperation(value = "创建订单", notes = "创建订单")
     @Transactional(rollbackFor = {RuntimeException.class, Error.class})
@@ -337,6 +340,7 @@ public class SecondOrderController {
             @ApiImplicitParam(paramType = "query", name = "originalOrderStatus", value = "原始订单状态", required = true, type = "String"),
             @ApiImplicitParam(paramType = "query", name = "targetOrderStatus", value = "目标的订单状态", required = true, type = "String"),
     })
+    @Transactional(rollbackFor = {RuntimeException.class, Error.class})
     public ResponseEntity<JSONObject> updateOrder(Integer orderId,
                                                   String orderCode,
                                                   String originalOrderStatus,
@@ -363,10 +367,40 @@ public class SecondOrderController {
              */
             if (originalOrderStatus.equals(OrderEnum.OrderStatus.TRANSPORT.getOrderStatus())
                     && targetOrderStatus.equals(OrderEnum.OrderStatus.EVALUATE.getOrderStatus())){
-                balanceService.addBalance(secondOrders.get(0).getUserId(),
+                //店铺余额加-加入记录
+                balanceService.addBalance(
                         secondOrders.get(0).getStoneId(),
                         BanlaceEnum.Relation.MONEY.getState(),
                         secondOrders.get(0).getAmount());
+                SecondStoreBalanceDetail secondStoreBalanceDetail = new SecondStoreBalanceDetail();
+                secondStoreBalanceDetail.setAmount(secondOrders.get(0).getAmount());
+                secondStoreBalanceDetail.setDetailType(BanlaceEnum.Relation.MONEY.getState());
+                secondStoreBalanceDetail.setIncomeExpenses(BanlaceEnum.incomeExpenses.PUT.getState());
+                secondStoreBalanceDetail.setStoreId(secondOrders.get(0).getStoneId());
+                SecondStore secondStore = secondStoreMapper.selectByPrimaryKey(secondOrders.get(0).getStoneId());
+                secondStoreBalanceDetail.setUserId(secondStore.getUserId());
+                secondStoreBalanceDetail.setCreateTime(LocalDateTime.now());
+                secondStoreBalanceDetail.setModifyTime(LocalDateTime.now());
+                secondStoreBalanceDetail.setIsDeleted((short) 0);
+                secondStoreBalanceDetailMapper.insertSelective(secondStoreBalanceDetail);
+                //购买商品后用户加积分-加入记录
+                SecondStoreExample secondStoreExample = new SecondStoreExample();
+                secondStoreExample.createCriteria().andIsDeletedEqualTo((short) 0)
+                        .andUserIdEqualTo(secondOrders.get(0).getUserId())
+                        .andSecondStatusEqualTo(0);
+                List<SecondStore> secondStores = secondStoreMapper.selectByExample(secondStoreExample);
+                balanceService.addBalance(secondStores.get(0).getId(),
+                                          BanlaceEnum.Relation.INTEGRAL.getState(),
+                                          secondOrders.get(0).getAmount());
+                secondStoreBalanceDetail.setAmount(secondOrders.get(0).getAmount());
+                secondStoreBalanceDetail.setDetailType(BanlaceEnum.Relation.INTEGRAL.getState());
+                secondStoreBalanceDetail.setIncomeExpenses(BanlaceEnum.incomeExpenses.PUT.getState());
+                secondStoreBalanceDetail.setStoreId(secondStores.get(0).getId());
+                secondStoreBalanceDetail.setUserId(secondOrders.get(0).getUserId());
+                secondStoreBalanceDetail.setCreateTime(LocalDateTime.now());
+                secondStoreBalanceDetail.setModifyTime(LocalDateTime.now());
+                secondStoreBalanceDetail.setIsDeleted((short) 0);
+                secondStoreBalanceDetailMapper.insertSelective(secondStoreBalanceDetail);
             }
             return builder.body(ResponseUtils.getResponseBody(0));
         }

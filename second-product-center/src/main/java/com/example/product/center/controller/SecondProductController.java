@@ -407,7 +407,6 @@ public class SecondProductController {
             throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
         //商品列表
-        List<SecondProduct> secondProducts = new ArrayList<>();
         SecondProductExample secondProductExample = new SecondProductExample();
         SecondProductExample.Criteria criteria = secondProductExample.createCriteria().andIsDeletedEqualTo((short) 0)
                 .andIsPutawayEqualTo(ProductEnum.IsPutaway.PUTAWAY.getState())
@@ -421,7 +420,7 @@ public class SecondProductController {
         if (storeId != null) {
             criteria.andStoreIdEqualTo(storeId);
         }
-        secondProducts = secondProductMapper.selectByExampleWithBLOBs(secondProductExample);
+        List<SecondProduct> secondProducts = secondProductMapper.selectByExampleWithBLOBs(secondProductExample);
         List<ProductList> productLists = new ArrayList<>();
         secondProducts.forEach(secondProduct1 -> {
             //物品
@@ -549,7 +548,6 @@ public class SecondProductController {
                     JSONObject a = addressService.getIngAndLat(add);
                     AddressList list = JSON.parseObject(String.valueOf(a), new TypeReference<AddressList>() {
                     });
-                    System.out.println(list);
                     productList.setLongitude(list.getResult().get(0).getLocation().get(0).getLng());
                     productList.setLatitude(list.getResult().get(0).getLocation().get(0).getLat());
                 }
@@ -610,6 +608,7 @@ public class SecondProductController {
             JSONObject a = addressService.getIngAndLat(address);
             AddressList list = JSON.parseObject(String.valueOf(a), new TypeReference<AddressList>() {
             });
+            System.out.println(list.getResult().get(0).getLocation());
             String lat = list.getResult().get(0).getLocation().get(0).getLat();
             String lng = list.getResult().get(0).getLocation().get(0).getLng();
             double distance = 2;
@@ -653,6 +652,7 @@ public class SecondProductController {
 
     @ApiOperation(value = "删除商品详情图", notes = "删除商品详情图")
     @RequestMapping(value = "/fileDeleteProduct", method = RequestMethod.POST)
+    @Transactional(rollbackFor = {RuntimeException.class, Error.class})
     public ResponseEntity<JSONObject> fileDeleteProduct(String file, Integer productId) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
         SecondProductPictrueExample secondProductPictrueExample = new SecondProductPictrueExample();
@@ -868,6 +868,7 @@ public class SecondProductController {
      */
     @ApiOperation(value = "上下架宝贝", notes = "上下架宝贝")
     @RequestMapping(value = "/IsPutaway", method = RequestMethod.POST)
+    @Transactional(rollbackFor = {RuntimeException.class, Error.class})
     public ResponseEntity<JSONObject> IsPutaway(Integer[] productsId, Integer isPutaway) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
         for (Integer productId : productsId) {

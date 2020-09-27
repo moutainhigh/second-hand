@@ -21,7 +21,7 @@ public class EnterStoreList {
     }
 
     public void setStoreId(Integer storeId) {
-        storeId = storeId;
+        this.storeId = storeId;
     }
 
     public Integer getUserId() {
@@ -63,4 +63,6 @@ public class EnterStoreList {
     public void setPhone(String phone) {
         this.phone = phone;
     }
+
+
 }
