@@ -39,6 +39,7 @@ public class ProductList {
     private Integer concernCount;//店铺关注人数
     private Integer secondStatus;//店铺状态
     private Short isStoreDeleted;
+    private Integer sellNumber;
     /**
      * 用户
      */
@@ -400,5 +401,13 @@ public class ProductList {
 
     public void setGoodsId(Integer goodsId) {
         this.goodsId = goodsId;
+    }
+
+    public Integer getSellNumber() {
+        return sellNumber;
+    }
+
+    public void setSellNumber(Integer sellNumber) {
+        this.sellNumber = sellNumber;
     }
 }

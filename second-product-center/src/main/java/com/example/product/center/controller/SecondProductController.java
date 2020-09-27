@@ -46,6 +46,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/SecondProduct")
 @CrossOrigin
 public class SecondProductController {
+    @Autowired
+    private SecondOrderDetailMapper secondOrderDetailMapper;
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
     @Autowired
@@ -556,7 +558,14 @@ public class SecondProductController {
                 productList.setPhone(secondProductAddress.getPhoneNumber());//电话
                 productList.setAddressDesc(secondProductAddress.getSecondDesc());//描述
             }
-
+            /**
+             * 订单
+             */
+            SecondOrderDetailExample secondOrderDetailExample = new SecondOrderDetailExample();
+            secondOrderDetailExample.createCriteria().andGoodsIdEqualTo(secondGoods.get(0).getId());
+            List<SecondOrderDetail> secondOrderDetails =
+            secondOrderDetailMapper.selectByExample(secondOrderDetailExample);
+            productList.setSellNumber(secondOrderDetails.size());
             /**
              * 学校
              * 根据用户id查询认证
