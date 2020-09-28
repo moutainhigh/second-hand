@@ -2015,3 +2015,13 @@ com.netflix.client.ClientException: Load balancer does not have available server
 2020-09-28 17:51:34.800  INFO 11948 --- [http-nio-7004-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 12 ms
 2020-09-28 17:51:34.984  INFO 11948 --- [http-nio-7004-exec-1] io.lettuce.core.EpollProvider            : Starting without optional epoll library
 2020-09-28 17:51:34.986  INFO 11948 --- [http-nio-7004-exec-1] io.lettuce.core.KqueueProvider           : Starting without optional kqueue library
+2020-09-28 17:56:30.640  INFO 11948 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-28 18:01:30.642  INFO 11948 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-28 18:06:30.645  INFO 11948 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-28 18:11:30.645  INFO 11948 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-28 18:16:30.646  INFO 11948 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-28 18:21:30.648  INFO 11948 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-28 18:26:30.650  INFO 11948 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-28 18:31:30.652  INFO 11948 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-28 18:36:30.654  INFO 11948 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-09-28 18:41:30.654  INFO 11948 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration

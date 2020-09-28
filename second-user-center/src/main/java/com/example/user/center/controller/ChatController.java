@@ -11,6 +11,7 @@ import com.example.user.center.manual.ChatWindow;
 import com.example.user.center.manual.Message;
 import com.example.user.center.manual.model.Chat;
 import com.example.user.center.model.SecondChat;
+import com.example.user.center.model.SecondChatExample;
 import com.example.user.center.model.SecondUser;
 import com.example.user.center.service.ChatService;
 import com.google.gson.Gson;
@@ -70,7 +71,7 @@ public class ChatController {
             secondChat.setFromId(ls.getUserId());
             secondChat.setSendTime(LocalDateTime.now());
             secondChat.setContent(ls.getMessage());
-            secondChat.setReadStatus(ChatEnum.ChatStatus.YET.getMessageStatus());
+            secondChat.setReadStatus(ChatEnum.ChatStatus.NOYET.getMessageStatus());
             secondChat.setCreateTime(LocalDateTime.now());
             secondChat.setModifyTime(LocalDateTime.now());
             secondChat.setIsDeleted((byte) 0);
@@ -186,5 +187,34 @@ public class ChatController {
         }
         List<ChatWindow> latestItem = chatWindows.stream().sorted(Comparator.comparing(ChatWindow::getModifyTime).reversed()).collect(Collectors.toList());
         return builder.body(ResponseUtils.getResponseBody(latestItem));
+    }
+
+    /**
+     *
+     * @param userId
+     * @param ByUserId
+     * @return
+     * @throws Exception
+     */
+    @ApiOperation(value = "已读所有聊天消息", notes = "已读所有聊天消息")
+    @RequestMapping(value = "/delChatYet", method = RequestMethod.POST)
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "ByUserId", value = "收消息用户id", required = true, type = "Integer"),
+    })
+    public ResponseEntity<JSONObject> delChatYet(
+            @RequestParam(value = "userId", required = false) Integer userId,
+            @RequestParam(value = "ByUserId", required = false) Integer ByUserId
+    ) throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
+        SecondChatExample secondChatExample = new SecondChatExample();
+        secondChatExample.createCriteria().andToIdEqualTo(ByUserId)
+                .andFromIdEqualTo(userId)
+                .andIsDeletedEqualTo((byte) 0)
+                .andReadStatusEqualTo(ChatEnum.ChatStatus.NOYET.getMessageStatus());
+        SecondChat secondChat = new SecondChat();
+        secondChat.setReadStatus(ChatEnum.ChatStatus.YET.getMessageStatus());
+        secondChatMapper.updateByExampleSelective(secondChat,secondChatExample);
+        return builder.body(ResponseUtils.getResponseBody(0));
     }
 }

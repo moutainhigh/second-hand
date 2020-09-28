@@ -172,7 +172,8 @@ private static SecondMessageMapper secondMessageMapper;
         String now = getNowTime();
         try {
             if (webSocketSet.get(sendUserno) != null) {
-                webSocketSet.get(sendUserno).sendMessage(now + "用户" + userId + "发来消息：" + " <br/> " + sendMessage);
+//                webSocketSet.get(sendUserno).sendMessage(now + "用户" + userId + "发来消息：" + " <br/> " + sendMessage);
+                webSocketSet.get(sendUserno).sendMessage(sendMessage);
             } else {
                 JSONArray jsonArray1= JSONArray.parseArray(String.valueOf(messages));
                 List<Message> list1 = JSONObject.parseArray(jsonArray1.toJSONString(), Message.class);
@@ -223,7 +224,8 @@ private static SecondMessageMapper secondMessageMapper;
                 //判断接收用户是否是当前发消息的用户
                 if (!userno.equals(key)) {
                     keys.add(key);
-                    webSocketSet.get(key).sendMessage(now + "用户" + userno + "发来消息：" + " <br/> " + sendMessage);
+//                    webSocketSet.get(key).sendMessage(now + "用户" + userno + "发来消息：" + " <br/> " + sendMessage);
+                    webSocketSet.get(key).sendMessage(sendMessage);
                     System.out.println("key = " + key);
                 }
             } catch (IOException e) {
