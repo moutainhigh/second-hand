@@ -67,12 +67,12 @@ public class FileController {
         fileDesc.setModifyTime(LocalDateTime.now());
         fileDesc.setIsDeleted((short) 0);
         secondFileMapper.insert(fileDesc);
-        InetAddress ip = null;
-        ip=ip.getLocalHost();
+//        InetAddress ip = null;
+//        ip=ip.getLocalHost();
 //        String localname=ip.getHostName();
-        String localip=ip.getHostAddress();
-//        String s = "http://"+localip+"/:7004/user/File/getPicture?id=";
-        String s = "http://39.100.237.144:7004/user/File/getPicture?id=";
+//        String localip=ip.getHostAddress();
+        String s = "http://"+getV4IP()+":7004/user/File/getPicture?id=";
+//        String s = "http://39.100.237.144:7004/user/File/getPicture?id=";
         return builder.body(ResponseUtils.getResponseBody(s+String.valueOf(fileDesc.getId())));
     }
     //压缩过
@@ -127,13 +127,6 @@ public class FileController {
         }
         secondFileMapper.deleteByPrimaryKey(Integer.valueOf(str2));
         return builder.body(ResponseUtils.getResponseBody(Integer.valueOf(str2)));
-    }
-    @ApiOperation(value = "Ip", notes = "Ip")
-    @RequestMapping(value = "/Ip", method = RequestMethod.POST)
-    public ResponseEntity<JSONObject> Ip() throws Exception {
-        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
-
-        return builder.body(ResponseUtils.getResponseBody(getV4IP()));
     }
     public static String getV4IP() {
         String ip = "";
