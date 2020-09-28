@@ -161,9 +161,7 @@ public class FileController {
         Pattern p = Pattern.compile("\\<dd class\\=\"fz24\">(.*?)\\<\\/dd>");
         Matcher m = p.matcher(inputLine.toString());
         if (m.find()) {
-            String ipstr = m.group(1);
-            ip = ipstr;
-            //System.out.println(ipstr);
+            ip = m.group(1);
         }
         return ip;
     }
