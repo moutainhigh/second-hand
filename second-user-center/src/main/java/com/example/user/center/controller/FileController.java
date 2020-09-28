@@ -20,15 +20,12 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
+import java.io.*;
+import java.net.*;
 import java.time.LocalDateTime;
 import java.util.Enumeration;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author shihao
@@ -136,55 +133,50 @@ public class FileController {
     public ResponseEntity<JSONObject> Ip() throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
 
-        return builder.body(ResponseUtils.getResponseBody(getInternetIp()));
+        return builder.body(ResponseUtils.getResponseBody(getV4IP()));
     }
-    public static String INTRANET_IP = getIntranetIp(); // 内网IP
-    public static String INTERNET_IP = getInternetIp(); // 外网IP
+    public static String getV4IP() {
+        String ip = "";
+        String chinaz = "http://ip.chinaz.com";
 
-    /**
-     * 获得内网IP
-     * @return 内网IP
-     */
-    private static String getIntranetIp(){
-        try{
-            return InetAddress.getLocalHost().getHostAddress();
-        } catch(Exception e){
-            throw new RuntimeException(e);
-        }
-    }
-    /**
-     * 获得外网IP
-     * @return 外网IP
-     */
-    private static String getInternetIp(){
-        try{
-            Enumeration<NetworkInterface> networks = NetworkInterface.getNetworkInterfaces();
-            InetAddress ip = null;
-            Enumeration<InetAddress> addrs;
-            while (networks.hasMoreElements())
-            {
-                addrs = networks.nextElement().getInetAddresses();
-                while (addrs.hasMoreElements())
-                {
-                    ip = addrs.nextElement();
-                    if (ip != null
-                            && ip instanceof Inet4Address
-                            && ip.isSiteLocalAddress()
-                            && !ip.getHostAddress().equals(INTRANET_IP))
-                    {
-                        return ip.getHostAddress();
-                    }
+        StringBuilder inputLine = new StringBuilder();
+        String read = "";
+        URL url = null;
+        HttpURLConnection urlConnection = null;
+        BufferedReader in = null;
+        try {
+            url = new URL(chinaz);
+            urlConnection = (HttpURLConnection) url.openConnection();
+            in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
+            while ((read = in.readLine()) != null) {
+                inputLine.append(read + "\r\n");
+            }
+            //System.out.println(inputLine.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
-
-            // 如果没有外网IP，就返回内网IP
-            return INTRANET_IP;
-        } catch(Exception e){
-            throw new RuntimeException(e);
         }
+        Pattern p = Pattern.compile("\\<dd class\\=\"fz24\">(.*?)\\<\\/dd>");
+        Matcher m = p.matcher(inputLine.toString());
+        if (m.find()) {
+            String ipstr = m.group(1);
+            ip = ipstr;
+            //System.out.println(ipstr);
+        }
+        return ip;
     }
 
+
     public static void main(String[] args) {
-         System.out.println(getInternetIp());
+         System.out.println(getV4IP());
     }
 }
