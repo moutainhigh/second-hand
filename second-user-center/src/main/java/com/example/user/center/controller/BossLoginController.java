@@ -2,16 +2,18 @@ package com.example.user.center.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.user.center.dao.SecondAuthMapper;
+import com.example.user.center.dao.SecondBossMapper;
+import com.example.user.center.dao.SecondSlideshowMapper;
 import com.example.user.center.dao.SecondUserMapper;
 import com.example.user.center.manual.Authentication;
-import com.example.user.center.model.SecondAuth;
-import com.example.user.center.model.SecondAuthExample;
-import com.example.user.center.model.SecondAuthenticationPicture;
-import com.example.user.center.model.SecondUser;
+import com.example.user.center.manual.SlideshowEnum;
+import com.example.user.center.model.*;
 import com.second.common.utils.Encrypt;
 import com.second.utils.response.handler.ResponseEntity;
 import com.second.utils.response.handler.ResponseUtils;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,6 +44,10 @@ public class BossLoginController {
     private SecondAuthMapper secondAuthMapper;
     @Autowired
     private SecondUserMapper secondUserMapper;
+    @Autowired
+    private SecondBossMapper secondBossMapper;
+    @Autowired
+    private SecondSlideshowMapper secondSlideshowMapper;
 //    总后台登录
 @RequestMapping(path = "/Login", method = RequestMethod.POST)
 @ApiOperation(value = "登录", notes = "登录")
@@ -121,6 +127,49 @@ public class BossLoginController {
         secondAuth.setCreateDate(LocalDateTime.now());
         secondAuth.setCreateDate(LocalDateTime.now());
         secondAuthMapper.insertSelective(secondAuth);
+        return builder.body(ResponseUtils.getResponseBody(0));
+    }
+
+    @RequestMapping(path = "/AddBasics", method = RequestMethod.POST)
+    @ApiOperation(value = "添加商家基础信息", notes = "添加商家基础信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "service", value = "客服", required = true, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "weChat", value = "微信", required = true, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "newUserIntegral", value = "新用户认证加的积分", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "storeWithdrawalCommission", value = "商家提现手续费率", required = true, type = "Double"),
+            @ApiImplicitParam(paramType = "query", name = "userWithdrawalCommission", value = "用户提现手续费率", required = true, type = "Double"),
+            @ApiImplicitParam(paramType = "query", name = "sonWithdrawalCommission", value = "子站点提现手续费率", required = true, type = "Double"),
+    })
+    @Transactional(rollbackFor = {RuntimeException.class, Error.class})
+    public ResponseEntity<JSONObject> AddBasics(
+            @RequestParam(value = "service", required = false) String service,
+            @RequestParam(value = "weChat", required = false) String weChat,
+            @RequestParam(value = "newUserIntegral", required = false) Integer newUserIntegral,
+            @RequestParam(value = "storeWithdrawalCommission", required = false) Double storeWithdrawalCommission,
+            @RequestParam(value = "userWithdrawalCommission", required = false) Double userWithdrawalCommission,
+            @RequestParam(value = "sonWithdrawalCommission", required = false) Double sonWithdrawalCommission,
+            @RequestParam(value = "slideshow", required = false) String[] slideshow,
+            HttpServletResponse response
+    ) throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
+        SecondBoss secondBoss = new SecondBoss();
+        secondBoss.setId(1);
+        secondBoss.setService(service);
+        secondBoss.setWeChat(weChat);
+        secondBoss.setNewUserIntegral(newUserIntegral);
+        secondBoss.setStoreWithdrawalCommission(storeWithdrawalCommission);
+        secondBoss.setUserWithdrawalCommission(userWithdrawalCommission);
+        secondBoss.setSonWithdrawalCommission(sonWithdrawalCommission);
+        secondBossMapper.insertSelective(secondBoss);
+        for (String file:slideshow){
+            SecondSlideshow secondSlideshow = new SecondSlideshow();
+            secondSlideshow.setFile(file);
+            secondSlideshow.setFileType(SlideshowEnum.SlideshowType.HOMEPAGE.getOrderStatus());
+            secondSlideshow.setCreateDate(LocalDateTime.now());
+            secondSlideshow.setModifyDate(LocalDateTime.now());
+            secondSlideshow.setIsDeleted((byte) 0);
+            secondSlideshowMapper.insertSelective(secondSlideshow);
+        }
         return builder.body(ResponseUtils.getResponseBody(0));
     }
 }

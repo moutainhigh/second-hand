@@ -1,4 +1,6 @@
 spring:
+  aop:
+    proxy-target-class: true
   application:
     name: order-server
   main:

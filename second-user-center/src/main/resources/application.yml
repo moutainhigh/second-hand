@@ -1,4 +1,6 @@
 spring:
+  aop:
+    proxy-target-class: true
   main:
     allow-bean-definition-overriding: true
   application:
@@ -52,7 +54,6 @@ eureka:
 
 logging:
   file: ./logs/king-words.log
-
 mybatis:
   mapper-locations:
     - mappers/*.xml

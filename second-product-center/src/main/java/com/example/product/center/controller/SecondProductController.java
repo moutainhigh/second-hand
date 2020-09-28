@@ -69,9 +69,6 @@ public class SecondProductController {
     //用户
     @Autowired
     private SecondUserMapper secondUserMapper;
-    //地址
-    @Autowired
-    private SecondStoreAddressMapper secondUserAddressMapper;
     //学校
     @Autowired
     private SecondCollegesMapper secondCollegesMapper;
@@ -87,6 +84,7 @@ public class SecondProductController {
     //商品地址
     @Autowired
     private SecondProductAddressMapper secondProductAddressMapper;
+    //店铺地址
     @Autowired
     private SecondStoreAddressMapper secondStoreAddressMapper;
     //子站点和店铺
@@ -166,11 +164,11 @@ public class SecondProductController {
         secondProductMapper.insertSelective(secondProduct);
         //删除redis数据保证数据一致
 //        deleted(String.valueOf(categoryId)+"ProductCategory");
-        SecondUserSonExample secondUserSonExample = new SecondUserSonExample();
-        secondUserSonExample.createCriteria().andStoreIdEqualTo(storeId)
-                .andIsDeletedEqualTo((byte) 0);
-        List<SecondUserSon> secondUserSons =
-                secondUserSonMapper.selectByExample(secondUserSonExample);
+//        SecondUserSonExample secondUserSonExample = new SecondUserSonExample();
+//        secondUserSonExample.createCriteria().andStoreIdEqualTo(storeId)
+//                .andIsDeletedEqualTo((byte) 0);
+//        List<SecondUserSon> secondUserSons =
+//                secondUserSonMapper.selectByExample(secondUserSonExample);
 //        deleted(String.valueOf(secondUserSons.get(0).getSonId())+"ProductSon");
         deleted(String.valueOf(secondProduct.getId()) + "detail");
         //

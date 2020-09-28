@@ -21,4 +21,8 @@ public class BalanceServiceImpl implements BalanceService {
     public Integer addStock(Integer userId, Integer storeId, String type,Integer money) {
         return balanceMapper.addStock(userId,storeId,type,money);
     }
+    @Override
+    public Integer addBalance(Integer storeId, String type, Integer money) {
+        return balanceMapper.addBalance(storeId,type,money);
+    }
 }

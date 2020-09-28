@@ -261,4 +261,73 @@ public class CategoryController {
         });
         return builder.body(ResponseUtils.getResponseBody(categoryInfos));
     }
+    @ApiOperation(value = "获取一级下所有类目", notes = "获取一级下所有类目")
+    @RequestMapping(value = "/categoryFirstList", method = RequestMethod.GET)
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "categoryId", value = "类目id", required = false, type = "Integer")
+    })
+    public ResponseEntity<JSONObject> categoryFirstList(
+            @RequestParam(name = "categoryId", required = false) Integer categoryId,
+            HttpServletRequest request)
+            throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
+//        查询一个一级类目
+        SecondCategoryExample secondCategoryExample = new SecondCategoryExample();
+        secondCategoryExample.createCriteria().andLevelIdEqualTo(0)
+                .andIsDeletedEqualTo((short) 0)
+                .andIdEqualTo(categoryId);
+        List<SecondCategory> secondCategorys = secondCategoryMapper.selectByExample(secondCategoryExample);
+        List<CategoryInfo> categoryInfos = new ArrayList<>();
+        secondCategorys.forEach(secondCategory -> {
+//            一级
+            CategoryInfo categoryInfo = new CategoryInfo();
+            categoryInfo.setDate(secondCategory.getCreateTime());
+            categoryInfo.setLevel(secondCategory.getLevelId());
+            categoryInfo.setFileId(secondCategory.getFile());
+            categoryInfo.setId(secondCategory.getId());
+            categoryInfo.setName(secondCategory.getSecondName());
+//            根据一级查询下级类目
+            SecondCategoryExample secondCategoryExample1 = new SecondCategoryExample();
+            secondCategoryExample1.createCriteria().andParentCategoryIdEqualTo(secondCategory.getId()).andIsDeletedEqualTo((short) 0);
+            List<SecondCategory> secondCategoryList = secondCategoryMapper.selectByExample(secondCategoryExample1);
+//          二级数组
+            List<CategoryInfo> categoryInfos1 = new ArrayList<>();
+            if (secondCategoryList.size()!=0){
+                secondCategoryList.forEach(secondCategory1 -> {
+//                二级
+                    CategoryInfo categoryInfo1 = new CategoryInfo();
+                    categoryInfo1.setId(secondCategory1.getId());
+                    categoryInfo1.setLevel(secondCategory1.getLevelId());
+                    categoryInfo1.setDate(secondCategory1.getCreateTime());
+                    categoryInfo1.setFileId(secondCategory1.getFile());
+                    categoryInfo1.setName(secondCategory1.getSecondName());
+//                    三级查询
+                    SecondCategoryExample secondCategoryExample2 = new SecondCategoryExample();
+                    secondCategoryExample2.createCriteria().andParentCategoryIdEqualTo(secondCategory1.getId()).andIsDeletedEqualTo((short) 0);
+                    List<SecondCategory> secondCategoryList2 = secondCategoryMapper.selectByExample(secondCategoryExample2);
+//                    三级数组
+                    List<CategoryInfo> categoryInfos2 = new ArrayList<>();
+                    if (secondCategoryList2.size()!=0){
+                        secondCategoryList2.forEach(secondCategory2 -> {
+//                            三级
+                            CategoryInfo categoryInfo2 = new CategoryInfo();
+                            categoryInfo2.setId(secondCategory2.getId());
+                            categoryInfo2.setLevel(secondCategory2.getLevelId());
+                            categoryInfo2.setDate(secondCategory2.getCreateTime());
+                            categoryInfo2.setFileId(secondCategory2.getFile());
+                            categoryInfo2.setName(secondCategory2.getSecondName());
+                            categoryInfos2.add(categoryInfo2);
+                        });
+                        //三级加入二级
+                        categoryInfo1.setCategories(categoryInfos2);
+                    }
+                    categoryInfos1.add(categoryInfo1);
+                });
+//                二级加入一级
+                categoryInfo.setCategories(categoryInfos1);
+            }
+            categoryInfos.add(categoryInfo);
+        });
+        return builder.body(ResponseUtils.getResponseBody(categoryInfos));
+    }
 }

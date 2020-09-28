@@ -5,6 +5,7 @@ import com.example.payment.center.config.MiniProgramConfig;
 import com.example.payment.center.dao.*;
 import com.example.payment.center.manual.*;
 import com.example.payment.center.model.*;
+import com.example.payment.center.service.BalanceService;
 import com.example.payment.center.util.PayUtil;
 import com.example.payment.center.service.AddStockService;
 import com.github.wxpay.sdk.WXPay;
@@ -76,6 +77,18 @@ public class MiniPaymentOrderController {
     //商品
     @Autowired
     private SecondProductMapper secondProductMapper;
+    //店铺
+    @Autowired
+    private SecondStoreMapper secondStoreMapper;
+    //店铺余额
+    @Autowired
+    private SecondStoreBalanceMapper secondStoreBalanceMapper;
+    //
+    @Autowired
+    private BalanceService balanceService;
+    //余额明细
+    @Autowired
+    private SecondStoreBalanceDetailMapper secondStoreBalanceDetailMapper;
     @ApiOperation(value = "支付订单", notes = "")
     @RequestMapping(value = "/order", method = RequestMethod.GET)
     @Transactional(rollbackFor = {RuntimeException.class, Error.class})
@@ -105,6 +118,8 @@ public class MiniPaymentOrderController {
         Map<String, String> resp = null;
         if (PaymentTypeEnum.getPaymentTypeEnum(secondOrderMapper.selectByExample(hfOrderExample).get(0).getPaymentName()).equals(PaymentTypeEnum.WECHART)) {
             resp = wxPay(miniProgramConfig,secondAuth.get(0), payOrder);
+        }else if (PaymentTypeEnum.getPaymentTypeEnum(secondOrderMapper.selectByExample(hfOrderExample).get(0).getPaymentName()).equals(PaymentTypeEnum.BALANCE)){
+            resp = balancePay(secondAuth.get(0), payOrder);
         }
         System.out.println(resp);
         return builder.body(ResponseUtils.getResponseBody(resp));
@@ -141,6 +156,62 @@ public class MiniPaymentOrderController {
 
     }
 
+    /**
+     * 余额支付
+     * @param hfUser
+     * @param payOrder
+     * @return
+     * @throws Exception
+     */
+    private Map<String, String> balancePay(SecondAuth hfUser, SecondPayOrder payOrder) throws Exception {
+        Map<String,String> map = new HashMap<>();
+        SecondStoreExample secondStoreExample = new SecondStoreExample();
+        secondStoreExample.createCriteria().andUserIdEqualTo(hfUser.getUserId())
+                .andIsDeletedEqualTo((short) 0)
+                .andSecondStatusEqualTo(0);
+        List<SecondStore> secondStores =
+        secondStoreMapper.selectByExample(secondStoreExample);
+        SecondStoreBalanceExample secondStoreBalanceExample = new SecondStoreBalanceExample();
+        secondStoreBalanceExample.createCriteria().andUserIdEqualTo(hfUser.getUserId())
+                .andStoreIdEqualTo(secondStores.get(0).getId())
+                .andIsDeletedEqualTo((short) 0);
+        List<SecondStoreBalance> secondStoreBalances =
+                secondStoreBalanceMapper.selectByExample(secondStoreBalanceExample);
+        if (secondStoreBalances.size()==0){
+            SecondStoreBalance secondStoreBalance = new SecondStoreBalance();
+            secondStoreBalance.setUserId(hfUser.getUserId());
+            secondStoreBalance.setStoreId(secondStores.get(0).getId());
+            secondStoreBalance.setBalanceType(BanlaceEnum.Relation.MONEY.getState());
+            secondStoreBalance.setSecondBalance(0);
+            secondStoreBalance.setCreateTime(LocalDateTime.now());
+            secondStoreBalance.setModifyTime(LocalDateTime.now());
+            secondStoreBalance.setIsDeleted((short) 0);
+            secondStoreBalanceMapper.insertSelective(secondStoreBalance);
+            map.put("statusCode","504");
+            map.put("status","return_msg");
+            return map;
+        }else {
+           int a = balanceService.addStock(hfUser.getUserId(),secondStores.get(0).getId(),
+                    BanlaceEnum.Relation.MONEY.getState(),payOrder.getAmount());
+           if (a<1){
+               map.put("statusCode","504");
+               map.put("status","return_msg");
+               return map;
+           }
+        }
+        map.put("statusCode","200");
+        map.put("status","succeed");
+        return map;
+    }
+    /**
+     *
+     * @param config
+     * @param openId
+     * @param orderCode
+     * @param Amount
+     * @return
+     * @throws Exception
+     */
     private Map<String, String> getWxPayData(MiniProgramConfig config, String openId, String orderCode,Integer Amount)
             throws Exception {
         Map<String, String> data = new HashMap<>();
@@ -152,7 +223,7 @@ public class MiniPaymentOrderController {
         data.put("fee_type", "CNY");
         data.put("total_fee", String.valueOf(Amount));
         data.put("spbill_create_ip", req.getRemoteAddr());
-        data.put("notify_url", "https://www.tjsichuang.cn:1443/api/payment/hf-payment/handleWxpay");
+        data.put("notify_url", "https://http://39.100.237.144:7005/payment/payment/handleWxpay");
         data.put("trade_type", "JSAPI");
         data.put("openid", openId);
         String sign = WXPayUtil.generateSignature(data, config.getKey());
@@ -235,22 +306,37 @@ public ResponseEntity<JSONObject> completePaymentAfter(
                 hfTansactionFlow.setModifyDate(LocalDateTime.now());
                 hfTansactionFlow.setHfStatus(TansactionFlowStatusEnum.COMPLETE.getStatus());
                 secondTransactionFlowMapper.updateByPrimaryKeySelective(hfTansactionFlow);
-                SecondOrderExample secondOrderExample1 = new SecondOrderExample();
-                secondOrderExample1.createCriteria().andOrderCodeEqualTo(secondOrder.getOrderCode());
-                SecondOrder secondOrder1 = new SecondOrder();
-                secondOrder1.setOrderStatus(OrderEnum.OrderStatus.PROCESS.getOrderStatus());
-                secondOrder1.setModifyTime(LocalDateTime.now());
-                secondOrder1.setPayStatus(1);
-                secondOrderMapper.updateByExampleSelective(secondOrder1,secondOrderExample1);
+//                if (OrderTypeEnum.RECHAEGE_ORDER.getOrderType().equals(secondOrder.getOrderType())){
+                    SecondOrderExample secondOrderExample1 = new SecondOrderExample();
+                    secondOrderExample1.createCriteria().andOrderCodeEqualTo(secondOrder.getOrderCode());
+                    SecondOrder secondOrder1 = new SecondOrder();
+                    secondOrder1.setOrderStatus(OrderEnum.OrderStatus.PROCESS.getOrderStatus());
+                    secondOrder1.setModifyTime(LocalDateTime.now());
+                    secondOrder1.setPayStatus(1);
+                    secondOrderMapper.updateByExampleSelective(secondOrder1,secondOrderExample1);
                     SecondOrderDetail secondOrderDetail = new SecondOrderDetail();
                     secondOrderDetail.setDetailStatus(OrderEnum.OrderStatus.PROCESS.getOrderStatus());
                     SecondOrderDetailExample example = new SecondOrderDetailExample();
                     example.createCriteria().andOrderIdEqualTo(secondOrder.getId());
                     secondOrderDetailMapper.updateByExampleSelective(secondOrderDetail,example);
+//                }
 					return builder.body(ResponseUtils.getResponseBody(hfTansactionFlow));
             } else {
                 throw new Exception("交易柳树不存在, 或者已完成支付");
             }
+        } else if (PaymentTypeEnum.getPaymentTypeEnum(secondOrder.getPaymentName()).equals(PaymentTypeEnum.BALANCE)){
+            SecondOrderExample secondOrderExample1 = new SecondOrderExample();
+            secondOrderExample1.createCriteria().andOrderCodeEqualTo(secondOrder.getOrderCode());
+            SecondOrder secondOrder1 = new SecondOrder();
+            secondOrder1.setOrderStatus(OrderEnum.OrderStatus.PROCESS.getOrderStatus());
+            secondOrder1.setModifyTime(LocalDateTime.now());
+            secondOrder1.setPayStatus(1);
+            secondOrderMapper.updateByExampleSelective(secondOrder1,secondOrderExample1);
+            SecondOrderDetail secondOrderDetail = new SecondOrderDetail();
+            secondOrderDetail.setDetailStatus(OrderEnum.OrderStatus.PROCESS.getOrderStatus());
+            SecondOrderDetailExample example = new SecondOrderDetailExample();
+            example.createCriteria().andOrderIdEqualTo(secondOrder.getId());
+            secondOrderDetailMapper.updateByExampleSelective(secondOrderDetail,example);
         }
     }
     return builder.body(ResponseUtils.getResponseBody(0));
@@ -367,6 +453,25 @@ public ResponseEntity<JSONObject> completePaymentAfter(
             }
 
             return builder.body(ResponseUtils.getResponseBody(resp));
+        } else if (secondOrders.get(0).getPaymentName().equals("balance") && secondOrders.get(0).getPaymentType().equals(0)) {
+            SecondStoreExample secondStoreExample = new SecondStoreExample();
+            secondStoreExample.createCriteria().andUserIdEqualTo(secondOrders.get(0).getUserId())
+                    .andIsDeletedEqualTo((short) 0);
+            List<SecondStore> secondStore = secondStoreMapper.selectByExample(secondStoreExample);
+            balanceService.addBalance(secondStore.get(0).getId(),
+                    BanlaceEnum.Relation.MONEY.getState(),
+                    secondOrders.get(0).getAmount());
+            //余额明细
+            SecondStoreBalanceDetail secondStoreBalanceDetail = new SecondStoreBalanceDetail();
+            secondStoreBalanceDetail.setUserId(secondOrders.get(0).getUserId());
+            secondStoreBalanceDetail.setStoreId(secondStore.get(0).getId());
+            secondStoreBalanceDetail.setAmount(secondOrders.get(0).getAmount());
+            secondStoreBalanceDetail.setDetailType(BanlaceEnum.Relation.MONEY.getState());
+            secondStoreBalanceDetail.setIncomeExpenses(BanlaceEnum.incomeExpenses.PUT.getState());
+            secondStoreBalanceDetail.setCreateTime(LocalDateTime.now());
+            secondStoreBalanceDetail.setModifyTime(LocalDateTime.now());
+            secondStoreBalanceDetail.setIsDeleted((short) 0);
+            secondStoreBalanceDetailMapper.insertSelective(secondStoreBalanceDetail);
         }
         return builder.body(ResponseUtils.getResponseBody(1));
     }
