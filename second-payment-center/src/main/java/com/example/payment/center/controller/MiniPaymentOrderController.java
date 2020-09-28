@@ -412,7 +412,7 @@ public ResponseEntity<JSONObject> completePaymentAfter(
             data.put("total_fee", String.valueOf(payOrder.getAmount()));
 
             data.put("spbill_create_ip", req.getRemoteAddr());
-            data.put("notify_url", "https://www.tjsichuang.cn:1443/api/payment/hf-payment/handleWxpay");
+            data.put("notify_url", "https://http://39.100.237.144:7005/payment/payment/handleWxpay");
 
             data.put("out_trade_no", String.valueOf(payOrder.getId()));
             data.put("op_user_id", miniProgramConfig.getMchID());
