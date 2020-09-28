@@ -86,18 +86,35 @@ private static SecondMessageMapper secondMessageMapper;
         webSocketSet.put(param, this);//加入map中
         addOnlineCount();           //在线数加1
         Object object = redisTemplate.opsForValue().get(param+"sendAll");
-        System.out.println(object);
+//        System.out.println(object);
         if (object!=null){
             JSONArray jsonArray= JSONArray.parseArray(String.valueOf(object));
             List<Message> list = JSONObject.parseArray(jsonArray.toJSONString(), Message.class);
             list.forEach(ls->{
+                redisTemplate.delete(param+"sendAll");
                 ls.setByUserId(Integer.valueOf(param));
                 ls.setType(MessageEnum.MessageStatus.SOLO.getMessageStatus());
+                List<Message> list1 = new ArrayList<>();
+                list1.add(ls);
+                Gson gson = new Gson();
+                onMessage(gson.toJson(list1));
             });
-            Gson gson = new Gson();
-            onMessage(gson.toJson(list));
-            redisTemplate.delete(param+"sendAll");
-            System.out.println(gson.toJson(list));
+
+        }
+        Object object1 = redisTemplate.opsForValue().get(param+"sendSolo");
+        if (object1!=null){
+            redisTemplate.delete(param+"sendSolo");
+            JSONArray jsonArray= JSONArray.parseArray(String.valueOf(object1));
+            List<Message> list = JSONObject.parseArray(jsonArray.toJSONString(), Message.class);
+            list.forEach(ls->{
+                ls.setByUserId(Integer.valueOf(param));
+                ls.setType(MessageEnum.MessageStatus.SOLO.getMessageStatus());
+                List<Message> list1 = new ArrayList<>();
+                list1.add(ls);
+                Gson gson = new Gson();
+                onMessage(gson.toJson(list1));
+            });
+
         }
         System.out.println("有新连接加入！当前在线人数为" + getOnlineCount());
     }
@@ -122,7 +139,7 @@ private static SecondMessageMapper secondMessageMapper;
      */
     @OnMessage
     public void onMessage(String message) {
-        System.out.println("来自客户端的消息:" + message);
+//        System.out.println("来自客户端的消息:" + message);
         JSONArray jsonArray= JSONArray.parseArray(message);
         List<Message> list = JSONObject.parseArray(jsonArray.toJSONString(), Message.class);
 //        session.get
@@ -130,11 +147,12 @@ private static SecondMessageMapper secondMessageMapper;
         if (MessageEnum.MessageStatus.Group.getMessageStatus().equals(list.get(0).getType())) {
             sendAll(list.get(0).getMessage(),message);
         } else {
+            //保存聊天
+//            addMessages(message);
             //给指定的人发消息
             sendToUser(list.get(0).getMessage(), String.valueOf(list.get(0).getByUserId())
-                    , String.valueOf(list.get(0).getUserId()));
-            //保存聊天
-            addMessages(message);
+                    , String.valueOf(list.get(0).getUserId()),message);
+
         }
     }
 
@@ -145,7 +163,7 @@ private static SecondMessageMapper secondMessageMapper;
      * @param userId  //发送人
      *
      */
-    private void sendToUser(String message,String byUserId,String userId) {
+    private void sendToUser(String message,String byUserId,String userId,String messages) {
 
 //        String sendUserno = message.split("[|]")[1];
 //        String sendMessage = message.split("[|]")[0];
@@ -156,6 +174,21 @@ private static SecondMessageMapper secondMessageMapper;
             if (webSocketSet.get(sendUserno) != null) {
                 webSocketSet.get(sendUserno).sendMessage(now + "用户" + userId + "发来消息：" + " <br/> " + sendMessage);
             } else {
+                JSONArray jsonArray1= JSONArray.parseArray(String.valueOf(messages));
+                List<Message> list1 = JSONObject.parseArray(jsonArray1.toJSONString(), Message.class);
+
+                Object object = redisTemplate.opsForValue().get(String.valueOf(byUserId)+"sendSolo");
+                List<Message> list = new ArrayList<>();
+                if (object!=null){
+                    JSONArray jsonArray= JSONArray.parseArray(String.valueOf(object));
+                    list = JSONObject.parseArray(jsonArray.toJSONString(), Message.class);
+                    list.add(list1.get(0));
+                } else {
+                    list.add(list1.get(0));
+                }
+                Gson gson = new Gson();
+                System.out.println("传入了"+gson.toJson(list));
+                redisTemplate.opsForValue().set(String.valueOf(byUserId)+"sendSolo",gson.toJson(list));
                 System.out.println("当前用户不在线");
             }
         } catch (IOException e) {
@@ -183,7 +216,7 @@ private static SecondMessageMapper secondMessageMapper;
                 .andIdDeletedEqualTo((byte) 0);
         List<SecondUser> secondUsers =
         secondUserMapper.selectByExample(secondUserExample);
-        System.out.println(secondUsers);
+//        System.out.println(secondUsers);
         List<String> keys = new ArrayList<>();
         for (String key : webSocketSet.keySet()) {
             try {
@@ -200,7 +233,22 @@ private static SecondMessageMapper secondMessageMapper;
         secondUsers.forEach(secondUser -> {
             boolean result = keys.contains(String.valueOf(secondUser.getId()));
             if (!result){
-                redisTemplate.opsForValue().set(String.valueOf(secondUser.getId())+"sendAll",messages);
+                Object object =
+                redisTemplate.opsForValue().get(String.valueOf(secondUser.getId())+"sendAll");
+                List<Message> list = new ArrayList<>();
+                JSONArray jsonArray1= JSONArray.parseArray(messages);
+                List<Message> list1 = JSONObject.parseArray(jsonArray1.toJSONString(), Message.class);
+                System.out.println(object);
+                if (object!=null){
+                    JSONArray jsonArray= JSONArray.parseArray(String.valueOf(object));
+                    list = JSONObject.parseArray(jsonArray.toJSONString(), Message.class);
+                    list.add(list1.get(0));
+                } else {
+                    list.add(list1.get(0));
+                }
+                Gson gson = new Gson();
+                System.out.println("传入了"+gson.toJson(list));
+                redisTemplate.opsForValue().set(String.valueOf(secondUser.getId())+"sendAll",gson.toJson(list));
             }
         });
     }

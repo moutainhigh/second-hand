@@ -1,12 +1,16 @@
 package com.example.user.center.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.example.user.center.dao.SecondChatMapper;
 import com.example.user.center.dao.SecondUserMapper;
+import com.example.user.center.manual.ChatEnum;
 import com.example.user.center.manual.ChatWindow;
+import com.example.user.center.manual.Message;
 import com.example.user.center.manual.model.Chat;
+import com.example.user.center.model.SecondChat;
 import com.example.user.center.model.SecondUser;
 import com.example.user.center.service.ChatService;
 import com.google.gson.Gson;
@@ -17,6 +21,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -50,6 +55,29 @@ public class ChatController {
     //用户
     @Autowired
     private SecondUserMapper secondUserMapper;
+    /**
+     * 保存聊天记录
+     */
+    @ApiOperation(value = "保存聊天记录", notes = "保存聊天记录")
+    @RequestMapping(value = "/addChat", method = RequestMethod.GET)
+    public ResponseEntity<JSONObject> addChat(String messages) throws JSONException {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
+        JSONArray jsonArray= JSONArray.parseArray(messages);
+        List<Message> list = JSONObject.parseArray(jsonArray.toJSONString(), Message.class);
+        list.forEach(ls->{
+            SecondChat secondChat = new SecondChat();
+            secondChat.setToId(ls.getByUserId());
+            secondChat.setFromId(ls.getUserId());
+            secondChat.setSendTime(LocalDateTime.now());
+            secondChat.setContent(ls.getMessage());
+            secondChat.setReadStatus(ChatEnum.ChatStatus.YET.getMessageStatus());
+            secondChat.setCreateTime(LocalDateTime.now());
+            secondChat.setModifyTime(LocalDateTime.now());
+            secondChat.setIsDeleted((byte) 0);
+            secondChatMapper.insertSelective(secondChat);
+        });
+        return builder.body(ResponseUtils.getResponseBody(0));
+    }
     /**
      * 查询聊天记录
      */
