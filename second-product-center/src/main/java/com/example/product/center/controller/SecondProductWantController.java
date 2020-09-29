@@ -1,10 +1,12 @@
 package com.example.product.center.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.product.center.dao.SecondGoodsMapper;
+import com.example.product.center.dao.SecondProductMapper;
 import com.example.product.center.dao.SecondProductWantMapper;
 import com.example.product.center.manual.WantEnum;
-import com.example.product.center.model.SecondProductWant;
-import com.example.product.center.model.SecondProductWantExample;
+import com.example.product.center.manual.WantProductList;
+import com.example.product.center.model.*;
 import com.second.utils.response.handler.ResponseEntity;
 import com.second.utils.response.handler.ResponseUtils;
 import io.swagger.annotations.Api;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,6 +40,11 @@ public class SecondProductWantController {
     private SecondProductWantMapper secondProductWantMapper;
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
+    @Autowired
+    private SecondProductMapper secondProductMapper;
+    @Autowired
+    private SecondGoodsMapper secondGoodsMapper;
+
     @RequestMapping(path = "/addProduct", method = RequestMethod.POST)
     @ApiOperation(value = "商品操作", notes = "商品操作")
     @ApiImplicitParams({
@@ -162,6 +170,51 @@ public class SecondProductWantController {
         return builder.body(ResponseUtils.getResponseBody(0));
     }
     /**
+     * 收藏商品列表
+     */
+    @RequestMapping(path = "/selectProductCollect", method = RequestMethod.GET)
+    @ApiOperation(value = "收藏商品列表", notes = "收藏商品列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, type = "Integer"),
+    })
+    @Transactional(rollbackFor = {RuntimeException.class, Error.class})
+    public ResponseEntity<JSONObject> selectProductCollect(
+            @RequestParam(value = "userId", required = false) Integer userId
+    ) throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
+        SecondProductWantExample secondProductWantExample = new SecondProductWantExample();
+        secondProductWantExample.createCriteria().andTypeEqualTo(WantEnum.Relation.COLLECT.getState())
+                .andIsDeletedEqualTo((short) 0)
+                .andUserIdEqualTo(userId);
+        List<WantProductList> wantProductLists = new ArrayList<>();
+        List<SecondProductWant> secondProductWants =
+        secondProductWantMapper.selectByExample(secondProductWantExample);
+        secondProductWants.forEach(secondProductWant -> {
+            WantProductList wantProductList = new WantProductList();
+            wantProductList.setProductId(secondProductWant.getProductId());
+            SecondProduct secondProduct = secondProductMapper.selectByPrimaryKey(secondProductWant.getProductId());
+            wantProductList.setProductFile(secondProduct.getFile());
+            wantProductList.setProductName(secondProduct.getProductName());
+            wantProductList.setProductState(secondProduct.getProductState());
+            SecondGoodsExample secondGoodsExample = new SecondGoodsExample();
+            secondGoodsExample.createCriteria().andProductIdEqualTo(secondProductWant.getProductId())
+                    .andIsDeletedEqualTo((short) 0);
+            List<SecondGoods> secondGoods = secondGoodsMapper.selectByExample(secondGoodsExample);
+            wantProductList.setPrice(secondGoods.get(0).getSellPrice());
+            wantProductList.setIsWant(selectProductCollect(secondProductWant.getProductId(),userId));
+            //想要数量
+            secondProductWantExample.clear();
+            secondProductWantExample.createCriteria().andUserIdEqualTo(userId)
+                    .andIsDeletedEqualTo((short) 0)
+                    .andTypeEqualTo(WantEnum.Relation.WANT.getState());
+            List<SecondProductWant> secondProductWantList =
+            secondProductWantMapper.selectByExample(secondProductWantExample);
+            wantProductList.setWantNumber(secondProductWantList.size());
+            wantProductLists.add(wantProductList);
+        });
+        return builder.body(ResponseUtils.getResponseBody(wantProductLists));
+    }
+    /**
      * 查询是否收藏了该商品
      */
     @RequestMapping(path = "/selectProductCollect", method = RequestMethod.POST)
@@ -171,15 +224,15 @@ public class SecondProductWantController {
             @ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, type = "Integer"),
     })
     @Transactional(rollbackFor = {RuntimeException.class, Error.class})
-    public ResponseEntity<JSONObject> selectProductCollect(
+    public Integer selectProductCollect(
             @RequestParam(value = "productId", required = false) Integer productId,
             @RequestParam(value = "userId", required = false) Integer userId
-    ) throws Exception {
+    ){
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
         Object is = redisTemplate.opsForValue().get(userId.toString()+productId.toString()+"Collect");
         if (is!=null){
             System.out.println("走redis");
-            return builder.body(ResponseUtils.getResponseBody(is));
+            return (Integer) is;
         }else {
             SecondProductWantExample secondProductWantExample = new SecondProductWantExample();
             secondProductWantExample.createCriteria()
@@ -191,10 +244,10 @@ public class SecondProductWantController {
                     secondProductWantMapper.selectByExample(secondProductWantExample);
             if (secondProductWants.size()!=0){
                 redisTemplate.opsForValue().set(userId.toString()+productId.toString()+"Collect",0);
-                return builder.body(ResponseUtils.getResponseBody(0));
+                return 0;
             } else {
                 redisTemplate.opsForValue().set(userId.toString()+productId.toString()+"Collect",1);
-                return builder.body(ResponseUtils.getResponseBody(1));
+                return 1;
             }
         }
     }
