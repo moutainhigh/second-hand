@@ -171,6 +171,7 @@ private SecondStoreMapper secondStoreMapper;
         if (CollectionUtils.isEmpty(list)) {
             secondUser.setAddress(userInfo.getString("country") + " " + userInfo.getString("province") + " " + userInfo.getString("city"));
 //            secondUser.setUsername(openid);
+            secondUser.setFile(userInfo.getString("avatarUrl"));
             secondUser.setPhone(userInfo.getString("phone"));
             System.out.println(userInfo);
             secondUser.setCreateDate(LocalDateTime.now());

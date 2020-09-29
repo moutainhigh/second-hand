@@ -136,6 +136,7 @@ public class StoreLoginController {
             secondUser.setIdDeleted((byte) 0);
             secondUser.setIsAuthentication(Authentication.UserState.NOPASS.getState());
             secondUser.setRegion(userInfo.getString("province"));
+            secondUser.setFile(userInfo.getString("avatarUrl"));
             secondUser.setUserStatus((byte) 0);
             secondUser.setNickName(userInfo.getString("nickName"));
             secondUser.setUserType(Authentication.LoginType.STOREWX.getState());
