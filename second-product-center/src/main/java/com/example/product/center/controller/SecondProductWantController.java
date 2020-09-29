@@ -187,6 +187,7 @@ public class SecondProductWantController {
         secondProductWantExample.createCriteria().andTypeEqualTo(type)
                 .andIsDeletedEqualTo((short) 0)
                 .andUserIdEqualTo(userId);
+        secondProductWantExample.setOrderByClause("create_Time desc");
         List<WantProductList> wantProductLists = new ArrayList<>();
         List<SecondProductWant> secondProductWants =
         secondProductWantMapper.selectByExample(secondProductWantExample);
