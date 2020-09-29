@@ -173,17 +173,18 @@ public class SecondProductWantController {
      * 收藏商品列表
      */
     @RequestMapping(path = "/selectProductCollect", method = RequestMethod.GET)
-    @ApiOperation(value = "收藏商品列表", notes = "收藏商品列表")
+    @ApiOperation(value = "收藏，浏览,商品列表", notes = "收藏商品列表")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, type = "Integer"),
     })
     @Transactional(rollbackFor = {RuntimeException.class, Error.class})
     public ResponseEntity<JSONObject> selectProductCollect(
-            @RequestParam(value = "userId", required = false) Integer userId
+            @RequestParam(value = "userId", required = false) Integer userId,
+            String type
     ) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
         SecondProductWantExample secondProductWantExample = new SecondProductWantExample();
-        secondProductWantExample.createCriteria().andTypeEqualTo(WantEnum.Relation.COLLECT.getState())
+        secondProductWantExample.createCriteria().andTypeEqualTo(type)
                 .andIsDeletedEqualTo((short) 0)
                 .andUserIdEqualTo(userId);
         List<WantProductList> wantProductLists = new ArrayList<>();
