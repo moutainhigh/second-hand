@@ -116,8 +116,10 @@ public class ChatController {
         ChatWindow chatWindow = new ChatWindow();
         chatWindow.setUserId(userId);
         chatWindow.setUserName(secondUser.getNickName());
+        chatWindow.setUserFile(secondUser.getFile());
         chatWindow.setByUserId(byUserId);
         chatWindow.setByUserName(bySecondUser.getNickName());
+        chatWindow.setByUserFile(bySecondUser.getFile());
         chatWindow.setCreateTime(LocalDateTime.now());
         chatWindow.setModifyTime(LocalDateTime.now());
         Object object =
@@ -171,7 +173,6 @@ public class ChatController {
     @RequestMapping(value = "/selChatWindow", method = RequestMethod.GET)
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, type = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "ByUserId", value = "收消息用户id", required = true, type = "Integer"),
     })
     public ResponseEntity<JSONObject> selChatWindow(
             @RequestParam(value = "userId", required = false) Integer userId

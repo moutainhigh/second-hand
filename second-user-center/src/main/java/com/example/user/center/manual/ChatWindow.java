@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 public class ChatWindow {
     private Integer userId;//建立人id
     private String userName;//建立人姓名
+    private String userFile;//头像
+    private String byUserFile;//被建立人头像
     private String byUserName;//被建立人姓名
     private Integer byUserId;//被建立人id
     private LocalDateTime createTime;//创建时间
@@ -64,5 +66,21 @@ public class ChatWindow {
 
     public void setModifyTime(LocalDateTime modifyTime) {
         this.modifyTime = modifyTime;
+    }
+
+    public String getUserFile() {
+        return userFile;
+    }
+
+    public void setUserFile(String userFile) {
+        this.userFile = userFile;
+    }
+
+    public String getByUserFile() {
+        return byUserFile;
+    }
+
+    public void setByUserFile(String byUserFile) {
+        this.byUserFile = byUserFile;
     }
 }

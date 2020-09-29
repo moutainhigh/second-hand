@@ -8,7 +8,7 @@
     <button onclick="send()">发送消息</button>
     <hr/>
 	<!--userno:发送消息人的编号-->
-	<div id="userno">1</div>
+	<div id="userno">2</div>
     <button onclick="closeWebSocket()">关闭WebSocket连接</button>
     <hr/>
     <div id="message"></div>
@@ -52,6 +52,10 @@
 
     //将消息显示在网页上
     function setMessageInnerHTML(sendMessage) {
+        // console.log(sendMessage)
+        var obj1 = JSON.parse(sendMessage);
+        console.log(obj1)
+        console.log(obj1.byUserId)
 		document.getElementById('message').innerHTML += sendMessage + '<br/>';
     }
 
