@@ -20,6 +20,7 @@ public class IntegralRecordList {
     private Integer productId;
     private String productName;
     private String integralFile;
+    private String integralType;//积分换购类型
     private Integer integralNeed;//需要的积分
     private String integralName;//积分换购名称
     private Integer exemptCommission;//
@@ -118,5 +119,13 @@ public class IntegralRecordList {
 
     public void setExemptCommission(Integer exemptCommission) {
         this.exemptCommission = exemptCommission;
+    }
+
+    public String getIntegralType() {
+        return integralType;
+    }
+
+    public void setIntegralType(String integralType) {
+        this.integralType = integralType;
     }
 }

@@ -96,6 +96,9 @@ private SecondStoreMapper secondStoreMapper;
     //评价
     @Autowired
     private SecondEvaluateMapper secondEvaluateMapper;
+    //余额
+    @Autowired
+    private SecondStoreBalanceMapper secondStoreBalanceMapper;
     @RequestMapping(path = "/wechart", method = RequestMethod.GET)
     @ApiOperation(value = "微信登录", notes = "微信登录")
     public ResponseEntity<JSONObject> wxLogin(@RequestParam(value = "code", required = false) String code,
@@ -527,6 +530,26 @@ private SecondStoreMapper secondStoreMapper;
 
         }
         return builder.body(ResponseUtils.getResponseBody(userDetails));
+    }
+    @RequestMapping(path = "/UserMoney", method = RequestMethod.GET)
+    @ApiOperation(value = "用户积分查询", notes = "用户列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "storeId", value = "店铺", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "type", value = "类型", required = true, type = "Integer"),
+    })
+    public ResponseEntity<JSONObject> UserMoney(
+            Integer userId,
+            Integer storeId,
+            String type
+    ) throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
+        SecondStoreBalanceExample secondStoreBalanceExample = new SecondStoreBalanceExample();
+        secondStoreBalanceExample.createCriteria().andUserIdEqualTo(userId)
+                .andStoreIdEqualTo(storeId)
+                .andBalanceTypeEqualTo(BanlaceEnum.Relation.getState(type).getState())
+                .andIsDeletedEqualTo((short) 0);
+        return builder.body(ResponseUtils.getResponseBody(secondStoreBalanceMapper.selectByExample(secondStoreBalanceExample)));
     }
     @InitBinder
     public void initBinder(WebDataBinder binder, WebRequest request) {

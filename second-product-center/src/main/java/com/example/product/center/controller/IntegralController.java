@@ -571,6 +571,7 @@ public class IntegralController {
         List<IntegralRecordList> integralRecordLists = new ArrayList<>();
         secondIntegralRecords.forEach(secondIntegralRecord -> {
             IntegralRecordList integralRecordList = new IntegralRecordList();
+            integralRecordList.setIntegralType(secondIntegralRecord.getIntegralType());
             integralRecordList.setRecordId(secondIntegralRecord.getId());
             integralRecordList.setUserId(userId);
             integralRecordList.setStoreId(storeId);
@@ -586,11 +587,11 @@ public class IntegralController {
                     .andIsDeletedEqualTo((byte) 0);
             List<SecondIntegralStrategy> secondIntegralStrategies =
                     secondIntegralStrategyMapper.selectByExample(secondIntegralStrategyExample);
-            if (IntegralType.equals(IntegralEnum.Relation.PRODUCT.getState())){
+            if (secondIntegralRecord.getIntegralType().equals(IntegralEnum.Relation.PRODUCT.getState())){
                 integralRecordList.setProductId(secondIntegralStrategies.get(0).getProductId());
 //                SecondProduct secondProduct = secondProductMapper.selectByPrimaryKey(secondIntegralStrategies.get(0).getProductId());
 //                integralRecordList.setProductName();
-            } else if (IntegralType.equals(IntegralEnum.Relation.WITHDRAW.getState())){
+            } else if (secondIntegralRecord.getIntegralType().equals(IntegralEnum.Relation.WITHDRAW.getState())){
                 integralRecordList.setExemptCommission(secondIntegralStrategies.get(0).getExemptCommission());
             }
             integralRecordLists.add(integralRecordList);
