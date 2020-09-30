@@ -183,18 +183,23 @@ public class WithdrawalController {
             if (secondWithdrawalExempts.size()!=0){
                 if (secondWithdrawalExempts.get(0).getExemptCommission()!=null){
                     if (secondWithdrawalExempts.get(0).getExemptCommission()>withdrawalMoney){
+                        secondWithdrawalExempt.setId(secondWithdrawalExempts.get(0).getId());
                         secondWithdrawalExempt.setExemptCommission(secondWithdrawalExempts.get(0).getExemptCommission()-withdrawalMoney);
                         secondWithdrawalExempt.setModifyDate(LocalDateTime.now());
+                        secondWithdrawalExemptMapper.updateByPrimaryKeySelective(secondWithdrawalExempt);
                         mon=withdrawalMoney;
                         withdrawalMoney=0;
                     } else {
+                        secondWithdrawalExempt.setId(secondWithdrawalExempts.get(0).getId());
                         secondWithdrawalExempt.setExemptCommission(0);
                         secondWithdrawalExempt.setModifyDate(LocalDateTime.now());
+                        secondWithdrawalExemptMapper.updateByPrimaryKeySelective(secondWithdrawalExempt);
                         mon=secondWithdrawalExempts.get(0).getExemptCommission();
                         withdrawalMoney=withdrawalMoney - secondWithdrawalExempts.get(0).getExemptCommission();
                     }
                 }
             }
+            //计算
             Double realityMoneys = ((Double.valueOf(withdrawalMoney) / 10000));
 //            Double realityMoneys = ((Double.valueOf(withdrawalMoney)*rate)/100);//                        利息进一位
             Integer realityMoneyx = (int) Math.ceil(realityMoneys);
