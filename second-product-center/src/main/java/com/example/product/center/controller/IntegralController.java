@@ -543,4 +543,56 @@ public class IntegralController {
         secondIntegralStrategyMapper.updateByExampleSelective(secondIntegralStrategy,secondIntegralStrategyExample);
         return "0";
     }
+    @ApiOperation(value = "查询积分换购记录", notes = "查询积分换购记录")
+    @RequestMapping(value = "/selectIntegralRecord", method = RequestMethod.GET)
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "IntegralType", value = "类型", required = true, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "state", value = "状态", required = true, type = "String"),
+    })
+    public ResponseEntity<JSONObject> selectIntegralRecord(
+            @RequestParam(value = "IntegralType", required = false) String IntegralType,
+            @RequestParam(value = "userId", required = false) Integer userId,
+            @RequestParam(value = "storeId", required = false) Integer storeId,
+            @RequestParam(value = "state", required = false) String state
+    ) throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
+        SecondIntegralRecordExample secondIntegralRecordExample = new SecondIntegralRecordExample();
+        SecondIntegralRecordExample.Criteria criteria = secondIntegralRecordExample.createCriteria().andUserIdEqualTo(userId)
+                .andStoreIdEqualTo(storeId)
+                .andIntegralTypeEqualTo(IntegralType)
+                .andIsDeletedEqualTo((byte) 0);
+        if (state!=null){
+            criteria.andIntegralStateEqualTo(state);
+        }
+        List<SecondIntegralRecord> secondIntegralRecords =
+        secondIntegralRecordMapper.selectByExample(secondIntegralRecordExample);
+        List<IntegralRecordList> integralRecordLists = new ArrayList<>();
+        secondIntegralRecords.forEach(secondIntegralRecord -> {
+            IntegralRecordList integralRecordList = new IntegralRecordList();
+            integralRecordList.setRecordId(secondIntegralRecord.getId());
+            integralRecordList.setUserId(userId);
+            integralRecordList.setStoreId(storeId);
+            integralRecordList.setIntegralId(secondIntegralRecord.getIntegralId());
+            integralRecordList.setIntegralState(secondIntegralRecord.getIntegralState());
+            integralRecordList.setCreateTime(secondIntegralRecord.getCreateDate());
+            SecondIntegral secondIntegral = secondIntegralMapper.selectByPrimaryKey(secondIntegralRecord.getIntegralId());
+            integralRecordList.setIntegralName(secondIntegral.getIntegralName());
+            integralRecordList.setIntegralNeed(secondIntegral.getIntegralNeed());
+            integralRecordList.setIntegralFile(secondIntegral.getInetgralFile());
+            SecondIntegralStrategyExample secondIntegralStrategyExample = new SecondIntegralStrategyExample();
+            secondIntegralStrategyExample.createCriteria().andIntegralIdEqualTo(secondIntegralRecord.getIntegralId())
+                    .andIsDeletedEqualTo((byte) 0);
+            List<SecondIntegralStrategy> secondIntegralStrategies =
+                    secondIntegralStrategyMapper.selectByExample(secondIntegralStrategyExample);
+            if (IntegralType.equals(IntegralEnum.Relation.PRODUCT.getState())){
+                integralRecordList.setProductId(secondIntegralStrategies.get(0).getProductId());
+//                SecondProduct secondProduct = secondProductMapper.selectByPrimaryKey(secondIntegralStrategies.get(0).getProductId());
+//                integralRecordList.setProductName();
+            } else if (IntegralType.equals(IntegralEnum.Relation.WITHDRAW.getState())){
+                integralRecordList.setExemptCommission(secondIntegralStrategies.get(0).getExemptCommission());
+            }
+            integralRecordLists.add(integralRecordList);
+        });
+        return builder.body(ResponseUtils.getResponseBody(integralRecordLists));
+    }
 }

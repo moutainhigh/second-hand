@@ -243,17 +243,17 @@ public class SecondOrderController {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
         SecondOrderExample secondOrderExample = new SecondOrderExample();
         if (OrderStatus.equals(OrderEnum.OrderStatus.ALL.getOrderStatus())){
-            secondOrderExample.createCriteria().andIsDeletedEqualTo((byte) 0)
+            SecondOrderExample.Criteria criteria = secondOrderExample.createCriteria().andIsDeletedEqualTo((byte) 0)
                     .andOrderTypeEqualTo(orderType);
             if (userId!=null){
-                secondOrderExample.createCriteria().andUserIdEqualTo(userId);
+                criteria.andUserIdEqualTo(userId);
             }
         }else{
-            secondOrderExample.createCriteria().andIsDeletedEqualTo((byte) 0)
+            SecondOrderExample.Criteria criteria = secondOrderExample.createCriteria().andIsDeletedEqualTo((byte) 0)
                     .andOrderTypeEqualTo(orderType)
             .andOrderStatusEqualTo(OrderStatus);
             if (userId!=null){
-                secondOrderExample.createCriteria().andUserIdEqualTo(userId);
+                criteria.andUserIdEqualTo(userId);
             }
         }
         List<SecondOrder> secondOrders = secondOrderMapper.selectByExample(secondOrderExample);
