@@ -557,9 +557,11 @@ public class IntegralController {
     ) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
         SecondIntegralRecordExample secondIntegralRecordExample = new SecondIntegralRecordExample();
-        SecondIntegralRecordExample.Criteria criteria = secondIntegralRecordExample.createCriteria().andUserIdEqualTo(userId)
-                .andStoreIdEqualTo(storeId)
+        SecondIntegralRecordExample.Criteria criteria = secondIntegralRecordExample.createCriteria()
                 .andIsDeletedEqualTo((byte) 0);
+        if (userId!=null&&storeId==null){
+            criteria.andUserIdEqualTo(userId).andStoreIdEqualTo(storeId);
+        }
         if (state!=null){
             criteria.andIntegralStateEqualTo(state);
         }
