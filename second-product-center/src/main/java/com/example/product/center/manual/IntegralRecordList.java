@@ -24,6 +24,7 @@ public class IntegralRecordList {
     private Integer integralNeed;//需要的积分
     private String integralName;//积分换购名称
     private Integer exemptCommission;//
+    private String address;
 
     public Integer getRecordId() {
         return recordId;
@@ -127,5 +128,13 @@ public class IntegralRecordList {
 
     public void setIntegralType(String integralType) {
         this.integralType = integralType;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }
