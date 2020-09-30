@@ -100,7 +100,9 @@ public class WithdrawalController {
     //审批提现记录
     @Autowired
     private SecondWithdrawalAuditMapper secondWithdrawalAuditMapper;
-
+    //免提现额度
+    @Autowired
+    private SecondWithdrawalExemptMapper secondWithdrawalExemptMapper;
     @RequestMapping(path = "/addWithdrawal", method = RequestMethod.POST)
     @ApiOperation(value = "申请提现", notes = "申请提现")
     @Transactional(rollbackFor = {RuntimeException.class, Error.class})
@@ -168,11 +170,36 @@ public class WithdrawalController {
             }else {
                 return builder.body(ResponseUtils.getResponseBody("没有这个来源"));
             }
+            //取店铺免提现额度
+            Integer mon = 0;
+            SecondWithdrawalExemptExample secondWithdrawalExemptExample = new SecondWithdrawalExemptExample();
+            secondWithdrawalExemptExample.createCriteria().andUserIdEqualTo(userId)
+                    .andStoreIdEqualTo(storeId)
+                    .andIsDeletedEqualTo((byte) 0);
+            List<SecondWithdrawalExempt> secondWithdrawalExempts =
+            secondWithdrawalExemptMapper.selectByExample(secondWithdrawalExemptExample);
+
+            SecondWithdrawalExempt secondWithdrawalExempt = new SecondWithdrawalExempt();
+            if (secondWithdrawalExempts.size()!=0){
+                if (secondWithdrawalExempts.get(0).getExemptCommission()!=null){
+                    if (secondWithdrawalExempts.get(0).getExemptCommission()>withdrawalMoney){
+                        secondWithdrawalExempt.setExemptCommission(secondWithdrawalExempts.get(0).getExemptCommission()-withdrawalMoney);
+                        secondWithdrawalExempt.setModifyDate(LocalDateTime.now());
+                        mon=withdrawalMoney;
+                        withdrawalMoney=0;
+                    } else {
+                        secondWithdrawalExempt.setExemptCommission(0);
+                        secondWithdrawalExempt.setModifyDate(LocalDateTime.now());
+                        mon=secondWithdrawalExempts.get(0).getExemptCommission();
+                        withdrawalMoney=withdrawalMoney - secondWithdrawalExempts.get(0).getExemptCommission();
+                    }
+                }
+            }
             Double realityMoneys = ((Double.valueOf(withdrawalMoney) / 10000));
 //            Double realityMoneys = ((Double.valueOf(withdrawalMoney)*rate)/100);//                        利息进一位
             Integer realityMoneyx = (int) Math.ceil(realityMoneys);
             //                        提现实际金额
-            Integer realityMoney = withdrawalMoney-(realityMoneyx*(int)(rate*100));
+            Integer realityMoney = (withdrawalMoney-(realityMoneyx*(int)(rate*100)))+mon;
             if (source.equals(WithdrawalEnum.WithdrawalSource.USER.getWithdrawalSource())){
                 SecondUserSonExample secondUserSonExample = new SecondUserSonExample();
                 secondUserSonExample.createCriteria().andUserIdEqualTo(userId)
