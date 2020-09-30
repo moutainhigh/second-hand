@@ -91,7 +91,7 @@ public class IntegralController {
             @RequestParam(value = "sellPrice", required = false) Integer sellPrice,
             @RequestParam(value = "storeId", required = false) Integer storeId,
             @RequestParam(value = "limit", required = false) Integer limit,
-            @RequestParam(value = "productDesc", required = false) Integer productDesc,
+            @RequestParam(value = "productDesc", required = false) String productDesc,
             @RequestParam(value = "quantity", required = false) Integer quantity
     ) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
