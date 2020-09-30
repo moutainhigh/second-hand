@@ -559,10 +559,12 @@ public class IntegralController {
         SecondIntegralRecordExample secondIntegralRecordExample = new SecondIntegralRecordExample();
         SecondIntegralRecordExample.Criteria criteria = secondIntegralRecordExample.createCriteria().andUserIdEqualTo(userId)
                 .andStoreIdEqualTo(storeId)
-                .andIntegralTypeEqualTo(IntegralType)
                 .andIsDeletedEqualTo((byte) 0);
         if (state!=null){
             criteria.andIntegralStateEqualTo(state);
+        }
+        if (IntegralType!=null){
+            criteria.andIntegralTypeEqualTo(IntegralType);
         }
         List<SecondIntegralRecord> secondIntegralRecords =
         secondIntegralRecordMapper.selectByExample(secondIntegralRecordExample);
