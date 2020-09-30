@@ -15,6 +15,7 @@ public class IntegralList {
     private String integralName;//积分商品名称
     private String integralType;//积分商品类型
     private Integer integralNeed;//所需积分数量
+    private String productDesc;
     private String inetgralFile;//图片
     private Integer integralQuantity;//库存
     private Integer productId;//商品id
@@ -118,5 +119,13 @@ public class IntegralList {
 
     public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
+    }
+
+    public String getProductDesc() {
+        return productDesc;
+    }
+
+    public void setProductDesc(String productDesc) {
+        this.productDesc = productDesc;
     }
 }

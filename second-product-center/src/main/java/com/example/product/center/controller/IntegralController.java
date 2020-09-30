@@ -91,6 +91,7 @@ public class IntegralController {
             @RequestParam(value = "sellPrice", required = false) Integer sellPrice,
             @RequestParam(value = "storeId", required = false) Integer storeId,
             @RequestParam(value = "limit", required = false) Integer limit,
+            @RequestParam(value = "productDesc", required = false) Integer productDesc,
             @RequestParam(value = "quantity", required = false) Integer quantity
     ) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
@@ -108,7 +109,7 @@ public class IntegralController {
             addWithdraw(secondIntegral.getId(),limit);
         }
         else if (IntegralEnum.Relation.getState(type).getState().equals(IntegralEnum.Relation.PRODUCT.getState())){
-            addProduct(secondIntegral.getId(),storeId,quantity,sellPrice);
+            addProduct(secondIntegral.getId(),storeId,quantity,sellPrice,productDesc);
         }
         return builder.body(ResponseUtils.getResponseBody(0));
     }
@@ -130,9 +131,10 @@ public class IntegralController {
     /**
      * 创建积分换购商品
      */
-    public String addProduct(Integer secondIntegralId,Integer StoreId,Integer goodsResp,Integer money){
+    public String addProduct(Integer secondIntegralId,Integer StoreId,Integer goodsResp,Integer money,String productDesc){
         //创建商品
         SecondProduct secondProduct = new SecondProduct();
+        secondProduct.setProductDesc(productDesc);
         secondProduct.setProductType(ProductEnum.Relation.INTEGRAL.getState());//积分商品
         secondProduct.setShowType(ProductEnum.ShowType.COUPON.getState());//卡券
         secondProduct.setStoreId(StoreId);
@@ -190,6 +192,7 @@ public class IntegralController {
             if (secondIntegral.getIntegralType().equals(IntegralEnum.Relation.PRODUCT.getState())){
                 SecondProduct secondProduct =
                 secondProductMapper.selectByPrimaryKey(secondIntegralStrategies.get(0).getProductId());
+                integralList.setProductDesc(secondProduct.getProductDesc());
                 integralList.setStoreId(secondProduct.getStoreId());
                 integralList.setProductId(secondProduct.getId());
                 SecondStore secondStore = secondStoreMapper.selectByPrimaryKey(secondProduct.getStoreId());
