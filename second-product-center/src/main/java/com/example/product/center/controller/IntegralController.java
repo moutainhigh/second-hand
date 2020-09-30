@@ -448,4 +448,98 @@ public class IntegralController {
         redisTemplate.delete(decrypt);
         return builder.body(ResponseUtils.getResponseBody(0));
     }
+    @ApiOperation(value = "修改积分商品", notes = "修改积分商品")
+    @RequestMapping(value = "/updateIntegralProduct", method = RequestMethod.POST)
+    @Transactional(rollbackFor = {RuntimeException.class, Error.class})
+    public ResponseEntity<JSONObject> updateIntegralProduct(
+
+            @RequestParam(value = "productName", required = false) String productName,
+            @RequestParam(value = "integralId", required = false) Integer integralId,
+            @RequestParam(value = "productId", required = false) Integer productId,
+            @RequestParam(value = "file1", required = false) String file1,
+            @RequestParam(value = "type", required = false) String type,
+            @RequestParam(value = "sellPrice", required = false) Integer sellPrice,
+            @RequestParam(value = "storeId", required = false) Integer storeId,
+            @RequestParam(value = "limit", required = false) Integer limit,
+            @RequestParam(value = "productDesc", required = false) String productDesc,
+            @RequestParam(value = "quantity", required = false) Integer quantity
+    ) throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
+        SecondIntegral secondIntegral = new SecondIntegral();
+        secondIntegral.setId(integralId);
+        secondIntegral.setIntegralName(productName);
+        secondIntegral.setIntegralNeed(sellPrice);
+        secondIntegral.setIntegralType(IntegralEnum.Relation.getState(type).getState());
+        secondIntegral.setQuantity(quantity);
+        secondIntegral.setInetgralFile(file1);
+        secondIntegral.setModifyDate(LocalDateTime.now());
+        secondIntegral.setIsDeleted((byte) 0);
+        secondIntegralMapper.updateByPrimaryKeySelective(secondIntegral);
+        if (IntegralEnum.Relation.getState(type).getState().equals(IntegralEnum.Relation.WITHDRAW.getState())){
+            updateWithdraw(secondIntegral.getId(),limit);
+        }
+        else if (IntegralEnum.Relation.getState(type).getState().equals(IntegralEnum.Relation.PRODUCT.getState())){
+            updateProduct(secondIntegral.getId(),storeId,quantity,sellPrice,productDesc,productId);
+        }
+        return builder.body(ResponseUtils.getResponseBody(0));
+    }
+    /**
+     * 修改积分换购提现资质
+     * @return
+     */
+    public String updateWithdraw(Integer secondIntegralId,
+                                 Integer money){
+        SecondIntegralStrategyExample secondIntegralStrategyExample = new SecondIntegralStrategyExample();
+        secondIntegralStrategyExample.createCriteria().andIntegralIdEqualTo(secondIntegralId)
+                .andIsDeletedEqualTo((byte) 0);
+        SecondIntegralStrategy secondIntegralStrategy = new SecondIntegralStrategy();
+        secondIntegralStrategy.setExemptCommission(money);
+        secondIntegralStrategy.setModifyDate(LocalDateTime.now());
+        secondIntegralStrategy.setIsDeleted((byte) 0);
+        secondIntegralStrategyMapper.updateByExampleSelective(secondIntegralStrategy,secondIntegralStrategyExample);
+        return "0";
+    }
+    /**
+     * 修改积分换购商品
+     */
+    public String updateProduct(Integer secondIntegralId,
+                                Integer StoreId,
+                                Integer goodsResp,
+                                Integer money,
+                                String productDesc,
+                                Integer productId){
+        //创建商品
+        SecondProduct secondProduct = new SecondProduct();
+        secondProduct.setId(productId);
+        secondProduct.setProductDesc(productDesc);
+        secondProduct.setProductType(ProductEnum.Relation.INTEGRAL.getState());//积分商品
+        secondProduct.setShowType(ProductEnum.ShowType.COUPON.getState());//卡券
+        secondProduct.setStoreId(StoreId);
+        secondProduct.setIsPutaway(ProductEnum.IsPutaway.PUTAWAY.getState());
+        secondProduct.setModifyTime(LocalDateTime.now());
+        secondProduct.setIsDeleted((short) 0);
+        secondProductMapper.updateByPrimaryKeySelective(secondProduct);
+        //物品
+        SecondGoodsExample secondGoodsExample = new SecondGoodsExample();
+        secondGoodsExample.createCriteria().andProductIdEqualTo(productId)
+                .andIsDeletedEqualTo((short) 0);
+        SecondGoods secondGoods = new SecondGoods();
+        secondGoods.setSellPrice(money);
+        secondGoods.setGoodsResp(goodsResp);//库存
+        secondGoods.setIsDeleted((short) 0);
+        secondGoods.setModifyTime(LocalDateTime.now());
+        secondGoodsMapper.updateByExampleSelective(secondGoods,secondGoodsExample);
+
+        SecondIntegralStrategyExample secondIntegralStrategyExample = new SecondIntegralStrategyExample();
+        secondIntegralStrategyExample.createCriteria().andIntegralIdEqualTo(secondIntegralId)
+                .andProductIdEqualTo(productId)
+                .andIsDeletedEqualTo((byte) 0);
+        SecondIntegralStrategy secondIntegralStrategy = new SecondIntegralStrategy();
+        secondIntegralStrategy.setProductId(secondProduct.getId());
+        secondIntegralStrategy.setIntegralId(secondIntegralId);
+        secondIntegralStrategy.setModifyDate(LocalDateTime.now());
+        secondIntegralStrategy.setIsDeleted((byte) 0);
+        secondIntegralStrategyMapper.updateByExampleSelective(secondIntegralStrategy,secondIntegralStrategyExample);
+        return "0";
+    }
 }
