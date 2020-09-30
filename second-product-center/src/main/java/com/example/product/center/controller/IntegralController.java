@@ -223,6 +223,7 @@ public class IntegralController {
     ) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
        SecondIntegral secondIntegral = new SecondIntegral();
+        secondIntegral.setId(integralId);
         secondIntegral.setIsDeleted((byte) 1);
         secondIntegral.setModifyDate(LocalDateTime.now());
         secondIntegralMapper.updateByPrimaryKeySelective(secondIntegral);
