@@ -573,12 +573,12 @@ public class IntegralController {
         List<IntegralRecordList> integralRecordLists = new ArrayList<>();
         secondIntegralRecords.forEach(secondIntegralRecord -> {
             IntegralRecordList integralRecordList = new IntegralRecordList();
-            SecondStore secondStore = secondStoreMapper.selectByPrimaryKey(storeId);
+            SecondStore secondStore = secondStoreMapper.selectByPrimaryKey(secondIntegralRecord.getStoreId());
             integralRecordList.setAddress(secondStore.getSecondAddress());
             integralRecordList.setIntegralType(secondIntegralRecord.getIntegralType());
             integralRecordList.setRecordId(secondIntegralRecord.getId());
-            integralRecordList.setUserId(userId);
-            integralRecordList.setStoreId(storeId);
+            integralRecordList.setUserId(secondIntegralRecord.getUserId());
+            integralRecordList.setStoreId(secondIntegralRecord.getStoreId());
             integralRecordList.setIntegralId(secondIntegralRecord.getIntegralId());
             integralRecordList.setIntegralState(secondIntegralRecord.getIntegralState());
             integralRecordList.setCreateTime(secondIntegralRecord.getCreateDate());
