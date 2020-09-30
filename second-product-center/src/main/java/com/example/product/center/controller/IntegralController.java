@@ -81,6 +81,9 @@ public class IntegralController {
     //授权
     @Autowired
     private SecondAuthMapper secondAuthMapper;
+
+    @Autowired
+    private SecondUserMapper secondUserMapper;
     @ApiOperation(value = "添加积分商品", notes = "添加积分商品")
     @RequestMapping(value = "/addIntegralProduct", method = RequestMethod.POST)
     @Transactional(rollbackFor = {RuntimeException.class, Error.class})
@@ -578,6 +581,8 @@ public class IntegralController {
             integralRecordList.setIntegralType(secondIntegralRecord.getIntegralType());
             integralRecordList.setRecordId(secondIntegralRecord.getId());
             integralRecordList.setUserId(secondIntegralRecord.getUserId());
+            SecondUser secondUser = secondUserMapper.selectByPrimaryKey(secondIntegralRecord.getUserId());
+            integralRecordList.setUserName(secondUser.getNickName());
             integralRecordList.setStoreId(secondIntegralRecord.getStoreId());
             integralRecordList.setIntegralId(secondIntegralRecord.getIntegralId());
             integralRecordList.setIntegralState(secondIntegralRecord.getIntegralState());
