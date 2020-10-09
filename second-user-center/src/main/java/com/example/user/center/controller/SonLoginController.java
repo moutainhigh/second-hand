@@ -210,6 +210,7 @@ public class SonLoginController {
             sonList.setSonBalance(secondSon.getSonBalance());//余额
             SecondColleges secondColleges =
             secondCollegesMapper.selectByPrimaryKey(secondSon.getCollegoryId());//学校id查询
+            sonList.setRecord(secondColleges.getRecord());
             sonList.setCollegoryName(secondColleges.getName());
             SecondCityExample secondCityExample = new SecondCityExample();//城市查询
             secondCityExample.createCriteria().andCityIdEqualTo(secondColleges.getCityId());

@@ -20,6 +20,7 @@ public class SonList {
     private String userName;
     private String loginUserName;
     private String sonFile;
+    private String record;
 
     public Integer getId() {
         return id;
@@ -107,5 +108,13 @@ public class SonList {
 
     public void setSonState(Integer sonState) {
         this.sonState = sonState;
+    }
+
+    public String getRecord() {
+        return record;
+    }
+
+    public void setRecord(String record) {
+        this.record = record;
     }
 }
