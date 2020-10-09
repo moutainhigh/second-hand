@@ -15,6 +15,7 @@ public class SonList {
     private String sonName;//子站点名称
     private Integer sonBalance;//子站点余额
     private String collegoryName;//学校名称
+    private Integer sonState;//子站点状态
     private String city;//城市
     private String userName;
     private String loginUserName;
@@ -98,5 +99,13 @@ public class SonList {
 
     public void setSonFile(String sonFile) {
         this.sonFile = sonFile;
+    }
+
+    public Integer getSonState() {
+        return sonState;
+    }
+
+    public void setSonState(Integer sonState) {
+        this.sonState = sonState;
     }
 }

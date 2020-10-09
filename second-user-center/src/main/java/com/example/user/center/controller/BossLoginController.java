@@ -1,13 +1,11 @@
 package com.example.user.center.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.example.user.center.dao.SecondAuthMapper;
-import com.example.user.center.dao.SecondBossMapper;
-import com.example.user.center.dao.SecondSlideshowMapper;
-import com.example.user.center.dao.SecondUserMapper;
+import com.example.user.center.dao.*;
 import com.example.user.center.manual.Authentication;
 import com.example.user.center.manual.SlideshowEnum;
 import com.example.user.center.model.*;
+import com.second.common.service.FileMangeService;
 import com.second.common.utils.Encrypt;
 import com.second.utils.response.handler.ResponseEntity;
 import com.second.utils.response.handler.ResponseUtils;
@@ -48,6 +46,9 @@ public class BossLoginController {
     private SecondBossMapper secondBossMapper;
     @Autowired
     private SecondSlideshowMapper secondSlideshowMapper;
+    //文件
+    @Autowired
+    private SecondFileMapper secondFileMapper;
 //    总后台登录
 @RequestMapping(path = "/Login", method = RequestMethod.POST)
 @ApiOperation(value = "登录", notes = "登录")
@@ -152,15 +153,28 @@ public class BossLoginController {
             HttpServletResponse response
     ) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
-        SecondBoss secondBoss = new SecondBoss();
-        secondBoss.setId(1);
-        secondBoss.setService(service);
-        secondBoss.setWeChat(weChat);
-        secondBoss.setNewUserIntegral(newUserIntegral);
-        secondBoss.setStoreWithdrawalCommission(storeWithdrawalCommission);
-        secondBoss.setUserWithdrawalCommission(userWithdrawalCommission);
-        secondBoss.setSonWithdrawalCommission(sonWithdrawalCommission);
-        secondBossMapper.insertSelective(secondBoss);
+        SecondBoss secondBoss1 = secondBossMapper.selectByPrimaryKey(1);
+        if (secondBoss1==null){
+            SecondBoss secondBoss = new SecondBoss();
+            secondBoss.setId(1);
+            secondBoss.setService(service);
+            secondBoss.setWeChat(weChat);
+            secondBoss.setNewUserIntegral(newUserIntegral);
+            secondBoss.setStoreWithdrawalCommission(storeWithdrawalCommission);
+            secondBoss.setUserWithdrawalCommission(userWithdrawalCommission);
+            secondBoss.setSonWithdrawalCommission(sonWithdrawalCommission);
+            secondBossMapper.insertSelective(secondBoss);
+        } else {
+            SecondBoss secondBoss = new SecondBoss();
+            secondBoss.setId(1);
+            secondBoss.setService(service);
+            secondBoss.setWeChat(weChat);
+            secondBoss.setNewUserIntegral(newUserIntegral);
+            secondBoss.setStoreWithdrawalCommission(storeWithdrawalCommission);
+            secondBoss.setUserWithdrawalCommission(userWithdrawalCommission);
+            secondBoss.setSonWithdrawalCommission(sonWithdrawalCommission);
+            secondBossMapper.updateByPrimaryKeySelective(secondBoss);
+        }
         for (String file:slideshow){
             SecondSlideshow secondSlideshow = new SecondSlideshow();
             secondSlideshow.setFile(file);
@@ -171,5 +185,49 @@ public class BossLoginController {
             secondSlideshowMapper.insertSelective(secondSlideshow);
         }
         return builder.body(ResponseUtils.getResponseBody(0));
+    }
+    @ApiOperation(value = "删除首页轮播图", notes = "删除首页轮播图")
+    @RequestMapping(value = "/deleted", method = RequestMethod.POST)
+    @Transactional(rollbackFor = {RuntimeException.class, Error.class})
+    public ResponseEntity<JSONObject> deleted(String file,String type) throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
+        SecondSlideshowExample secondSlideshowExample = new SecondSlideshowExample();
+        secondSlideshowExample.createCriteria()
+                .andFileEqualTo(file)
+                .andFileTypeEqualTo(type);
+        SecondSlideshow secondSlideshow = new SecondSlideshow();
+        secondSlideshow.setIsDeleted((byte) 0);
+        secondSlideshowMapper.updateByExampleSelective(secondSlideshow,secondSlideshowExample);
+        fileDelete2(file);
+        return builder.body(ResponseUtils.getResponseBody(0));
+    }
+    public ResponseEntity<JSONObject> fileDelete2(String file) throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
+        String str1 = file.substring(0, file.indexOf("="));
+        String str2 = file.substring(str1.length() + 1, file.length());
+
+        SecondFile fileDesc = secondFileMapper.selectByPrimaryKey(Integer.valueOf(str2));
+        FileMangeService fileManageService = new FileMangeService();
+        if (fileDesc != null) {
+            fileManageService.deleteFile(fileDesc.getGroupName(), fileDesc.getRemoteFilename());
+        }
+        secondFileMapper.deleteByPrimaryKey(Integer.valueOf(str2));
+        return builder.body(ResponseUtils.getResponseBody(Integer.valueOf(str2)));
+    }
+    /**
+     * 轮播图查询
+     */
+    @ApiOperation(value = "查询轮播图", notes = "查询轮播图")
+    @RequestMapping(value = "/select", method = RequestMethod.GET)
+    @Transactional(rollbackFor = {RuntimeException.class, Error.class})
+    public ResponseEntity<JSONObject> select(String type) throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
+        SecondSlideshowExample secondSlideshowExample = new SecondSlideshowExample();
+        secondSlideshowExample.createCriteria()
+                .andFileTypeEqualTo(type);
+        List<SecondSlideshow> secondSlideshows =
+        secondSlideshowMapper.selectByExample(secondSlideshowExample);
+
+        return builder.body(ResponseUtils.getResponseBody(secondSlideshows));
     }
 }

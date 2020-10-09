@@ -45,6 +45,7 @@ private SecondBossSettingMapper secondBossSettingMapper;
             //返回选择文件提示
             return "请选择上传文件";
         }
+        payBoss.setBossId(1);
         SecondBossSettingExample payBossExample = new SecondBossSettingExample();
         payBossExample.createCriteria().andBossIdEqualTo(payBoss.getBossId()).andIsDeletedEqualTo((byte) 0);
         List<SecondBossSetting> payBossList = secondBossSettingMapper.selectByExample(payBossExample);

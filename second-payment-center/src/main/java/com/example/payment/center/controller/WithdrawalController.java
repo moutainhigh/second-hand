@@ -340,6 +340,26 @@ public class WithdrawalController {
         return builder.body(ResponseUtils.getResponseBody(0));
 
     }
+
+    @ApiOperation(value = "提现率查询", notes = "提现率查询")
+    @RequestMapping(value = "/commission", method = RequestMethod.GET)
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "type", value = "提现人类型", required = true, type = "String"),
+    })
+    public ResponseEntity<JSONObject> commission(String type)
+            throws JSONException {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
+        SecondBoss secondBoss = secondBossMapper.selectByPrimaryKey(1);
+        if (type.equals(Authentication.LoginType.USERWX.getState())){
+            return builder.body(ResponseUtils.getResponseBody(secondBoss.getUserWithdrawalCommission()));
+        } else if (type.equals(Authentication.LoginType.STOREWX.getState())){
+            return builder.body(ResponseUtils.getResponseBody(secondBoss.getStoreWithdrawalCommission()));
+        }else if (type.equals(Authentication.LoginType.SON.getState())){
+            return builder.body(ResponseUtils.getResponseBody(secondBoss.getSonWithdrawalCommission()));
+        }
+        return builder.body(ResponseUtils.getResponseBody(0));
+
+    }
     public static void main(String[] args) {
         Integer money = 10100;
         Double realityMoneys1 = ((Double.valueOf(money) / 10000));

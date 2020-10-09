@@ -198,6 +198,7 @@ public class SonLoginController {
         List<SonList> sonLists = new ArrayList<>();
         secondSons.forEach(secondSon -> {
             SonList sonList = new SonList();
+            sonList.setSonState(secondSon.getSonState());
             sonList.setId(secondSon.getId());//子站点id
             sonList.setUserId(secondSon.getUserId());
             sonList.setCollegoryId(secondSon.getCollegoryId());//学校id
@@ -218,5 +219,24 @@ public class SonLoginController {
             sonLists.add(sonList);
         });
         return builder.body(ResponseUtils.getResponseBody(sonLists));
+    }
+
+    @RequestMapping(path = "/stateSon", method = RequestMethod.POST)
+    @ApiOperation(value = "子站点状态改变", notes = "子站点状态改变")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "state", value = "状态0 1", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "sonId", value = "子站点id", required = true, type = "Integer"),
+    })
+    public ResponseEntity<JSONObject> stateSon(
+            Integer state,
+            Integer sonId,
+            HttpServletResponse response
+    ) throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
+        SecondSon secondSon = new SecondSon();
+        secondSon.setId(sonId);
+        secondSon.setSonState(state);
+        secondSonMapper.updateByPrimaryKeySelective(secondSon);
+        return builder.body(ResponseUtils.getResponseBody(0));
     }
 }
