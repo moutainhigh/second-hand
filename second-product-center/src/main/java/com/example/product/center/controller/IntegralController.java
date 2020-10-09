@@ -562,7 +562,7 @@ public class IntegralController {
         SecondIntegralRecordExample secondIntegralRecordExample = new SecondIntegralRecordExample();
         SecondIntegralRecordExample.Criteria criteria = secondIntegralRecordExample.createCriteria()
                 .andIsDeletedEqualTo((byte) 0);
-        if (userId!=null&&storeId==null){
+        if (userId!=null&&storeId!=null){
             criteria.andUserIdEqualTo(userId).andStoreIdEqualTo(storeId);
         }
         if (state!=null){
