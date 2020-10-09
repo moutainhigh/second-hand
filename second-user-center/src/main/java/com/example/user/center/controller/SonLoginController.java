@@ -5,6 +5,7 @@ import com.example.user.center.dao.*;
 import com.example.user.center.manual.Authentication;
 import com.example.user.center.manual.SonList;
 import com.example.user.center.model.*;
+import com.example.user.center.service.SonService;
 import com.second.common.utils.Encrypt;
 import com.second.utils.response.handler.ResponseEntity;
 import com.second.utils.response.handler.ResponseUtils;
@@ -54,6 +55,9 @@ public class SonLoginController {
     //用户
     @Autowired
     private SecondUserMapper secondUserMapper;
+    //学校
+    @Autowired
+    private SonService sonService;
     @RequestMapping(path = "/addSon", method = RequestMethod.POST)
     @ApiOperation(value = "创建子站点", notes = "创建子站点")
     @ApiImplicitParams({
@@ -238,5 +242,15 @@ public class SonLoginController {
         secondSon.setSonState(state);
         secondSonMapper.updateByPrimaryKeySelective(secondSon);
         return builder.body(ResponseUtils.getResponseBody(0));
+    }
+
+    @RequestMapping(path = "/colleges", method = RequestMethod.GET)
+    @ApiOperation(value = "学校查询", notes = "学校查询")
+    public ResponseEntity<JSONObject> colleges(
+            HttpServletResponse response
+    ) throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
+
+        return builder.body(ResponseUtils.getResponseBody(sonService.select()));
     }
 }
