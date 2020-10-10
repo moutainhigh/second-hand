@@ -325,9 +325,12 @@ private SecondStoreMapper secondStoreMapper;
             //学校
             SecondColleges secondColleges = collegesMapper.selectByPrimaryKey(secondAuthentication.getCollegesId());
             //子站点
-            SecondSon secondSon = secondSonMapper.selectByPrimaryKey(secondColleges.getSonId());
-            authenticationList1.setSonId(secondSon.getId());
-            authenticationList1.setSonName(secondSon.getSonName());
+            SecondSonExample secondSonExample = new SecondSonExample();
+            secondSonExample.createCriteria().andCollegoryIdEqualTo(secondColleges.getId())
+                    .andIsDeletedEqualTo((short) 0);
+            List<SecondSon> secondSon = secondSonMapper.selectByExample(secondSonExample);
+            authenticationList1.setSonId(secondSon.get(0).getId());
+            authenticationList1.setSonName(secondSon.get(0).getSonName());
             authenticationList.add(authenticationList1);
         });
         if (sonId != null){
