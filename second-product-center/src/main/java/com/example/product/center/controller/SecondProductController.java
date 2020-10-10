@@ -549,8 +549,10 @@ public class SecondProductController {
                     JSONObject a = addressService.getIngAndLat(add);
                     AddressList list = JSON.parseObject(String.valueOf(a), new TypeReference<AddressList>() {
                     });
-                    productList.setLongitude(list.getResult().get(0).getLocation().get(0).getLng());
-                    productList.setLatitude(list.getResult().get(0).getLocation().get(0).getLat());
+                    if (list!=null){
+                        productList.setLongitude(list.getResult().get(0).getLocation().get(0).getLng());
+                        productList.setLatitude(list.getResult().get(0).getLocation().get(0).getLat());
+                    }
                 }
 
 
