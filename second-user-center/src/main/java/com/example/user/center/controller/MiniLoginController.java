@@ -363,9 +363,10 @@ private SecondStoreMapper secondStoreMapper;
         secondAuthenticationExample.createCriteria().andIsDeletedEqualTo((byte) 0)
                 .andIdEqualTo(AuthenticationId)
                 .andAuthenticationStateEqualTo(Authentication.State.getState(StartAuthenticationState).getState());
+        List<SecondAuthentication> secondAuthentications = secondAuthenticationMapper.selectByExample(secondAuthenticationExample);
         secondAuthenticationMapper.updateByExampleSelective(secondAuthentication,secondAuthenticationExample);
         //修改用户表状态
-        List<SecondAuthentication> secondAuthentications = secondAuthenticationMapper.selectByExample(secondAuthenticationExample);
+
         if (secondAuthentications.size()!=0 && EndAuthenticationState.equals(Authentication.State.PASS.getState())){
             SecondUser secondUser = new SecondUser();
             secondUser.setId(secondAuthentications.get(0).getUserId());
