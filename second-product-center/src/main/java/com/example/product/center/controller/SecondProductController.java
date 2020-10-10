@@ -24,6 +24,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -318,8 +319,19 @@ public class SecondProductController {
             secondProductAddress.setSecondCity(secondStoreAddress.getSecondCity());
             secondProductAddress.setSecondConty(secondStoreAddress.getSecondConty());
             secondProductAddress.setSecondAddressDetail(secondStoreAddress.getSecondAddressDetail());
-            secondProductAddress.setLongitude(secondStoreAddress.getLongitude());
-            secondProductAddress.setLatitude(secondStoreAddress.getLatitude());
+            if(secondStoreAddress.getLongitude()==null&&secondStoreAddress.getLatitude()==null){
+                String add =
+                        secondStoreAddress.getSecondProvince() + secondStoreAddress.getSecondCity()
+                                + secondStoreAddress.getSecondConty() + secondStoreAddress.getSecondAddressDetail();
+                JSONObject a = addressService.getIngAndLat(add);
+                AddressList list = JSON.parseObject(String.valueOf(a), new TypeReference<AddressList>() {
+                });
+                secondProductAddress.setLongitude(list.getResult().get(0).getLocation().get(0).getLng());
+                secondProductAddress.setLatitude(list.getResult().get(0).getLocation().get(0).getLat());
+            } else {
+                secondProductAddress.setLongitude(secondStoreAddress.getLongitude());
+                secondProductAddress.setLatitude(secondStoreAddress.getLatitude());
+            }
             secondProductAddress.setContact(secondStoreAddress.getContact());
             secondProductAddress.setPhoneNumber(secondStoreAddress.getPhoneNumber());
             secondProductAddress.setSecondDesc(secondStoreAddress.getSecondDesc());
@@ -912,7 +924,12 @@ public class SecondProductController {
         }
         return builder.body(ResponseUtils.getResponseBody(0));
     }
-
+    //
+    //每隔2秒执行一次
+//    @Scheduled(fixedRate = 2000)
+//    public void testTasks() {
+//        System.out.println("定时任务执行时间：");
+//    }
     /**
      * 通过经纬度获取距离(单位：米)
      *
