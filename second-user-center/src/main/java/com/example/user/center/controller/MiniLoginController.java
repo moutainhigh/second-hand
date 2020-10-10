@@ -346,7 +346,7 @@ private SecondStoreMapper secondStoreMapper;
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "StartAuthenticationState", value = "开始审核状态", required = true, type = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "AuthenticationId", value = "审核id", required = true, type = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "EndAuthenticationState", value = "审核id", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "EndAuthenticationState", value = "结束审核状态", required = true, type = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "sonId", value = "子站点id", required = true, type = "Integer"),
     })
     public ResponseEntity<JSONObject> authenticationDispose(
@@ -394,9 +394,11 @@ private SecondStoreMapper secondStoreMapper;
     @ApiOperation(value = "用户列表", notes = "用户列表")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "IsAuthentication", value = "是否认证,0是，1否", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "sonId", value = "子站点id", required = true, type = "Integer"),
     })
     public ResponseEntity<JSONObject> UserList(
-            Integer IsAuthentication
+            Integer IsAuthentication,
+            Integer sonId
     ) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
         SecondUserExample secondUserExample = new SecondUserExample();
@@ -461,7 +463,20 @@ private SecondStoreMapper secondStoreMapper;
             }
             userList.setPhone(secondStores.get(0).getPhoneNumber());
             userList.setCreateTime(secondUser.getCreateDate());
-            userLists.add(userList);
+            if (sonId!=null){
+                SecondUserSonExample secondUserSonExample = new SecondUserSonExample();
+                secondUserSonExample.createCriteria().andUserIdEqualTo(userList.getUserId())
+                        .andStoreIdEqualTo(secondStores.get(0).getId())
+                        .andIsDeletedEqualTo((byte) 0)
+                        .andSonIdEqualTo(sonId);
+                List<SecondUserSon> secondUserSons =
+                        secondUserSonMapper.selectByExample(secondUserSonExample);
+                if (secondUserSons.size()!=0){
+                    userLists.add(userList);
+                }
+            } else {
+                userLists.add(userList);
+            }
         });
         return builder.body(ResponseUtils.getResponseBody(userLists));
     }
