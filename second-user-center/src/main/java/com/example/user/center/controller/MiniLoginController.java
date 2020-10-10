@@ -294,7 +294,8 @@ private SecondStoreMapper secondStoreMapper;
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
 //审核列表
         SecondAuthenticationExample secondAuthenticationExample = new SecondAuthenticationExample();
-        secondAuthenticationExample.createCriteria().andIsDeletedEqualTo((byte) 0);
+        secondAuthenticationExample.createCriteria().andIsDeletedEqualTo((byte) 0)
+        .andAuthenticationStateEqualTo(Authentication.State.AUDIT.getState());
         List<SecondAuthentication> secondAuthentications = secondAuthenticationMapper.selectByExample(secondAuthenticationExample);
         List<AuthenticationList> authenticationList = new ArrayList<>();
         //        循环审核
@@ -375,18 +376,28 @@ private SecondStoreMapper secondStoreMapper;
             SecondStore secondStore = new SecondStore();
             secondStore.setId(secondAuthentications.get(0).getStoreId());
             secondStore.setSecondStatus(Authentication.UserState.PASS.getState());
-            //用户店铺积分
-            SecondBoss secondBoss = secondBossMapper.selectByPrimaryKey(1);
-            secondStore.setSecondBalance(secondBoss.getNewUserIntegral());
-            secondStoreMapper.updateByPrimaryKeySelective(secondStore);
-            SecondUserSon secondUserSon = new SecondUserSon();
-            secondUserSon.setStoreId(secondAuthentications.get(0).getStoreId());
-            secondUserSon.setUserId(secondAuthentications.get(0).getUserId());
-            secondUserSon.setSonId(sonId);
-            secondUserSon.setCreateDate(LocalDateTime.now());
-            secondUserSon.setModifyDate(LocalDateTime.now());
-            secondUserSon.setIsDeleted((byte) 0);
-            secondUserSonMapper.insertSelective(secondUserSon);
+
+            SecondUserSonExample secondUserSonExample = new SecondUserSonExample();
+            secondUserSonExample.createCriteria().andUserIdEqualTo(secondAuthentications.get(0).getUserId())
+                    .andStoreIdEqualTo(secondAuthentications.get(0).getStoreId())
+                    .andSonIdEqualTo(sonId)
+                    .andIsDeletedEqualTo((byte) 0);
+            List<SecondUserSon> secondUserSons
+                     = secondUserSonMapper.selectByExample(secondUserSonExample);
+            if (secondUserSons.size()==0){
+                //用户店铺积分
+                SecondBoss secondBoss = secondBossMapper.selectByPrimaryKey(1);
+                secondStore.setSecondBalance(secondBoss.getNewUserIntegral());
+                secondStoreMapper.updateByPrimaryKeySelective(secondStore);
+                SecondUserSon secondUserSon = new SecondUserSon();
+                secondUserSon.setStoreId(secondAuthentications.get(0).getStoreId());
+                secondUserSon.setUserId(secondAuthentications.get(0).getUserId());
+                secondUserSon.setSonId(sonId);
+                secondUserSon.setCreateDate(LocalDateTime.now());
+                secondUserSon.setModifyDate(LocalDateTime.now());
+                secondUserSon.setIsDeleted((byte) 0);
+                secondUserSonMapper.insertSelective(secondUserSon);
+            }
         }
         return builder.body(ResponseUtils.getResponseBody(0));
     }
