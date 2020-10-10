@@ -928,8 +928,11 @@ public class SecondProductController {
         return d * Math.PI / 180.0;
     }
 
-    public static double getDistance(double lat1, double lng1, double lat2,
-                                     double lng2) {
+    public static double getDistance(Double lat1, Double lng1, Double lat2,
+                                     Double lng2) {
+        if (lat1==null||lng1==null||lat2==null||lng2==null
+
+        ){}
         double radLat1 = rad(lat1);
         double radLat2 = rad(lat2);
         double a = radLat1 - radLat2;
