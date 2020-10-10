@@ -547,10 +547,10 @@ public class SecondProductController {
                             secondProductAddress.getSecondProvince() + secondProductAddress.getSecondCity()
                                     + secondProductAddress.getSecondConty() + secondProductAddress.getSecondAddressDetail();
                     JSONObject a = addressService.getIngAndLat(add);
+                    System.out.println(a);
                     AddressList list = JSON.parseObject(String.valueOf(a), new TypeReference<AddressList>() {
                     });
                     if (list!=null){
-                        System.out.println(list);
                         if (list.getResult().size()!=0){
                             if (list.getResult().get(0).getLocation().size()!=0){
                                 productList.setLongitude(list.getResult().get(0).getLocation().get(0).getLng());
