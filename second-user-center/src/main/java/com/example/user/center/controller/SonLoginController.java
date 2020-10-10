@@ -133,7 +133,72 @@ public class SonLoginController {
         secondAuthMapper.insertSelective(secondAuth);
         return builder.body(ResponseUtils.getResponseBody(0));
     }
+    @RequestMapping(path = "/updateSon", method = RequestMethod.POST)
+    @ApiOperation(value = "修改子站点", notes = "修改子站点")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "name", value = "子站点名称", required = true, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "username", value = "登录用户名", required = true, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "password", value = "登录密码", required = true, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "collegoryId", value = "学校id", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "sonId", value = "子站点id", required = true, type = "Integer"),
 
+    })
+    public ResponseEntity<JSONObject> updateSon(
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "username", required = false) String username,
+            @RequestParam(value = "password", required = false) String password,
+            @RequestParam(value = "file", required = false) String file,
+            @RequestParam(value = "collegoryId", required = false) Integer collegoryId,
+            @RequestParam(value = "sonId", required = false) Integer sonId,
+            HttpServletResponse response, HttpServletRequest request) throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
+        //看下此学校是否已经有了子站点
+        SecondSonExample secondSonExample = new SecondSonExample();
+        secondSonExample.createCriteria().andCollegoryIdEqualTo(collegoryId)
+                .andIsDeletedEqualTo((short) 0);
+        List<SecondSon> secondSons = secondSonMapper.selectByExample(secondSonExample);
+        if (secondSons.size()!=0){
+            response.sendError(HttpStatus.FORBIDDEN.value(), "已经存在子站点");
+            return builder.body(ResponseUtils.getResponseBody(1));
+        }
+        //判断用户名是否存在
+        SecondAuthExample secondAuthExample = new SecondAuthExample();
+        secondAuthExample.createCriteria().andUsernameEqualTo(username)
+                .andIsDeletedEqualTo((byte) 0)
+                .andLoginTypeEqualTo(Authentication.LoginType.BOSS.getState());
+        List<SecondAuth> secondAuths1 = secondAuthMapper.selectByExample(secondAuthExample);
+        if (secondAuths1.size()!=0){
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), "用户名存在");
+            return builder.body(ResponseUtils.getResponseBody(1));
+        }
+        //创建用户
+        //创建子站点
+        SecondSon secondSon = new SecondSon();
+        secondSon.setId(sonId);
+        secondSon.setFile(file);
+        secondSon.setCollegoryId(collegoryId);
+        secondSon.setSonName(name);
+        secondSon.setSonBalance(0);
+        secondSon.setModifyTime(LocalDateTime.now());
+        secondSonMapper.updateByPrimaryKeySelective(secondSon);
+        SecondSon secondSon1 = secondSonMapper.selectByPrimaryKey(sonId);
+        SecondAuthExample secondAuthExample1 = new SecondAuthExample();
+        secondAuthExample1.createCriteria()
+                .andUserIdEqualTo(secondSon1.getUserId())
+                .andLoginTypeEqualTo(Authentication.LoginType.SON.getState())
+                .andStoreIdEqualTo(sonId)
+                .andIsDeletedEqualTo((byte) 0);
+        SecondAuth secondAuth = new SecondAuth();
+        secondAuth.setLoginType(Authentication.LoginType.SON.getState());
+        secondAuth.setUsername(username);
+        BCryptPasswordEncoder bcryptPasswordEncoder = new BCryptPasswordEncoder();
+        secondAuth.setPassword(bcryptPasswordEncoder.encode(password));
+        secondAuth.setStoreId(secondSon.getId());//子站点登录这里为子站点id
+        secondAuth.setAuthStatus(Byte.valueOf("0"));
+        secondAuth.setModifyDate(LocalDateTime.now());
+        secondAuthMapper.updateByExampleSelective(secondAuth,secondAuthExample1);
+        return builder.body(ResponseUtils.getResponseBody(0));
+    }
     @RequestMapping(path = "/Login", method = RequestMethod.POST)
     @ApiOperation(value = "子站点登录", notes = "子站点登录")
     public ResponseEntity<JSONObject> Login(

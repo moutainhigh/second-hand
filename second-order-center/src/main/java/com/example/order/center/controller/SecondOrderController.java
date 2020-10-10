@@ -106,6 +106,15 @@ public class SecondOrderController {
     @Transactional(rollbackFor = {RuntimeException.class, Error.class})
     public ResponseEntity<JSONObject> addCategory(CreateOrderRequest request, HttpServletRequest requests, HttpServletResponse response) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
+
+        SecondStoreExample secondStoreExample = new SecondStoreExample();
+        secondStoreExample.createCriteria().andUserIdEqualTo(request.getUserId())
+                .andIsDeletedEqualTo((short) 0);
+        List<SecondStore> secondStores = secondStoreMapper.selectByExample(secondStoreExample);
+        if (!secondStores.get(0).getSecondStatus().equals(Authentication.State.PASS.getState())){
+            response.sendError(HttpStatus.FORBIDDEN.value(), "没有认证");
+            return builder.body(ResponseUtils.getResponseBody(1));
+        }
         List list = checkResp(request.getGoodsList());
 
         System.out.println(list);

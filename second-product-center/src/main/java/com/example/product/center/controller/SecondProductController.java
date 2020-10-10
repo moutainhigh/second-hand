@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -131,14 +132,17 @@ public class SecondProductController {
             @RequestParam(value = "linePrice", required = false) Integer linePrice,
             @RequestParam(value = "goodsResp", required = false) Integer goodsResp,
             @RequestParam(value = "labelIds", required = false) Integer[] labelIds,
-            @RequestParam(value = "storeId", required = false) Integer storeId
+            @RequestParam(value = "storeId", required = false) Integer storeId,
+            HttpServletResponse response
 
     ) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
-        System.out.println(storeId);
-        System.out.println(productName);
         //地址
         SecondStore secondStore = secondStoreMapper.selectByPrimaryKey(storeId);
+        if (!secondStore.getSecondStatus().equals(Authentication.State.PASS.getState())){
+            response.sendError(HttpStatus.FORBIDDEN.value(), "没有认证");
+            return builder.body(ResponseUtils.getResponseBody(1));
+        }
         if (secondStore.getStoreType().equals(Authentication.StoreType.STORE.getState())) {
             SecondStoreAddressExample secondStoreAddressExample = new SecondStoreAddressExample();
             secondStoreAddressExample.createCriteria().andIsDeletedEqualTo((short) 0)
