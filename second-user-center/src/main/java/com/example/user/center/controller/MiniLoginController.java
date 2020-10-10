@@ -414,7 +414,7 @@ private SecondStoreMapper secondStoreMapper;
             userList.setNickName(secondUser.getNickName());
             SecondAuthenticationExample secondAuthenticationExample = new SecondAuthenticationExample();
             secondAuthenticationExample.createCriteria().andUserIdEqualTo(secondUser.getId())
-                    .andAuthenticationStateEqualTo(Authentication.State.PASS.getState())
+                    .andAuthenticationStateEqualTo(IsAuthentication)
             .andIsDeletedEqualTo((byte) 0);
             List<SecondAuthentication> secondAuthentication =
                     secondAuthenticationMapper.selectByExample(secondAuthenticationExample);
@@ -463,7 +463,7 @@ private SecondStoreMapper secondStoreMapper;
             }
             userList.setPhone(secondStores.get(0).getPhoneNumber());
             userList.setCreateTime(secondUser.getCreateDate());
-            if (sonId!=null){
+            if (sonId!=null&&IsAuthentication.equals(Authentication.State.PASS.getState())){
                 SecondUserSonExample secondUserSonExample = new SecondUserSonExample();
                 secondUserSonExample.createCriteria().andUserIdEqualTo(userList.getUserId())
                         .andStoreIdEqualTo(secondStores.get(0).getId())
