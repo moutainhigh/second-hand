@@ -179,8 +179,19 @@ public class SecondProductController {
         secondProductAddress.setSecondCity(secondStoreAddress.getSecondCity());
         secondProductAddress.setSecondConty(secondStoreAddress.getSecondConty());
         secondProductAddress.setSecondAddressDetail(secondStoreAddress.getSecondAddressDetail());
-        secondProductAddress.setLongitude(secondStoreAddress.getLongitude());
-        secondProductAddress.setLatitude(secondStoreAddress.getLatitude());
+        if(secondStoreAddress.getLongitude()==null&&secondStoreAddress.getLatitude()==null){
+            String add =
+                    secondStoreAddress.getSecondProvince() + secondStoreAddress.getSecondCity()
+                    + secondStoreAddress.getSecondConty() + secondStoreAddress.getSecondAddressDetail();
+                    JSONObject a = addressService.getIngAndLat(add);
+            AddressList list = JSON.parseObject(String.valueOf(a), new TypeReference<AddressList>() {
+            });
+            secondProductAddress.setLongitude(list.getResult().get(0).getLocation().get(0).getLng());
+            secondProductAddress.setLatitude(list.getResult().get(0).getLocation().get(0).getLat());
+        } else {
+            secondProductAddress.setLongitude(secondStoreAddress.getLongitude());
+            secondProductAddress.setLatitude(secondStoreAddress.getLatitude());
+        }
         secondProductAddress.setContact(secondStoreAddress.getContact());
         secondProductAddress.setPhoneNumber(secondStoreAddress.getPhoneNumber());
         secondProductAddress.setSecondDesc(secondStoreAddress.getSecondDesc());
@@ -542,28 +553,29 @@ public class SecondProductController {
                 if (secondProductAddress.getLongitude() != null && secondProductAddress.getLatitude() != null) {
                     productList.setLatitude(secondProductAddress.getLatitude());//纬度
                     productList.setLongitude(secondProductAddress.getLongitude());//经度
-                } else {
-                    String add =
-                            secondProductAddress.getSecondProvince() + secondProductAddress.getSecondCity()
-                                    + secondProductAddress.getSecondConty() + secondProductAddress.getSecondAddressDetail();
-                    JSONObject a = addressService.getIngAndLat(add);
-                    System.out.println(a);
-                    AddressList list = JSON.parseObject(String.valueOf(a), new TypeReference<AddressList>() {
-                    });
-                    if (list!=null){
-                        if (list.getResult().size()!=0){
-                            if (list.getResult().get(0).getLocation().size()!=0){
-                                productList.setLongitude(list.getResult().get(0).getLocation().get(0).getLng());
-                            }
-                        }
-                        if (list.getResult().size()!=0){
-                            if (list.getResult().get(0).getLocation().size()!=0){
-                                productList.setLatitude(list.getResult().get(0).getLocation().get(0).getLat());
-                            }
-                        }
-
-                    }
                 }
+//                else {
+//                    String add =
+//                            secondProductAddress.getSecondProvince() + secondProductAddress.getSecondCity()
+//                                    + secondProductAddress.getSecondConty() + secondProductAddress.getSecondAddressDetail();
+//                    JSONObject a = addressService.getIngAndLat(add);
+//                    System.out.println(a);
+//                    AddressList list = JSON.parseObject(String.valueOf(a), new TypeReference<AddressList>() {
+//                    });
+//                    if (list!=null){
+//                        if (list.getResult().size()!=0){
+//                            if (list.getResult().get(0).getLocation().size()!=0){
+//                                productList.setLongitude(list.getResult().get(0).getLocation().get(0).getLng());
+//                            }
+//                        }
+//                        if (list.getResult().size()!=0){
+//                            if (list.getResult().get(0).getLocation().size()!=0){
+//                                productList.setLatitude(list.getResult().get(0).getLocation().get(0).getLat());
+//                            }
+//                        }
+//
+//                    }
+//                }
 
 
                 productList.setPhone(secondProductAddress.getPhoneNumber());//电话
