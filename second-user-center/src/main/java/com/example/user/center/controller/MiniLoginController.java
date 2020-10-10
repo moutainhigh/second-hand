@@ -424,7 +424,7 @@ private SecondStoreMapper secondStoreMapper;
             SecondStoreExample secondStoreExample = new SecondStoreExample();
             secondStoreExample.createCriteria().andUserIdEqualTo(secondUser.getId())
                     .andIsDeletedEqualTo((short) 0)
-                    .andSecondStatusEqualTo(Authentication.UserState.PASS.getState());
+                    .andSecondStatusEqualTo(IsAuthentication);
             List<SecondStore> secondStores = secondStoreMapper.selectByExample(secondStoreExample);
             //默认一个用户一个店铺
             SecondProductExample secondProductExample = new SecondProductExample();
