@@ -930,9 +930,9 @@ public class SecondProductController {
 
     public static double getDistance(Double lat1, Double lng1, Double lat2,
                                      Double lng2) {
-        if (lat1==null||lng1==null||lat2==null||lng2==null
-
-        ){}
+        if (lat1==null||lng1==null||lat2==null||lng2==null){
+            return 3;
+        }
         double radLat1 = rad(lat1);
         double radLat2 = rad(lat2);
         double a = radLat1 - radLat2;
