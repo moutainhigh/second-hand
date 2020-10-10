@@ -550,8 +550,17 @@ public class SecondProductController {
                     AddressList list = JSON.parseObject(String.valueOf(a), new TypeReference<AddressList>() {
                     });
                     if (list!=null){
-                        productList.setLongitude(list.getResult().get(0).getLocation().get(0).getLng());
-                        productList.setLatitude(list.getResult().get(0).getLocation().get(0).getLat());
+                        if (list.getResult().size()!=0){
+                            if (list.getResult().get(0).getLocation().size()!=0){
+                                productList.setLongitude(list.getResult().get(0).getLocation().get(0).getLng());
+                            }
+                        }
+                        if (list.getResult().size()!=0){
+                            if (list.getResult().get(0).getLocation().size()!=0){
+                                productList.setLatitude(list.getResult().get(0).getLocation().get(0).getLat());
+                            }
+                        }
+
                     }
                 }
 
