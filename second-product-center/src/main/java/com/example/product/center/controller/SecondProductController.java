@@ -669,21 +669,21 @@ public class SecondProductController {
         }
 
 
-        int total = productLists1.size();
-        if (pageNum == null) {
-            pageNum = 1;
-        }
-        if (pageSize == null) {
-            pageSize = total;
-        }
-        Page<Object> pages = PageHelper.startPage(pageNum, pageSize);
-
-        pages.setTotal(total);
-        int startIndex = (pageNum - 1) * pageSize;
-        int endIndex = Math.min(startIndex + pageSize, total);
-        pages.addAll(productLists1.subList(startIndex, endIndex));
-        PageInfo pageInfo = new PageInfo<>(pages);
-        return builder.body(ResponseUtils.getResponseBody(pageInfo));
+//        int total = productLists1.size();
+//        if (pageNum == null) {
+//            pageNum = 1;
+//        }
+//        if (pageSize == null) {
+//            pageSize = total;
+//        }
+//        Page<Object> pages = PageHelper.startPage(pageNum, pageSize);
+//
+//        pages.setTotal(total);
+//        int startIndex = (pageNum - 1) * pageSize;
+//        int endIndex = Math.min(startIndex + pageSize, total);
+//        pages.addAll(productLists1.subList(startIndex, endIndex));
+//        PageInfo pageInfo = new PageInfo<>(pages);
+        return builder.body(ResponseUtils.getResponseBody(productLists1));
     }
 
     public ResponseEntity<JSONObject> fileDelete2(String file) throws Exception {
