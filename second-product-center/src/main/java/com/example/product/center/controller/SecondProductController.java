@@ -451,8 +451,8 @@ public class SecondProductController {
 
         List<SecondProduct> secondProducts = secondProductMapper.selectByExampleWithBLOBs(secondProductExample);
 
-//        secondProducts.forEach(secondProduct1 -> {
-            for(SecondProduct secondProduct1 : secondProducts){
+        secondProducts.forEach(secondProduct1 -> {
+//            for(SecondProduct secondProduct1 : secondProducts){
             //物品
 
             SecondUserSonExample secondUserSonExample = new SecondUserSonExample();
@@ -640,7 +640,7 @@ public class SecondProductController {
                 productList.setLabelName(files);
             }
             productLists.add(productList);
-        };
+        });
         List<ProductList> productLists1 = new ArrayList<>();
         productLists1 = productLists.stream().filter(a -> a.getIsStoreDeleted() == 0 && a.getSecondStatus() == 0)
                 .collect(Collectors.toList());
