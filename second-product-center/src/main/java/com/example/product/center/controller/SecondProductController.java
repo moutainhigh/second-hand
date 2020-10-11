@@ -447,8 +447,10 @@ public class SecondProductController {
         if (storeId != null) {
             criteria.andStoreIdEqualTo(storeId);
         }
-        List<SecondProduct> secondProducts = secondProductMapper.selectByExampleWithBLOBs(secondProductExample);
         List<ProductList> productLists = new ArrayList<>();
+
+        List<SecondProduct> secondProducts = secondProductMapper.selectByExampleWithBLOBs(secondProductExample);
+
 //        secondProducts.forEach(secondProduct1 -> {
             for(SecondProduct secondProduct1 : secondProducts){
             //物品
