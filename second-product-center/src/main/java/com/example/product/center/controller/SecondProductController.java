@@ -449,8 +449,8 @@ public class SecondProductController {
         }
         List<ProductList> productLists = new ArrayList<>();
 
-        List<SecondProduct> secondProducts = secondProductMapper.selectByExample(secondProductExample);
-
+        List<SecondProduct> secondProducts = secondProductMapper.selectByExampleWithBLOBs(secondProductExample);
+        System.out.println(secondProducts);
         secondProducts.forEach(secondProduct1 -> {
 //            for(SecondProduct secondProduct1 : secondProducts){
             //物品
