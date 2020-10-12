@@ -48,7 +48,7 @@ public class WxStoreLoginConfig {
     public static SecondBossSettingMapper secondBossSettingMapper;
     @Autowired
     public void setSecondBossSettingMapper(SecondBossSettingMapper secondBossSettingMapper) {
-        WxLoginConfig.secondBossSettingMapper = secondBossSettingMapper;
+        WxStoreLoginConfig.secondBossSettingMapper = secondBossSettingMapper;
     }
 
     public static String APPID ="wx2641aaa105c07dd4";
