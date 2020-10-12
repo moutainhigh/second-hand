@@ -463,6 +463,7 @@ public ResponseEntity<JSONObject> completePaymentAfter(
                     secondOrders.get(0).getAmount());
             //余额明细
             SecondStoreBalanceDetail secondStoreBalanceDetail = new SecondStoreBalanceDetail();
+            secondStoreBalanceDetail.setPayDesc("退款");
             secondStoreBalanceDetail.setUserId(secondOrders.get(0).getUserId());
             secondStoreBalanceDetail.setStoreId(secondStore.get(0).getId());
             secondStoreBalanceDetail.setAmount(secondOrders.get(0).getAmount());

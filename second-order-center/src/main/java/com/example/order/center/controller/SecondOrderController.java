@@ -348,11 +348,13 @@ public class SecondOrderController {
             @ApiImplicitParam(paramType = "query", name = "orderCode", value = "订单号", required = true, type = "String"),
             @ApiImplicitParam(paramType = "query", name = "originalOrderStatus", value = "原始订单状态", required = true, type = "String"),
             @ApiImplicitParam(paramType = "query", name = "targetOrderStatus", value = "目标的订单状态", required = true, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "productName", value = "商品名称", required = true, type = "String"),
     })
     @Transactional(rollbackFor = {RuntimeException.class, Error.class})
     public ResponseEntity<JSONObject> updateOrder(Integer orderId,
                                                   String orderCode,
                                                   String originalOrderStatus,
+                                                  String productName,
                                                   String targetOrderStatus
     )
             throws JSONException {
@@ -382,6 +384,8 @@ public class SecondOrderController {
                         BanlaceEnum.Relation.MONEY.getState(),
                         secondOrders.get(0).getAmount());
                 SecondStoreBalanceDetail secondStoreBalanceDetail = new SecondStoreBalanceDetail();
+                secondStoreBalanceDetail.setPayName("订单");
+                secondStoreBalanceDetail.setPayDesc(productName);
                 secondStoreBalanceDetail.setAmount(secondOrders.get(0).getAmount());
                 secondStoreBalanceDetail.setDetailType(BanlaceEnum.Relation.MONEY.getState());
                 secondStoreBalanceDetail.setIncomeExpenses(BanlaceEnum.incomeExpenses.PUT.getState());

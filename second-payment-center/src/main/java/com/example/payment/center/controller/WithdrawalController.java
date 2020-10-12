@@ -237,6 +237,7 @@ public class WithdrawalController {
             //店铺余额流水
             SecondStoreBalanceDetail secondStoreBalanceDetail = new SecondStoreBalanceDetail();
             secondStoreBalanceDetail.setUserId(userId);
+            secondStoreBalanceDetail.setPayDesc("提现");
             secondStoreBalanceDetail.setStoreId(storeId);
             secondStoreBalanceDetail.setAmount(-withdrawalMoney);
             secondStoreBalanceDetail.setDetailType(BanlaceEnum.Relation.MONEY.getState());

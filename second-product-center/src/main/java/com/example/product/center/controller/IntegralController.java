@@ -312,6 +312,7 @@ public class IntegralController {
          * 记录积分
          */
         SecondStoreBalanceDetail secondStoreBalanceDetail = new SecondStoreBalanceDetail();
+        secondStoreBalanceDetail.setPayName("积分兑换");
         secondStoreBalanceDetail.setUserId(userId);
         secondStoreBalanceDetail.setStoreId(storeId);
         secondStoreBalanceDetail.setAmount(-secondIntegral.getIntegralNeed()*quantity);
