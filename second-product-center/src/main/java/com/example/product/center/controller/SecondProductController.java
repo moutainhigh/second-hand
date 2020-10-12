@@ -421,6 +421,7 @@ public class SecondProductController {
             @ApiImplicitParam(paramType = "query", name = "sonId", value = "子站点id", required = false, type = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "categoryId", value = "类目id", required = false, type = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "storeId", value = "店铺id", required = false, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "isSon", value = "是否是子站点查询 0是", required = false, type = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "showType", value = "商品类型", required = false, type = "String"),
     })
     @RequestMapping(value = "/selectProduct", method = RequestMethod.GET)
@@ -429,6 +430,7 @@ public class SecondProductController {
             @RequestParam(name = "sonId", required = false) Integer sonId,
             @RequestParam(name = "storeId", required = false) Integer storeId,
             @RequestParam(name = "showType", required = false) String showType,
+            @RequestParam(name = "isSon", required = false) Integer isSon,
             @RequestParam(name = "categoryId", required = false) Integer categoryId
     )
             throws Exception {
@@ -648,7 +650,7 @@ public class SecondProductController {
         /**
          * 筛选认证子站点学校2公里商品
          */
-        if (sonId != null) {
+        if (sonId != null && isSon == null) {
             SecondSon secondSon = secondSonMapper.selectByPrimaryKey(sonId);
             SecondColleges secondColleges = secondCollegesMapper.selectByPrimaryKey(secondSon.getCollegoryId());
             SecondCityExample secondCityExample = new SecondCityExample();
@@ -667,7 +669,10 @@ public class SecondProductController {
                             .filter(s -> getDistance(Double.parseDouble(s.getLatitude()), Double.parseDouble(s.getLongitude()), Double.parseDouble(lat), Double.parseDouble(lng)) < distance)
                             .collect(Collectors.toList());
         }
-
+        if (sonId != null && isSon == 0) {
+            productLists1 =
+                    productLists1.stream().filter(s-> s.getSonId().equals(sonId)).collect(Collectors.toList());
+        }
 
 //        int total = productLists1.size();
 //        if (pageNum == null) {
