@@ -3,7 +3,9 @@ package com.example.user.center.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.example.user.center.dao.*;
 import com.example.user.center.manual.Authentication;
+import com.example.user.center.manual.BanlaceEnum;
 import com.example.user.center.manual.SonList;
+import com.example.user.center.manual.StoreDetails;
 import com.example.user.center.model.*;
 import com.example.user.center.service.SonService;
 import com.second.common.utils.Encrypt;
@@ -58,6 +60,12 @@ public class SonLoginController {
     //学校
     @Autowired
     private SonService sonService;
+    //店铺
+    @Autowired
+    private SecondStoreMapper secondStoreMapper;
+    //店铺余额
+    @Autowired
+    private SecondStoreBalanceMapper secondStoreBalanceMapper;
     @RequestMapping(path = "/addSon", method = RequestMethod.POST)
     @ApiOperation(value = "创建子站点", notes = "创建子站点")
     @ApiImplicitParams({
@@ -318,5 +326,34 @@ public class SonLoginController {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
 
         return builder.body(ResponseUtils.getResponseBody(sonService.select()));
+    }
+    @RequestMapping(path = "/sonDetails", method = RequestMethod.GET)
+    @ApiOperation(value = "子站点详情", notes = "子站点详情")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "storeId", value = "店铺id", required = true, type = "Integer"),
+    })
+    public ResponseEntity<JSONObject> UserDetails(
+            Integer userId,
+            Integer storeId
+    ) throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
+        SecondStore secondStore = secondStoreMapper.selectByPrimaryKey(storeId);
+        SecondStoreBalanceExample secondStoreBalanceExample = new SecondStoreBalanceExample();
+        secondStoreBalanceExample.createCriteria()
+                .andUserIdEqualTo(userId)
+                .andStoreIdEqualTo(storeId)
+                .andBalanceTypeEqualTo(BanlaceEnum.Relation.MONEY.getState())
+                .andIsDeletedEqualTo((short) 0);
+        List<SecondStoreBalance> secondStoreBalances =
+                secondStoreBalanceMapper.selectByExample(secondStoreBalanceExample);
+        StoreDetails storeDetails = new StoreDetails();
+        storeDetails.setUserId(userId);
+        storeDetails.setStoreId(storeId);
+        storeDetails.setCreateTime(secondStore.getCreateTime());
+        storeDetails.setAddress(secondStore.getSecondAddress());
+        storeDetails.setStoreStatus(secondStore.getSecondStatus());
+        storeDetails.setMoney(secondStoreBalances.get(0).getSecondBalance());
+        return builder.body(ResponseUtils.getResponseBody(storeDetails));
     }
 }
