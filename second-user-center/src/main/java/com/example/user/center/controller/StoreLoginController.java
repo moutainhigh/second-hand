@@ -250,6 +250,7 @@ public class StoreLoginController {
             @RequestParam(value = "AuthenticationId", required = false) Integer AuthenticationId
     ) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
+        System.out.println(fileIds);
         for (String file: fileIds){
             SecondStoreAuthenticationPicture secondAuthenticationPicture = new SecondStoreAuthenticationPicture();
             secondAuthenticationPicture.setSecondAuthenticationId(AuthenticationId);
