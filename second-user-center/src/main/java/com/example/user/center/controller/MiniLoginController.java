@@ -235,30 +235,74 @@ private SecondStoreMapper secondStoreMapper;
                                                      @RequestParam(value = "userId", required = false) Integer userId,
                                                      HttpServletResponse response, HttpServletRequest request) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
-//学生认证
-        SecondColleges secondColleges = collegesMapper.selectByPrimaryKey(colleges);
-        SecondAuthentication secondAuthentication = new SecondAuthentication();
-        secondAuthentication.setCollegesName(secondColleges.getName());
-        secondAuthentication.setName(name);//名称
-        secondAuthentication.setSex(sex);//性别
-        Instant instant = date.toInstant();//入学时间
-        //date转LocalDateTime
-        ZoneId zoneId = ZoneId.systemDefault();
-        LocalDateTime localDateTime = instant.atZone(zoneId).toLocalDateTime();
-        secondAuthentication.setEntranceTime(localDateTime);
-        secondAuthentication.setStudentNumber(number);//学号
-        secondAuthentication.setCollegesId(colleges);//学校id
-        secondAuthentication.setCollegesRecord(record);//学校类别
-        secondAuthentication.setUserId(userId);//用户id
-        secondAuthentication.setAuthenticationState(Authentication.State.AUDIT.getState());//审核状态
-        secondAuthentication.setCreateDate(LocalDateTime.now());
-        secondAuthentication.setModifyDate(LocalDateTime.now());
-        secondAuthentication.setIsDeleted((byte) 0);
-        secondAuthentication.setStoreId(storeId);
-        System.out.println(secondAuthentication);
-        secondAuthenticationMapper.insert(secondAuthentication);
+        SecondAuthenticationExample secondAuthenticationExample
+                = new SecondAuthenticationExample();
+        secondAuthenticationExample.createCriteria()
+                .andUserIdEqualTo(userId)
+                .andIsDeletedEqualTo((byte) 0)
+        .andAuthenticationStateEqualTo(Authentication.State.PASS.getState());
+        List<SecondAuthentication> secondAuthenticationExamples
+                 = secondAuthenticationMapper.selectByExample(secondAuthenticationExample);
+        if (secondAuthenticationExamples.size()!=0){
+            return builder.body(ResponseUtils.getResponseBody("已经审核通过"));
+        }
+        secondAuthenticationExample.clear();
+        secondAuthenticationExample.createCriteria()
+                .andUserIdEqualTo(userId)
+                .andIsDeletedEqualTo((byte) 0)
+                .andAuthenticationStateEqualTo(Authentication.State.AUDIT.getState());
+        List<SecondAuthentication> secondAuthenticationExamples1
+                = secondAuthenticationMapper.selectByExample(secondAuthenticationExample);
+        if (secondAuthenticationExamples1.size()==0){
+            //学生认证
+            SecondColleges secondColleges = collegesMapper.selectByPrimaryKey(colleges);
+            SecondAuthentication secondAuthentication = new SecondAuthentication();
+            secondAuthentication.setCollegesName(secondColleges.getName());
+            secondAuthentication.setName(name);//名称
+            secondAuthentication.setSex(sex);//性别
+            Instant instant = date.toInstant();//入学时间
+            //date转LocalDateTime
+            ZoneId zoneId = ZoneId.systemDefault();
+            LocalDateTime localDateTime = instant.atZone(zoneId).toLocalDateTime();
+            secondAuthentication.setEntranceTime(localDateTime);
+            secondAuthentication.setStudentNumber(number);//学号
+            secondAuthentication.setCollegesId(colleges);//学校id
+            secondAuthentication.setCollegesRecord(record);//学校类别
+            secondAuthentication.setUserId(userId);//用户id
+            secondAuthentication.setAuthenticationState(Authentication.State.AUDIT.getState());//审核状态
+            secondAuthentication.setCreateDate(LocalDateTime.now());
+            secondAuthentication.setModifyDate(LocalDateTime.now());
+            secondAuthentication.setIsDeleted((byte) 0);
+            secondAuthentication.setStoreId(storeId);
+            secondAuthenticationMapper.insert(secondAuthentication);
 
-        return builder.body(ResponseUtils.getResponseBody(secondAuthentication.getId()));//审核id
+            return builder.body(ResponseUtils.getResponseBody(secondAuthentication.getId()));//审核id
+        }else {
+            //学生认证
+            SecondColleges secondColleges = collegesMapper.selectByPrimaryKey(colleges);
+            SecondAuthentication secondAuthentication = new SecondAuthentication();
+            secondAuthentication.setId(secondAuthenticationExamples1.get(0).getId());
+            secondAuthentication.setCollegesName(secondColleges.getName());
+            secondAuthentication.setName(name);//名称
+            secondAuthentication.setSex(sex);//性别
+            Instant instant = date.toInstant();//入学时间
+            //date转LocalDateTime
+            ZoneId zoneId = ZoneId.systemDefault();
+            LocalDateTime localDateTime = instant.atZone(zoneId).toLocalDateTime();
+            secondAuthentication.setEntranceTime(localDateTime);
+            secondAuthentication.setStudentNumber(number);//学号
+            secondAuthentication.setCollegesId(colleges);//学校id
+            secondAuthentication.setCollegesRecord(record);//学校类别
+            secondAuthentication.setUserId(userId);//用户id
+            secondAuthentication.setAuthenticationState(Authentication.State.AUDIT.getState());//审核状态
+            secondAuthentication.setModifyDate(LocalDateTime.now());
+            secondAuthentication.setIsDeleted((byte) 0);
+            secondAuthentication.setStoreId(storeId);
+            secondAuthenticationMapper.updateByPrimaryKeySelective(secondAuthentication);
+            return builder.body(ResponseUtils.getResponseBody(secondAuthenticationExamples1.get(0).getId()));
+
+        }
+
     }
     @RequestMapping(path = "/authenticationFile", method = RequestMethod.POST)
     @ApiOperation(value = "学生认证文件上传", notes = "提交学生认证文件上传")

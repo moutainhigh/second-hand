@@ -200,44 +200,118 @@ public class StoreLoginController {
                                                      @RequestParam(value = "authenticationDesc", required = false) String authenticationDesc,
                                                      HttpServletResponse response, HttpServletRequest request) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
-        SecondStoreAuthentication secondStoreAuthentication = new SecondStoreAuthentication();
-        secondStoreAuthentication.setStoreId(storeId);
-        secondStoreAuthentication.setUserId(userId);
-        secondStoreAuthentication.setAuthenticationDesc(authenticationDesc);
-        secondStoreAuthentication.setSex(sex);
-        secondStoreAuthentication.setAuthenticationState(Authentication.State.AUDIT.getState());
-        secondStoreAuthentication.setCreateDate(LocalDateTime.now());
-        secondStoreAuthentication.setModifyDate(LocalDateTime.now());
-        secondStoreAuthentication.setIsDeleted((byte) 0);
-        secondStoreAuthenticationMapper.insertSelective(secondStoreAuthentication);
-        //地址
-        SecondStoreAddress secondStoreAddress = new SecondStoreAddress();
-        secondStoreAddress.setStoreId(storeId);
-        secondStoreAddress.setSecondProvince(province);
-        secondStoreAddress.setLatitude(latitude);
-        secondStoreAddress.setLongitude(longitude);
-        secondStoreAddress.setSecondCity(city);
-        secondStoreAddress.setSecondConty(conty);
-        secondStoreAddress.setSecondAddressDetail(addressDetail);
-        secondStoreAddress.setContact(phoneNumber);///联系方式
-        secondStoreAddress.setContact(name);
-        secondStoreAddress.setIsDeleted((short) 0);
-        secondStoreAddress.setCreateTime(LocalDateTime.now());
-        secondStoreAddress.setModifyTime(LocalDateTime.now());
-        secondStoreAddressMapper.insertSelective(secondStoreAddress);
-        //店铺
-        SecondStore secondStore = new SecondStore();
-        secondStore.setId(storeId);
-        secondStore.setStoreName(storeName);
-        secondStore.setContact(name);
-        secondStore.setPhoneNumber(phoneNumber);
-        secondStore.setSecondAddress(city+conty+addressDetail);
-        secondStore.setModifyDate(LocalDateTime.now());
-        secondStoreMapper.updateByPrimaryKeySelective(secondStore);
-        Map<String,Object> map = new HashMap<>();
-        map.put("authenticationId",secondStoreAuthentication.getId());//审核id
-        map.put("addressId",secondStoreAddress.getId());//地址id
-        return builder.body(ResponseUtils.getResponseBody(map));
+
+        SecondStoreAuthenticationExample secondStoreAuthenticationExample = new SecondStoreAuthenticationExample();
+        secondStoreAuthenticationExample.createCriteria()
+                .andUserIdEqualTo(userId)
+                .andStoreIdEqualTo(storeId)
+                .andIsDeletedEqualTo((byte) 0)
+        .andAuthenticationStateEqualTo(Authentication.State.PASS.getState());
+        List<SecondStoreAuthentication> secondStoreAuthentications
+                = secondStoreAuthenticationMapper.selectByExample(secondStoreAuthenticationExample);
+        if (secondStoreAuthentications.size()!=0){
+            return builder.body(ResponseUtils.getResponseBody("已经认证了"));
+        }
+        secondStoreAuthenticationExample.clear();
+        secondStoreAuthenticationExample.createCriteria()
+                .andUserIdEqualTo(userId)
+                .andStoreIdEqualTo(storeId)
+                .andIsDeletedEqualTo((byte) 0)
+                .andAuthenticationStateEqualTo(Authentication.State.AUDIT.getState());
+        List<SecondStoreAuthentication> secondStoreAuthentications1
+                = secondStoreAuthenticationMapper.selectByExample(secondStoreAuthenticationExample);
+        if (secondStoreAuthentications1.size()==0){
+            SecondStoreAuthentication secondStoreAuthentication = new SecondStoreAuthentication();
+            secondStoreAuthentication.setName(name);
+            secondStoreAuthentication.setStoreId(storeId);
+            secondStoreAuthentication.setUserId(userId);
+            secondStoreAuthentication.setAuthenticationDesc(authenticationDesc);
+            secondStoreAuthentication.setSex(sex);
+            secondStoreAuthentication.setAuthenticationState(Authentication.State.AUDIT.getState());
+            secondStoreAuthentication.setModifyDate(LocalDateTime.now());
+            secondStoreAuthentication.setIsDeleted((byte) 0);
+            secondStoreAuthenticationMapper.insertSelective(secondStoreAuthentication);
+            //地址
+            SecondStoreAddress secondStoreAddress = new SecondStoreAddress();
+            secondStoreAddress.setStoreId(storeId);
+            secondStoreAddress.setSecondProvince(province);
+            secondStoreAddress.setLatitude(latitude);
+            secondStoreAddress.setLongitude(longitude);
+            secondStoreAddress.setSecondCity(city);
+            secondStoreAddress.setSecondConty(conty);
+            secondStoreAddress.setSecondAddressDetail(addressDetail);
+            secondStoreAddress.setContact(phoneNumber);///联系方式
+            secondStoreAddress.setContact(name);
+            secondStoreAddress.setIsDeleted((short) 1);
+            secondStoreAddress.setModifyTime(LocalDateTime.now());
+            secondStoreAddressMapper.insertSelective(secondStoreAddress);
+            //店铺
+            SecondStore secondStore = new SecondStore();
+            secondStore.setId(storeId);
+            secondStore.setStoreName(storeName);
+            secondStore.setContact(name);
+            secondStore.setPhoneNumber(phoneNumber);
+            secondStore.setSecondAddress(city+conty+addressDetail);
+            secondStore.setModifyDate(LocalDateTime.now());
+            secondStoreMapper.updateByPrimaryKeySelective(secondStore);
+            Map<String,Object> map = new HashMap<>();
+            map.put("authenticationId",secondStoreAuthentication.getId());//审核id
+            map.put("addressId",secondStoreAddress.getId());//地址id
+            return builder.body(ResponseUtils.getResponseBody(map));
+        } else {
+            SecondStoreAuthentication secondStoreAuthentication = new SecondStoreAuthentication();
+            secondStoreAuthentication.setId(secondStoreAuthentications1.get(0).getId());
+            secondStoreAuthentication.setName(name);
+            secondStoreAuthentication.setStoreId(storeId);
+            secondStoreAuthentication.setUserId(userId);
+            secondStoreAuthentication.setAuthenticationDesc(authenticationDesc);
+            secondStoreAuthentication.setSex(sex);
+            secondStoreAuthentication.setAuthenticationState(Authentication.State.AUDIT.getState());
+            secondStoreAuthentication.setModifyDate(LocalDateTime.now());
+            secondStoreAuthentication.setIsDeleted((byte) 0);
+            secondStoreAuthenticationMapper.updateByPrimaryKeySelective(secondStoreAuthentication);
+            //地址
+            SecondStoreAddressExample secondStoreAddressExample = new SecondStoreAddressExample();
+            secondStoreAddressExample.createCriteria()
+                    .andStoreIdEqualTo(storeId)
+                    .andIsDeletedEqualTo((short) 0);
+            SecondStoreAddress secondStoreAddress = new SecondStoreAddress();
+            secondStoreAddress.setStoreId(storeId);
+            secondStoreAddress.setSecondProvince(province);
+            secondStoreAddress.setLatitude(latitude);
+            secondStoreAddress.setLongitude(longitude);
+            secondStoreAddress.setSecondCity(city);
+            secondStoreAddress.setSecondConty(conty);
+            secondStoreAddress.setSecondAddressDetail(addressDetail);
+            secondStoreAddress.setContact(phoneNumber);///联系方式
+            secondStoreAddress.setContact(name);
+            secondStoreAddress.setIsDeleted((short) 0);
+            secondStoreAddress.setModifyTime(LocalDateTime.now());
+            secondStoreAddressMapper.updateByExampleSelective(secondStoreAddress,secondStoreAddressExample);
+            //店铺
+            SecondStore secondStore = new SecondStore();
+            secondStore.setId(storeId);
+            secondStore.setStoreName(storeName);
+            secondStore.setContact(name);
+            secondStore.setPhoneNumber(phoneNumber);
+            secondStore.setSecondAddress(city+conty+addressDetail);
+            secondStore.setModifyDate(LocalDateTime.now());
+            secondStoreMapper.updateByPrimaryKeySelective(secondStore);
+
+            SecondStoreAuthenticationPictureExample secondStoreAuthenticationPictureExample
+                     = new SecondStoreAuthenticationPictureExample();
+            secondStoreAuthenticationPictureExample.createCriteria()
+                    .andSecondAuthenticationIdEqualTo(secondStoreAuthentications1.get(0).getId())
+                    .andIsDeletedEqualTo((byte) 0);
+            SecondStoreAuthenticationPicture secondStoreAuthenticationPicture = new SecondStoreAuthenticationPicture();
+            secondStoreAuthenticationPicture.setIsDeleted((byte) 1);
+            secondStoreAuthenticationPictureMapper.updateByExampleSelective(secondStoreAuthenticationPicture,secondStoreAuthenticationPictureExample);
+            Map<String,Object> map = new HashMap<>();
+            map.put("authenticationId",secondStoreAuthentications1.get(0).getId());//审核id
+            map.put("addressId",secondStoreAddress.getId());//地址id
+            return builder.body(ResponseUtils.getResponseBody(map));
+        }
+
     }
     @RequestMapping(path = "/authenticationFile", method = RequestMethod.POST)
     @ApiOperation(value = "入驻商家认证文件上传", notes = "入驻商家认证文件上传")
