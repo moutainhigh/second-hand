@@ -243,7 +243,7 @@ public class StoreLoginController {
     @ApiOperation(value = "入驻商家认证文件上传", notes = "入驻商家认证文件上传")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "fileIds", value = "文件数组", required = true, type = "String[]"),
-            @ApiImplicitParam(paramType = "query", name = "AuthenticationId", value = "审核id", required = true, type = "Integer"),
+//            @ApiImplicitParam(paramType = "query", name = "AuthenticationId", value = "审核id", required = true, type = "Integer"),
     })
     public ResponseEntity<JSONObject> authenticationFile(
             @RequestParam(value = "fileIds", required = false) String[] fileIds,
