@@ -142,7 +142,7 @@ private SecondStoreMapper secondStoreMapper;
         map.put("AuthStart",secondUser1.getIsAuthentication());//认证状态
         SecondStoreExample secondStoreExample = new SecondStoreExample();
         secondStoreExample.createCriteria().andUserIdEqualTo(secondUser.getId())
-                .andIsDeletedEqualTo((short) 0).andSecondStatusEqualTo(0);
+                .andIsDeletedEqualTo((short) 0);
         List<SecondStore> secondStores = secondStoreMapper.selectByExample(secondStoreExample);
         map.put("storeId",secondStores.get(0).getId());
         SecondUserSonExample secondUserSonExample = new SecondUserSonExample();

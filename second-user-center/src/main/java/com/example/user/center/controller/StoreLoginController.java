@@ -337,6 +337,7 @@ public class StoreLoginController {
             SecondStore secondStore = new SecondStore();
             secondStore.setId(secondStoreAuthentications.get(0).getStoreId());
             secondStore.setSecondStatus(Authentication.UserState.PASS.getState());
+            secondStoreMapper.updateByPrimaryKeySelective(secondStore);
         }
         return builder.body(ResponseUtils.getResponseBody(0));
     }
