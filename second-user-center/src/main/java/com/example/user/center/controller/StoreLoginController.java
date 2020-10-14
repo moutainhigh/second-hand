@@ -402,7 +402,7 @@ public class StoreLoginController {
         secondStoreAuthenticationExample.createCriteria().andIsDeletedEqualTo((byte) 0)
                 .andIdEqualTo(AuthenticationId)
                 .andAuthenticationStateEqualTo(Authentication.State.getState(StartAuthenticationState).getState());
-        secondStoreAuthenticationMapper.updateByExampleSelective(secondStoreAuthentication,secondStoreAuthenticationExample);
+
         //修改用户表状态
         List<SecondStoreAuthentication> secondStoreAuthentications = secondStoreAuthenticationMapper.selectByExample(secondStoreAuthenticationExample);
         if (secondStoreAuthentications.size()!=0 && EndAuthenticationState.equals(Authentication.State.PASS.getState())){
@@ -415,6 +415,8 @@ public class StoreLoginController {
             secondStore.setSecondStatus(Authentication.UserState.PASS.getState());
             secondStoreMapper.updateByPrimaryKeySelective(secondStore);
         }
+        secondStoreAuthenticationMapper.updateByExampleSelective(secondStoreAuthentication,secondStoreAuthenticationExample);
+
         return builder.body(ResponseUtils.getResponseBody(0));
     }
 
