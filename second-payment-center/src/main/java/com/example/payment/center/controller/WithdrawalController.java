@@ -148,7 +148,7 @@ public class WithdrawalController {
             response.sendError(HttpStatus.FORBIDDEN.value(), "余额不足");
             return builder.body(ResponseUtils.getResponseBody(1));
         }
-        if (balanceService.addStock(userId,storeId,BanlaceEnum.Relation.MONEY.getState(),withdrawalMoney)>1){
+        if (balanceService.addStock(userId,storeId,BanlaceEnum.Relation.MONEY.getState(),withdrawalMoney)>0){
             /**
              * 取出提现利率
              */
