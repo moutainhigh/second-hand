@@ -342,6 +342,7 @@ public class WithdrawalController {
                         SecondStoreBalanceExample secondStoreBalanceExample = new SecondStoreBalanceExample();
                         secondStoreBalanceExample.createCriteria().andUserIdEqualTo(secondSon.getUserId())
                                 .andStoreIdEqualTo(secondStores.get(0).getId())
+//                                .andBalanceTypeEqualTo()
                                 .andIsDeletedEqualTo((short) 0);
 
                         balanceService.addBalance(secondStores.get(0).getId(),BanlaceEnum.Relation.MONEY.getState(),(secondWithdrawals.get(0).getDeduct()*30)/100);
