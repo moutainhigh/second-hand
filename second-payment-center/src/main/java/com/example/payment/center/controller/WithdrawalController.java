@@ -125,7 +125,7 @@ public class WithdrawalController {
                                                     @RequestParam(value = "methodId", required = false) Integer methodId,
                                                     @RequestParam(value = "storeId", required = false) Integer storeId,
                                                     @RequestParam(value = "userId", required = false) Integer userId,
-                                                    @RequestParam(value = "sonId", required = false) Integer sonId,
+//                                                    @RequestParam(value = "sonId", required = false) Integer sonId,
                                                     HttpServletResponse response) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
         SecondStoreBalanceExample secondStoreBalanceExample = new SecondStoreBalanceExample();
@@ -205,16 +205,8 @@ public class WithdrawalController {
             Integer realityMoneyx = (int) Math.ceil(realityMoneys);
             //                        提现实际金额
             Integer realityMoney = (withdrawalMoney-(realityMoneyx*(int)(rate*100)))+mon;
-            if (source.equals(WithdrawalEnum.WithdrawalSource.USER.getWithdrawalSource())){
-                SecondUserSonExample secondUserSonExample = new SecondUserSonExample();
-                secondUserSonExample.createCriteria().andUserIdEqualTo(userId)
-                        .andStoreIdEqualTo(storeId)
-                        .andIsDeletedEqualTo((byte) 0);
-                List<SecondUserSon> secondUserSons =
-                        secondUserSonMapper.selectByExample(secondUserSonExample);
-                sonBalanceService.add(secondUserSons.get(0).getSonId(),((realityMoneyx*(int)(rate*100))*30)/100);
-            }
             SecondWithdrawal secondWithdrawal = new SecondWithdrawal();
+            secondWithdrawal.setDeduct((realityMoneyx*(int)(rate*100)));//扣除的手续费
             secondWithdrawal.setSource(source);
             secondWithdrawal.setWithdrawalMark(getC(null));
             secondWithdrawal.setPhone(phone);
@@ -229,7 +221,7 @@ public class WithdrawalController {
             secondWithdrawal.setMethodId(methodId);
             secondWithdrawal.setUserId(userId);
             secondWithdrawal.setStoreId(storeId);
-            secondWithdrawal.setSonId(sonId);
+//            secondWithdrawal.setSonId(sonId);
             secondWithdrawal.setCreateDate(LocalDateTime.now());
             secondWithdrawal.setModifyDate(LocalDateTime.now());
             secondWithdrawal.setIsDeleted((byte) 0);
@@ -328,6 +320,47 @@ public class WithdrawalController {
             SecondWithdrawal secondWithdrawal = secondWithdrawals.get(0);
             secondWithdrawal.setWithdrawalState(WithdrawalEnum.WithdrawalState.getWithdrawalState(type).getWithdrawalState());
             secondWithdrawalMapper.updateByPrimaryKeySelective(secondWithdrawal);
+
+            if (secondWithdrawals.get(0).getWithdrawalType().equals(WithdrawalEnum.WithdrawalSource.USER.getWithdrawalSource())
+            && type.equals(WithdrawalEnum.WithdrawalState.COMPLETE.getWithdrawalState())){
+                //如果提现人是用户给子站点加余额
+                SecondUserSonExample secondUserSonExample = new SecondUserSonExample();
+                secondUserSonExample.createCriteria()
+                        .andUserIdEqualTo(secondWithdrawals.get(0).getUserId())
+                        .andStoreIdEqualTo(secondWithdrawals.get(0).getStoreId())
+                        .andIsDeletedEqualTo((byte) 0);
+                List<SecondUserSon> secondUserSons =
+                        secondUserSonMapper.selectByExample(secondUserSonExample);
+                if (secondUserSons.size()!=0){
+                    SecondSon secondSon = secondSonMapper.selectByPrimaryKey(secondUserSons.get(0).getSonId());
+                    SecondStoreExample secondStoreExample = new SecondStoreExample();
+                    secondStoreExample.createCriteria()
+                            .andUserIdEqualTo(secondSon.getUserId())
+                            .andIsDeletedEqualTo((short) 0);
+                    List<SecondStore> secondStores = secondStoreMapper.selectByExample(secondStoreExample);
+                    if (secondStores.size()!=0){
+                        SecondStoreBalanceExample secondStoreBalanceExample = new SecondStoreBalanceExample();
+                        secondStoreBalanceExample.createCriteria().andUserIdEqualTo(secondSon.getUserId())
+                                .andStoreIdEqualTo(secondStores.get(0).getId())
+                                .andIsDeletedEqualTo((short) 0);
+
+                        balanceService.addBalance(secondStores.get(0).getId(),BanlaceEnum.Relation.MONEY.getState(),(secondWithdrawals.get(0).getDeduct()*30)/100);
+                        //店铺余额流水
+                        SecondStoreBalanceDetail secondStoreBalanceDetail = new SecondStoreBalanceDetail();
+                        secondStoreBalanceDetail.setUserId(userId);
+                        secondStoreBalanceDetail.setPayDesc("提现反钱");
+                        secondStoreBalanceDetail.setStoreId(secondStores.get(0).getId());
+                        secondStoreBalanceDetail.setAmount((secondWithdrawals.get(0).getDeduct()*30)/100);
+                        secondStoreBalanceDetail.setDetailType(BanlaceEnum.Relation.MONEY.getState());
+                        secondStoreBalanceDetail.setIncomeExpenses(BanlaceEnum.incomeExpenses.PUT.getState());
+                        secondStoreBalanceDetail.setCreateTime(LocalDateTime.now());
+                        secondStoreBalanceDetail.setModifyTime(LocalDateTime.now());
+                        secondStoreBalanceDetail.setIsDeleted((short) 0);
+                        secondStoreBalanceDetailMapper.insertSelective(secondStoreBalanceDetail);
+                    }
+
+                }
+            }
             //审批记录
             SecondWithdrawalAudit secondWithdrawalAudit = new SecondWithdrawalAudit();
             secondWithdrawalAudit.setWithdrawalId(secondWithdrawal.getId());

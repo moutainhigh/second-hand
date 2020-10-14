@@ -345,7 +345,8 @@ public class StoreLoginController {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
 //审核列表
         SecondStoreAuthenticationExample secondAuthenticationExample = new SecondStoreAuthenticationExample();
-        secondAuthenticationExample.createCriteria().andIsDeletedEqualTo((byte) 0);
+        secondAuthenticationExample.createCriteria().andIsDeletedEqualTo((byte) 0)
+        .andAuthenticationStateEqualTo(Authentication.State.PASS.getState());
         List<SecondStoreAuthentication> secondStoreAuthentications = secondStoreAuthenticationMapper.selectByExample(secondAuthenticationExample);
         List<AuthenticationStoreList> authenticationStoreList = new ArrayList<>();
         //        循环审核
