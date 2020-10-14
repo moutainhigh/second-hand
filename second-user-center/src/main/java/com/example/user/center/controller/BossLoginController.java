@@ -85,19 +85,20 @@ public class BossLoginController {
     public ResponseEntity<JSONObject> AddLogin(
             @RequestParam(value = "username", required = false) String username,
             @RequestParam(value = "password", required = false) String password,
-            @RequestParam(value = "userId", required = false) Integer userId,
+//            @RequestParam(value = "userId", required = false) Integer userId,
             HttpServletResponse response
     ) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
         SecondAuthExample secondAuthExample = new SecondAuthExample();
-        secondAuthExample.createCriteria().andIsDeletedEqualTo((byte) 0)
-                .andUserIdEqualTo(userId).andLoginTypeEqualTo(Authentication.LoginType.BOSS.getState());
-        List<SecondAuth> secondAuths = secondAuthMapper.selectByExample(secondAuthExample);
-        //判断此用户是否已经有了登录权限
-        if (secondAuths.size()!=0){
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "已经有账号了");
-            return builder.body(ResponseUtils.getResponseBody(1));
-        }
+//        secondAuthExample.createCriteria().andIsDeletedEqualTo((byte) 0)
+//                .andLoginTypeEqualTo(Authentication.LoginType.BOSS.getState())
+//        .andUsernameEqualTo(username);
+//        List<SecondAuth> secondAuths = secondAuthMapper.selectByExample(secondAuthExample);
+//        //判断此用户是否已经有了登录权限
+//        if (secondAuths.size()!=0){
+//            response.sendError(HttpStatus.UNAUTHORIZED.value(), "已经有账号了");
+//            return builder.body(ResponseUtils.getResponseBody(1));
+//        }
         secondAuthExample.clear();
         secondAuthExample.createCriteria().andUsernameEqualTo(username)
                 .andIsDeletedEqualTo((byte) 0)
@@ -117,7 +118,7 @@ public class BossLoginController {
         secondUser.setModifyDate(LocalDateTime.now());
         secondUser.setIdDeleted((byte) 0);
         secondUserMapper.insertSelective(secondUser);
-        userId = secondUser.getId();
+        Integer userId = secondUser.getId();
         BCryptPasswordEncoder bcryptPasswordEncoder = new BCryptPasswordEncoder();
         SecondAuth secondAuth = new SecondAuth();
         secondAuth.setUserId(userId);
