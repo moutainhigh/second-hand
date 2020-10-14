@@ -242,7 +242,7 @@ public class StoreLoginController {
             secondStoreAddress.setSecondAddressDetail(addressDetail);
             secondStoreAddress.setContact(phoneNumber);///联系方式
             secondStoreAddress.setContact(name);
-            secondStoreAddress.setIsDeleted((short) 1);
+            secondStoreAddress.setIsDeleted((short) 0);
             secondStoreAddress.setModifyTime(LocalDateTime.now());
             secondStoreAddressMapper.insertSelective(secondStoreAddress);
             //店铺
