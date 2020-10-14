@@ -122,7 +122,7 @@ public class WithdrawalController {
                                                     @RequestParam(value = "withdrawalMoney", required = false) Integer withdrawalMoney,
                                                     @RequestParam(value = "withdrawalAccount", required = false) String withdrawalAccount,
                                                     @RequestParam(value = "withdrawalName", required = false) String withdrawalName,
-                                                    @RequestParam(value = "methodId", required = false) Integer methodId,
+                                                    @RequestParam(value = "methodId", required = false) String methodId,
                                                     @RequestParam(value = "storeId", required = false) Integer storeId,
                                                     @RequestParam(value = "userId", required = false) Integer userId,
 //                                                    @RequestParam(value = "sonId", required = false) Integer sonId,
@@ -217,7 +217,7 @@ public class WithdrawalController {
             secondWithdrawal.setWithdrawalState(WithdrawalEnum.WithdrawalState.CHECK.getWithdrawalState());
 //            SecondWithdrawalMethod secondWithdrawalMethod =
 //            secondWithdrawalMethodMapper.selectByPrimaryKey(methodId);
-//            secondWithdrawal.setWithdrawalType(secondWithdrawalMethod.getWithdrawalWayName());
+            secondWithdrawal.setWithdrawalType(methodId);
 //            secondWithdrawal.setMethodId(methodId);
             secondWithdrawal.setUserId(userId);
             secondWithdrawal.setStoreId(storeId);
