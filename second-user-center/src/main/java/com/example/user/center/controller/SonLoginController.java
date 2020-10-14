@@ -98,7 +98,7 @@ public class SonLoginController {
         SecondAuthExample secondAuthExample = new SecondAuthExample();
         secondAuthExample.createCriteria().andUsernameEqualTo(username)
                 .andIsDeletedEqualTo((byte) 0)
-                .andLoginTypeEqualTo(Authentication.LoginType.BOSS.getState());
+                .andLoginTypeEqualTo(Authentication.LoginType.SON.getState());
         List<SecondAuth> secondAuths1 = secondAuthMapper.selectByExample(secondAuthExample);
         if (secondAuths1.size()!=0){
             response.sendError(HttpStatus.UNAUTHORIZED.value(), "用户名存在");
