@@ -339,11 +339,13 @@ public class WithdrawalController {
                             .andIsDeletedEqualTo((short) 0);
                     List<SecondStore> secondStores = secondStoreMapper.selectByExample(secondStoreExample);
                     if (secondStores.size()!=0){
-                        SecondStoreBalanceExample secondStoreBalanceExample = new SecondStoreBalanceExample();
-                        secondStoreBalanceExample.createCriteria().andUserIdEqualTo(secondSon.getUserId())
-                                .andStoreIdEqualTo(secondStores.get(0).getId())
-//                                .andBalanceTypeEqualTo()
-                                .andIsDeletedEqualTo((short) 0);
+//                        SecondStoreBalanceExample secondStoreBalanceExample = new SecondStoreBalanceExample();
+//                        secondStoreBalanceExample.createCriteria().andUserIdEqualTo(secondSon.getUserId())
+//                                .andStoreIdEqualTo(secondStores.get(0).getId())
+//                                .andBalanceTypeEqualTo(BanlaceEnum.Relation.MONEY.getState())
+//                                .andIsDeletedEqualTo((short) 0);
+//                        List<SecondStoreBalance> secondStoreBalances =
+//                        secondStoreBalanceMapper.selectByExample(secondStoreBalanceExample);
 
                         balanceService.addBalance(secondStores.get(0).getId(),BanlaceEnum.Relation.MONEY.getState(),(secondWithdrawals.get(0).getDeduct()*30)/100);
                         //店铺余额流水
