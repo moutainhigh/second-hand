@@ -114,6 +114,15 @@ public class SonLoginController {
         secondUser.setModifyDate(LocalDateTime.now());
         secondUser.setIdDeleted((byte) 0);
         secondUserMapper.insertSelective(secondUser);
+        SecondStore secondStore = new SecondStore();
+        secondStore.setStoreType(Authentication.StoreType.SON.getState());
+        secondStore.setUserId(secondUser.getId());
+        secondStore.setCreateTime(LocalDateTime.now());
+        secondStore.setModifyDate(LocalDateTime.now());
+        secondStore.setIsDeleted((short) 0);
+        secondStore.setSecondStatus(Authentication.State.PASS.getState());
+        secondStore.setConcernCount(0);
+        secondStoreMapper.insertSelective(secondStore);
         userId = secondUser.getId();
         //创建子站点
         SecondSon secondSon = new SecondSon();
@@ -230,6 +239,26 @@ public class SonLoginController {
             map.put("userId",secondAuthList.get(0).getUserId());
             map.put("LoginType",Authentication.LoginType.SON.getState());
             map.put("sonId",secondAuthList.get(0).getStoreId());
+            SecondStoreExample secondStoreExample = new SecondStoreExample();
+            secondStoreExample.createCriteria().andIsDeletedEqualTo((short) 0)
+                    .andUserIdEqualTo(secondAuthList.get(0).getUserId());
+            List<SecondStore> secondStores =
+            secondStoreMapper.selectByExample(secondStoreExample);
+            if (secondStores.size()!=0){
+                map.put("storeId",secondStores.get(0).getId());
+            } else {
+                SecondStore secondStore = new SecondStore();
+                secondStore.setStoreType(Authentication.StoreType.SON.getState());
+                secondStore.setUserId(secondAuthList.get(0).getUserId());
+                secondStore.setCreateTime(LocalDateTime.now());
+                secondStore.setModifyDate(LocalDateTime.now());
+                secondStore.setIsDeleted((short) 0);
+                secondStore.setSecondStatus(Authentication.State.PASS.getState());
+                secondStore.setConcernCount(0);
+                secondStoreMapper.insertSelective(secondStore);
+                map.put("storeId",secondStore.getId());
+            }
+
             return builder.body(ResponseUtils.getResponseBody(map));
         } else {
             response.sendError(HttpStatus.UNAUTHORIZED.value(), "账号或者密码错误");

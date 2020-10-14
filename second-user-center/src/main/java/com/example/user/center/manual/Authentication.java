@@ -90,6 +90,7 @@ public class Authentication {
     public static enum StoreType {
         USER("user"),//用户店铺
         BOSS("boss"),//总后台店铺
+        SON("son"),//子站点店铺
         STORE("store");//入驻商家店铺
         private String state;
 
