@@ -290,6 +290,7 @@ public class SecondOrderController {
             orderList.setOrderId(secondOrder.getId());
             orderList.setStoreId(secondOrder.getStoneId());
             SecondStore secondStore = secondStoreMapper.selectByPrimaryKey(secondOrder.getStoneId());
+            orderList.setStoreAddress(secondStore.getSecondAddress());
             orderList.setStoreName(secondStore.getStoreName());
             orderList.setCreateTime(secondStore.getCreateTime());
             orderList.setUserId(secondOrder.getUserId());

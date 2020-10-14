@@ -23,6 +23,7 @@ public class OrderList {
     private Integer userId;//用户id
     private String nickName;//用户昵称
     private Integer sonId;//子站点id
+    private String storeAddress;//店铺地址
 
     private List<OrderProductList> orderProductLists;
 
@@ -104,5 +105,13 @@ public class OrderList {
 
     public void setOrderStatus(String orderStatus) {
         this.orderStatus = orderStatus;
+    }
+
+    public String getStoreAddress() {
+        return storeAddress;
+    }
+
+    public void setStoreAddress(String storeAddress) {
+        this.storeAddress = storeAddress;
     }
 }
