@@ -623,7 +623,24 @@ private SecondStoreMapper secondStoreMapper;
                 .andStoreIdEqualTo(storeId)
                 .andBalanceTypeEqualTo(BanlaceEnum.Relation.getState(type).getState())
                 .andIsDeletedEqualTo((short) 0);
-        return builder.body(ResponseUtils.getResponseBody(secondStoreBalanceMapper.selectByExample(secondStoreBalanceExample)));
+        List<SecondStoreBalance> secondStoreBalances =
+        secondStoreBalanceMapper.selectByExample(secondStoreBalanceExample);
+        if (secondStoreBalances.size()!=0){
+            return builder.body(ResponseUtils.getResponseBody(secondStoreBalances));
+        }else {
+            SecondStoreBalance secondStoreBalance = new SecondStoreBalance();
+            secondStoreBalance.setUserId(userId);
+            secondStoreBalance.setStoreId(storeId);
+            secondStoreBalance.setBalanceType(BanlaceEnum.Relation.getState(type).getState());
+            secondStoreBalance.setSecondBalance(0);
+            secondStoreBalance.setCreateTime(LocalDateTime.now());
+            secondStoreBalance.setModifyTime(LocalDateTime.now());
+            secondStoreBalance.setIsDeleted((short) 0);
+            secondStoreBalanceMapper.insertSelective(secondStoreBalance);
+            List<SecondStoreBalance> secondStoreBalances1 =
+                    secondStoreBalanceMapper.selectByExample(secondStoreBalanceExample);
+            return builder.body(ResponseUtils.getResponseBody(secondStoreBalances1));
+        }
     }
     @InitBinder
     public void initBinder(WebDataBinder binder, WebRequest request) {
