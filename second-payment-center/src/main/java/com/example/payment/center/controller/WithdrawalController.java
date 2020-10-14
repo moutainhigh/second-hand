@@ -115,7 +115,7 @@ public class WithdrawalController {
             @ApiImplicitParam(paramType = "query", name = "methodId", value = "取款方式id", required = true, type = "String"),
             @ApiImplicitParam(paramType = "query", name = "storeId", value = "店铺id", required = true, type = "String"),
             @ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, type = "String"),
-            @ApiImplicitParam(paramType = "query", name = "sonId", value = "子站点id", required = true, type = "String"),
+//            @ApiImplicitParam(paramType = "query", name = "sonId", value = "子站点id", required = true, type = "String"),
     })
     public ResponseEntity<JSONObject> addWithdrawal(@RequestParam(value = "source", required = false) String source,
                                                     @RequestParam(value = "phone", required = false) String phone,
