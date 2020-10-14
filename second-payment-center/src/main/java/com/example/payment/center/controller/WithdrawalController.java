@@ -215,10 +215,10 @@ public class WithdrawalController {
             secondWithdrawal.setWithdrawalAccount(withdrawalAccount);
             secondWithdrawal.setWithdrawalName(withdrawalName);
             secondWithdrawal.setWithdrawalState(WithdrawalEnum.WithdrawalState.CHECK.getWithdrawalState());
-            SecondWithdrawalMethod secondWithdrawalMethod =
-            secondWithdrawalMethodMapper.selectByPrimaryKey(methodId);
-            secondWithdrawal.setWithdrawalType(secondWithdrawalMethod.getWithdrawalWayName());
-            secondWithdrawal.setMethodId(methodId);
+//            SecondWithdrawalMethod secondWithdrawalMethod =
+//            secondWithdrawalMethodMapper.selectByPrimaryKey(methodId);
+//            secondWithdrawal.setWithdrawalType(secondWithdrawalMethod.getWithdrawalWayName());
+//            secondWithdrawal.setMethodId(methodId);
             secondWithdrawal.setUserId(userId);
             secondWithdrawal.setStoreId(storeId);
 //            secondWithdrawal.setSonId(sonId);
