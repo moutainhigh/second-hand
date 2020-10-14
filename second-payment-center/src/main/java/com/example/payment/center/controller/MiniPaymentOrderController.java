@@ -310,12 +310,20 @@ public ResponseEntity<JSONObject> completePaymentAfter(
                     SecondOrderExample secondOrderExample1 = new SecondOrderExample();
                     secondOrderExample1.createCriteria().andOrderCodeEqualTo(secondOrder.getOrderCode());
                     SecondOrder secondOrder1 = new SecondOrder();
-                    secondOrder1.setOrderStatus(OrderEnum.OrderStatus.PROCESS.getOrderStatus());
+                    if (secondOrder.getOrderType().equals("store")){
+                        secondOrder1.setOrderStatus(OrderEnum.OrderStatus.TRANSPORT.getOrderStatus());
+                    }else if (secondOrder.getOrderType().equals("user")){
+                        secondOrder1.setOrderStatus(OrderEnum.OrderStatus.PROCESS.getOrderStatus());
+                    }
                     secondOrder1.setModifyTime(LocalDateTime.now());
                     secondOrder1.setPayStatus(1);
                     secondOrderMapper.updateByExampleSelective(secondOrder1,secondOrderExample1);
                     SecondOrderDetail secondOrderDetail = new SecondOrderDetail();
+                if (secondOrder.getOrderType().equals("store")){
+                    secondOrderDetail.setDetailStatus(OrderEnum.OrderStatus.TRANSPORT.getOrderStatus());
+                }else if (secondOrder.getOrderType().equals("user")){
                     secondOrderDetail.setDetailStatus(OrderEnum.OrderStatus.PROCESS.getOrderStatus());
+                }
                     SecondOrderDetailExample example = new SecondOrderDetailExample();
                     example.createCriteria().andOrderIdEqualTo(secondOrder.getId());
                     secondOrderDetailMapper.updateByExampleSelective(secondOrderDetail,example);
