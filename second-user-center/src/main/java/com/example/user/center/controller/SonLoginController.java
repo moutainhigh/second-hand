@@ -229,6 +229,10 @@ public class SonLoginController {
                 .andLoginTypeEqualTo(Authentication.LoginType.SON.getState())
                 .andIsDeletedEqualTo((byte) 0);
         List<SecondAuth> secondAuthList = secondAuthMapper.selectByExample(secondAuthExample);
+        if (secondAuthList.size()==0){
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), "账号或者密码错误");
+            return builder.body(ResponseUtils.getResponseBody(1));
+        }
         BCryptPasswordEncoder bcp = new BCryptPasswordEncoder();
         boolean a = bcp.matches(password,secondAuthList.get(0).getPassword());
         if (a){
