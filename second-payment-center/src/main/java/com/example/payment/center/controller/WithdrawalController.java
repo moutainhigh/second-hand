@@ -255,6 +255,7 @@ public class WithdrawalController {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
         SecondWithdrawalExample secondWithdrawalExample = new SecondWithdrawalExample();
         secondWithdrawalExample.createCriteria().andSourceEqualTo(source)
+                .andWithdrawalStateEqualTo(WithdrawalEnum.WithdrawalState.CHECK.getWithdrawalState())
                 .andIsDeletedEqualTo((byte) 0);
         List<SecondWithdrawal> secondWithdrawal =
         secondWithdrawalMapper.selectByExample(secondWithdrawalExample);
@@ -313,11 +314,13 @@ public class WithdrawalController {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
         SecondWithdrawalExample secondWithdrawalExample = new SecondWithdrawalExample();
         secondWithdrawalExample.createCriteria().andIdEqualTo(WithdrawalId)
-                .andWithdrawalTypeEqualTo(originalType);
+                .andWithdrawalStateEqualTo(originalType)
+        .andIsDeletedEqualTo((byte) 0);
         List<SecondWithdrawal> secondWithdrawals =
                 secondWithdrawalMapper.selectByExample(secondWithdrawalExample);
         if (secondWithdrawals.size()!=0){
             SecondWithdrawal secondWithdrawal = secondWithdrawals.get(0);
+            System.out.println(secondWithdrawal.getId());
             secondWithdrawal.setWithdrawalState(WithdrawalEnum.WithdrawalState.getWithdrawalState(type).getWithdrawalState());
             secondWithdrawalMapper.updateByPrimaryKeySelective(secondWithdrawal);
 
