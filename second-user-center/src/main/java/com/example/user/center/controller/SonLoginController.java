@@ -379,10 +379,23 @@ public class SonLoginController {
         StoreDetails storeDetails = new StoreDetails();
         storeDetails.setUserId(userId);
         storeDetails.setStoreId(storeId);
-        storeDetails.setCreateTime(secondStore.getCreateTime());
-        storeDetails.setAddress(secondStore.getSecondAddress());
-        storeDetails.setStoreStatus(secondStore.getSecondStatus());
-        storeDetails.setMoney(secondStoreBalances.get(0).getSecondBalance());
+        if (secondStoreBalances.size()!=0){
+            storeDetails.setCreateTime(secondStore.getCreateTime());
+            storeDetails.setAddress(secondStore.getSecondAddress());
+            storeDetails.setStoreStatus(secondStore.getSecondStatus());
+            storeDetails.setMoney(secondStoreBalances.get(0).getSecondBalance());
+        } else {
+            SecondStoreBalance secondStoreBalance = new SecondStoreBalance();
+            secondStoreBalance.setUserId(userId);
+            secondStoreBalance.setStoreId(storeId);
+            secondStoreBalance.setBalanceType(BanlaceEnum.Relation.MONEY.getState());
+            secondStoreBalance.setSecondBalance(0);
+            secondStoreBalance.setCreateTime(LocalDateTime.now());
+            secondStoreBalance.setModifyTime(LocalDateTime.now());
+            secondStoreBalance.setIsDeleted((short) 0);
+            secondStoreBalanceMapper.insertSelective(secondStoreBalance);
+            storeDetails.setMoney(0);
+        }
         return builder.body(ResponseUtils.getResponseBody(storeDetails));
     }
 }
