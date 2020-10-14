@@ -417,9 +417,6 @@ private SecondStoreMapper secondStoreMapper;
             secondUser.setId(secondAuthentications.get(0).getUserId());
             secondUser.setIsAuthentication(Authentication.UserState.PASS.getState());
             secondUserMapper.updateByPrimaryKeySelective(secondUser);
-            SecondStore secondStore = new SecondStore();
-            secondStore.setId(secondAuthentications.get(0).getStoreId());
-            secondStore.setSecondStatus(Authentication.UserState.PASS.getState());
 
             SecondUserSonExample secondUserSonExample = new SecondUserSonExample();
             secondUserSonExample.createCriteria().andUserIdEqualTo(secondAuthentications.get(0).getUserId())
@@ -431,8 +428,26 @@ private SecondStoreMapper secondStoreMapper;
             if (secondUserSons.size()==0){
                 //用户店铺积分
                 SecondBoss secondBoss = secondBossMapper.selectByPrimaryKey(1);
-                secondStore.setSecondBalance(secondBoss.getNewUserIntegral());
-                secondStoreMapper.updateByPrimaryKeySelective(secondStore);
+                SecondStoreBalanceExample secondStoreBalanceExample = new SecondStoreBalanceExample();
+                secondStoreBalanceExample.createCriteria()
+                        .andUserIdEqualTo(secondAuthentications.get(0).getUserId())
+                        .andStoreIdEqualTo(secondAuthentications.get(0).getStoreId())
+                        .andIsDeletedEqualTo((short) 0)
+                        .andBalanceTypeEqualTo(BanlaceEnum.Relation.INTEGRAL.getState());
+                List<SecondStoreBalance> secondStoreBalances =
+                        secondStoreBalanceMapper.selectByExample(secondStoreBalanceExample);
+                if (secondStoreBalances.size()==0){
+                    SecondStoreBalance secondStoreBalance = new SecondStoreBalance();
+                    secondStoreBalance.setUserId(secondAuthentications.get(0).getUserId());
+                    secondStoreBalance.setStoreId(secondAuthentications.get(0).getStoreId());
+                    secondStoreBalance.setBalanceType(BanlaceEnum.Relation.INTEGRAL.getState());
+                    secondStoreBalance.setIsDeleted((short) 0);
+                    secondStoreBalance.setSecondBalance(secondBoss.getNewUserIntegral());
+                    secondStoreBalance.setCreateTime(LocalDateTime.now());
+                    secondStoreBalance.setModifyTime(LocalDateTime.now());
+                    secondStoreBalanceMapper.insertSelective(secondStoreBalance);
+                }
+
                 SecondUserSon secondUserSon = new SecondUserSon();
                 secondUserSon.setStoreId(secondAuthentications.get(0).getStoreId());
                 secondUserSon.setUserId(secondAuthentications.get(0).getUserId());
