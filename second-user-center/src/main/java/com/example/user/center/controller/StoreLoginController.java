@@ -155,6 +155,7 @@ public class StoreLoginController {
         secondStore.setSecondStatus(Authentication.UserState.NOPASS.getState());
         secondStoreMapper.insertSelective(secondStore);
         SecondAuth record = new SecondAuth();
+        record.setIsDeleted((byte) 0);
         record.setStoreId(secondStore.getId());
         record.setAuthKey(openid);
         record.setAuthStatus(Byte.valueOf("0"));
