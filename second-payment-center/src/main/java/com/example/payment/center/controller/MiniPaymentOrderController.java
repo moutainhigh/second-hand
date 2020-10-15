@@ -387,7 +387,7 @@ public ResponseEntity<JSONObject> completePaymentAfter(
     @RequestMapping(value = "/refund", method = RequestMethod.GET)
     @Transactional(rollbackFor = {RuntimeException.class, Error.class})
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "outTradeNo", value = "订单id", required = true, type = "orderCode"),
+            @ApiImplicitParam(paramType = "query", name = "orderCode", value = "订单编码", required = true, type = "orderCode"),
             @ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, type = "Integer") })
     public ResponseEntity<JSONObject> refund( Integer userId,Integer payOrderId,String orderCode) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
@@ -409,7 +409,7 @@ public ResponseEntity<JSONObject> completePaymentAfter(
 
         SecondPayOrder payOrder = secondPayOrderMapper.selectByPrimaryKey(payOrderId);
         SecondAuth hfUser = secondAuthMapper.selectByPrimaryKey(userId);
-        if (secondOrders.get(0).getPaymentName().equals("wechart") && secondOrders.get(0).getPaymentType().equals(0)){
+        if (secondOrders.get(0).getPaymentName().equals("wechart") && secondOrders.get(0).getPayStatus().equals(1)){
 //			MiniProgramConfig config = new MiniProgramConfig();
             WXPay wxpay = new WXPay(miniProgramConfig);
             Map<String, String> data = new HashMap<>();
@@ -461,7 +461,7 @@ public ResponseEntity<JSONObject> completePaymentAfter(
             }
 
             return builder.body(ResponseUtils.getResponseBody(resp));
-        } else if (secondOrders.get(0).getPaymentName().equals("balance") && secondOrders.get(0).getPaymentType().equals(0)) {
+        } else if (secondOrders.get(0).getPaymentName().equals("balance") && secondOrders.get(0).getPayStatus().equals(1)) {
             SecondStoreExample secondStoreExample = new SecondStoreExample();
             secondStoreExample.createCriteria().andUserIdEqualTo(secondOrders.get(0).getUserId())
                     .andIsDeletedEqualTo((short) 0);
