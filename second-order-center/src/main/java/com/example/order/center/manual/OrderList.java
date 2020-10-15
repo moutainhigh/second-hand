@@ -22,6 +22,7 @@ public class OrderList {
     private LocalDateTime createTime;//创建时间
     private Integer userId;//用户id
     private String nickName;//用户昵称
+    private String userFile;//用户头像
     private Integer sonId;//子站点id
     private String storeAddress;//店铺地址
 
@@ -113,5 +114,13 @@ public class OrderList {
 
     public void setStoreAddress(String storeAddress) {
         this.storeAddress = storeAddress;
+    }
+
+    public String getUserFile() {
+        return userFile;
+    }
+
+    public void setUserFile(String userFile) {
+        this.userFile = userFile;
     }
 }

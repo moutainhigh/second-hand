@@ -247,8 +247,8 @@ public class SecondOrderController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "orderType", value = "订单类型,user,store", required = true, type = "String"),
             @ApiImplicitParam(paramType = "query", name = "OrderStatus", value = "订单状态", required = true, type = "String"),
-            @ApiImplicitParam(paramType = "query", name = "sonId", value = "子站点id", required = true, type = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "sonId", value = "子站点id", required = false, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = false, type = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "showType", value = "商品展示类型", required = true, type = "String"),
     })
     public ResponseEntity<JSONObject> selectOrder(String orderType,String OrderStatus,Integer sonId,Integer userId,String showType) throws Exception {
@@ -293,12 +293,21 @@ public class SecondOrderController {
             orderList.setOrderId(secondOrder.getId());
             orderList.setStoreId(secondOrder.getStoneId());
             SecondStore secondStore = secondStoreMapper.selectByPrimaryKey(secondOrder.getStoneId());
-            orderList.setStoreAddress(secondStore.getSecondAddress());
+            SecondOrderAddressExample secondOrderAddressExample = new SecondOrderAddressExample();
+            secondOrderAddressExample.createCriteria()
+                    .andOrderIdEqualTo(secondOrder.getId())
+                    .andIsDeletedEqualTo((short) 0);
+            List<SecondOrderAddress> secondOrderAddresses
+                    =secondOrderAddressMapper.selectByExample(secondOrderAddressExample);
+            if (secondOrderAddresses.size()!=0){
+                orderList.setStoreAddress(secondOrderAddresses.get(0).getSecondAddressDetail());
+            }
             orderList.setStoreName(secondStore.getStoreName());
             orderList.setCreateTime(secondStore.getCreateTime());
             orderList.setUserId(secondOrder.getUserId());
             SecondUser secondUser = secondUserMapper.selectByPrimaryKey(secondOrder.getUserId());
             orderList.setNickName(secondUser.getNickName());
+            orderList.setUserFile(secondUser.getFile());
             SecondOrderDetailExample secondOrderDetailExample = new SecondOrderDetailExample();
             secondOrderDetailExample.createCriteria().andOrderIdEqualTo(secondOrder.getId());
             List<SecondOrderDetail> secondOrderDetails =
