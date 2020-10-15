@@ -57,7 +57,6 @@ public class EvaluateController {
             @ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, type = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "storeId", value = "店铺id", required = true, type = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "orderDetails", value = "订单详情id", required = true, type = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "files", value = "评价图", required = true, type = "List<String>"),
             @ApiImplicitParam(paramType = "query", name = "evaluate", value = "评价内容", required = true, type = "String"),
             @ApiImplicitParam(paramType = "query", name = "parentEvaluateId", value = "父级评价id", required = true, type = "Integer"),
     })
