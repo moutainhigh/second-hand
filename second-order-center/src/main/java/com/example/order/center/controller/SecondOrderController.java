@@ -17,10 +17,12 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.time.FastDateFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -58,7 +60,8 @@ public class SecondOrderController {
         threadLocal.set(builder);
         return threadLocal.get().toString();
     }
-
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
     //物品
     @Autowired
     private SecondGoodsMapper secondGoodsMapper;
@@ -371,8 +374,18 @@ public class SecondOrderController {
 
         SecondOrder secondOrder = new SecondOrder();
         if (secondOrders.size()!=0){
-            secondOrder.setOrderStatus(targetOrderStatus);
-            secondOrder.setCreateTime(LocalDateTime.now());
+            /**
+             * 退款处理
+             */
+            if (originalOrderStatus.equals(OrderEnum.OrderStatus.CONTROVERSIAL.getOrderStatus())
+                    && targetOrderStatus.equals("refuse")){
+                //拒绝退款 返回原始订单状态
+                secondOrder.setOrderStatus(String.valueOf(redisTemplate.opsForValue().get("refund"+String.valueOf(orderId))));
+            }else {
+                secondOrder.setOrderStatus(targetOrderStatus);
+            }
+
+            secondOrder.setModifyTime(LocalDateTime.now());
             secondOrderMapper.updateByExampleSelective(secondOrder,secondOrderExample);
             /**
              * 确认收货
@@ -416,6 +429,13 @@ public class SecondOrderController {
                 secondStoreBalanceDetail.setIsDeleted((short) 0);
                 secondStoreBalanceDetailMapper.insertSelective(secondStoreBalanceDetail);
             }
+            /**
+             * 申请退款
+             */
+            if (targetOrderStatus.equals(OrderEnum.OrderStatus.CONTROVERSIAL.getOrderStatus())){
+                redisTemplate.opsForValue().set("refund"+String.valueOf(orderId),secondOrders.get(0).getOrderStatus());
+            }
+
             return builder.body(ResponseUtils.getResponseBody(0));
         }
 
