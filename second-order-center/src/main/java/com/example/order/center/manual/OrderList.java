@@ -28,6 +28,7 @@ public class OrderList {
     private String userFile;//用户头像
     private Integer sonId;//子站点id
     private String storeAddress;//店铺地址
+    private Integer payOrderId;//支付订单
 
     private List<OrderProductList> orderProductLists;
 
@@ -149,5 +150,13 @@ public class OrderList {
 
     public void setStoreUserFile(String storeUserFile) {
         this.storeUserFile = storeUserFile;
+    }
+
+    public Integer getPayOrderId() {
+        return payOrderId;
+    }
+
+    public void setPayOrderId(Integer payOrderId) {
+        this.payOrderId = payOrderId;
     }
 }
