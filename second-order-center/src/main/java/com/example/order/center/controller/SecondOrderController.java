@@ -256,6 +256,7 @@ public class SecondOrderController {
         SecondOrderExample secondOrderExample = new SecondOrderExample();
         if (OrderStatus.equals(OrderEnum.OrderStatus.ALL.getOrderStatus())){
             SecondOrderExample.Criteria criteria = secondOrderExample.createCriteria().andIsDeletedEqualTo((byte) 0)
+                    .andOrderStatusNotEqualTo(OrderEnum.OrderStatus.PAYMENT.getOrderStatus())
                     .andOrderTypeEqualTo(orderType);
             if (userId!=null){
                 criteria.andUserIdEqualTo(userId);
