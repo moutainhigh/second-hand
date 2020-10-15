@@ -249,9 +249,10 @@ public class SecondOrderController {
             @ApiImplicitParam(paramType = "query", name = "OrderStatus", value = "订单状态", required = true, type = "String"),
             @ApiImplicitParam(paramType = "query", name = "sonId", value = "子站点id", required = false, type = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = false, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "storeId", value = "所属的店铺id 和userId只需填一个", required = false, type = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "showType", value = "商品展示类型", required = true, type = "String"),
     })
-    public ResponseEntity<JSONObject> selectOrder(String orderType,String OrderStatus,Integer sonId,Integer userId,String showType) throws Exception {
+    public ResponseEntity<JSONObject> selectOrder(String orderType,String OrderStatus,Integer sonId,Integer userId,String showType,Integer storeId) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
         SecondOrderExample secondOrderExample = new SecondOrderExample();
         if (OrderStatus.equals(OrderEnum.OrderStatus.ALL.getOrderStatus())){
@@ -260,6 +261,9 @@ public class SecondOrderController {
                     .andOrderTypeEqualTo(orderType);
             if (userId!=null){
                 criteria.andUserIdEqualTo(userId);
+            }
+            if (storeId!=null){
+                criteria.andStoneIdEqualTo(storeId);
             }
         }else{
             SecondOrderExample.Criteria criteria = secondOrderExample.createCriteria().andIsDeletedEqualTo((byte) 0)
