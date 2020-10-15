@@ -314,6 +314,16 @@ public ResponseEntity<JSONObject> completePaymentAfter(
                         secondOrder1.setOrderStatus(OrderEnum.OrderStatus.TRANSPORT.getOrderStatus());
                     }else if (secondOrder.getOrderType().equals("user")){
                         secondOrder1.setOrderStatus(OrderEnum.OrderStatus.PROCESS.getOrderStatus());
+                        SecondOrderDetailExample secondOrderDetailExample = new SecondOrderDetailExample();
+                        secondOrderDetailExample.createCriteria().andOrderIdEqualTo(secondOrder.getId())
+                                .andIsDeletedEqualTo((byte) 0);
+                        List<SecondOrderDetail> secondOrderDetails =
+                                secondOrderDetailMapper.selectByExample(secondOrderDetailExample);
+                        SecondGoods secondGoods = secondGoodsMapper.selectByPrimaryKey(secondOrderDetails.get(0).getGoodsId());
+                        SecondProduct secondProduct = secondProductMapper.selectByPrimaryKey(secondGoods.getProductId());
+                        secondProduct.setProductState(ProductEnum.ProductState.SELLOUT.getState());
+                        secondProduct.setModifyTime(LocalDateTime.now());
+                        secondProductMapper.updateByPrimaryKeySelective(secondProduct);
                     }
                     secondOrder1.setModifyTime(LocalDateTime.now());
                     secondOrder1.setPayStatus(1);
