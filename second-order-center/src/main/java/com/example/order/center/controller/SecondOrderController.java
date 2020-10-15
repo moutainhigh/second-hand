@@ -309,6 +309,11 @@ public class SecondOrderController {
             }
             orderList.setStoreName(secondStore.getStoreName());
             orderList.setCreateTime(secondStore.getCreateTime());
+            orderList.setStoreUserId(secondStore.getUserId());
+            SecondUser secondUser1 = secondUserMapper.selectByPrimaryKey(secondStore.getUserId());
+            orderList.setStoreUserFile(secondUser1.getFile());
+            orderList.setStoreNickName(secondUser1.getNickName());
+
             orderList.setUserId(secondOrder.getUserId());
             SecondUser secondUser = secondUserMapper.selectByPrimaryKey(secondOrder.getUserId());
             orderList.setNickName(secondUser.getNickName());

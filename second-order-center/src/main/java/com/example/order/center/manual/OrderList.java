@@ -19,6 +19,9 @@ public class OrderList {
     private String orderCode;//订单号
     private String storeName;//店铺名称
     private Integer storeId;//店铺id
+    private Integer storeUserId;//商品所属的店铺用户id
+    private String storeNickName;
+    private String storeUserFile;
     private LocalDateTime createTime;//创建时间
     private Integer userId;//用户id
     private String nickName;//用户昵称
@@ -122,5 +125,29 @@ public class OrderList {
 
     public void setUserFile(String userFile) {
         this.userFile = userFile;
+    }
+
+    public Integer getStoreUserId() {
+        return storeUserId;
+    }
+
+    public void setStoreUserId(Integer storeUserId) {
+        this.storeUserId = storeUserId;
+    }
+
+    public String getStoreNickName() {
+        return storeNickName;
+    }
+
+    public void setStoreNickName(String storeNickName) {
+        this.storeNickName = storeNickName;
+    }
+
+    public String getStoreUserFile() {
+        return storeUserFile;
+    }
+
+    public void setStoreUserFile(String storeUserFile) {
+        this.storeUserFile = storeUserFile;
     }
 }
