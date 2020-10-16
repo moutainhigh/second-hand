@@ -478,7 +478,7 @@ public class SecondProductController {
             //商品状态
             productList.setProductState(secondProduct1.getProductState());
             //列表图
-            productList.setFile(secondProduct1.getFile());
+//            productList.setFile(secondProduct1.getFile());
             //wuping
             SecondGoodsExample secondGoodsExample = new SecondGoodsExample();
             secondGoodsExample.createCriteria()
@@ -548,6 +548,7 @@ public class SecondProductController {
                     files.add(secondProductPictrue.getFile());
                 });
                 productList.setFiles(files);
+                productList.setFile(secondProductPictrues.get(0).getFile());
             }
             /**
              * 店铺
