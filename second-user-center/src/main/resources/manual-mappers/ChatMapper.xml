@@ -21,8 +21,8 @@ SELECT
 FROM
 	`second_chat`
 WHERE
-	to_id = 1
-	AND from_id = 2
+	to_id = #{userId}
+	AND from_id = #{byUserId}
 	OR to_id = 2
 	AND from_id = 1
 ORDER BY

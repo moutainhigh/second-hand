@@ -417,7 +417,13 @@ private SecondStoreMapper secondStoreMapper;
             secondUser.setId(secondAuthentications.get(0).getUserId());
             secondUser.setIsAuthentication(Authentication.UserState.PASS.getState());
             secondUserMapper.updateByPrimaryKeySelective(secondUser);
-
+            SecondStoreExample secondStoreExample = new SecondStoreExample();
+            secondStoreExample.createCriteria().andUserIdEqualTo(secondAuthentications.get(0).getUserId())
+                    .andIsDeletedEqualTo((short) 0);
+            SecondStore secondStore = new SecondStore();
+            secondStore.setSecondStatus(0);
+            secondStore.setCreateTime(LocalDateTime.now());
+            secondStoreMapper.updateByExampleSelective(secondStore,secondStoreExample);
             SecondUserSonExample secondUserSonExample = new SecondUserSonExample();
             secondUserSonExample.createCriteria().andUserIdEqualTo(secondAuthentications.get(0).getUserId())
                     .andStoreIdEqualTo(secondAuthentications.get(0).getStoreId())
