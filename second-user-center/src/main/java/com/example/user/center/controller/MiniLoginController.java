@@ -657,6 +657,61 @@ private SecondStoreMapper secondStoreMapper;
             return builder.body(ResponseUtils.getResponseBody(secondStoreBalances1));
         }
     }
+    @RequestMapping(path = "/UserStoreDetails", method = RequestMethod.GET)
+    @ApiOperation(value = "用户店铺详情", notes = "用户店铺详情")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "storeId", value = "店铺id", required = true, type = "Integer"),
+    })
+    public ResponseEntity<JSONObject> UserStoreDetails(
+            Integer userId,
+            Integer storeId
+    ) throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
+        SecondStore secondStore = secondStoreMapper.selectByPrimaryKey(storeId);
+        SecondStoreBalanceExample secondStoreBalanceExample = new SecondStoreBalanceExample();
+        secondStoreBalanceExample.createCriteria()
+                .andUserIdEqualTo(userId)
+                .andStoreIdEqualTo(storeId)
+                .andBalanceTypeEqualTo(BanlaceEnum.Relation.MONEY.getState())
+                .andIsDeletedEqualTo((short) 0);
+        List<SecondStoreBalance> secondStoreBalances =
+                secondStoreBalanceMapper.selectByExample(secondStoreBalanceExample);
+        StoreDetails storeDetails = new StoreDetails();
+        storeDetails.setUserId(userId);
+        storeDetails.setStoreId(storeId);
+        storeDetails.setCreateTime(secondStore.getCreateTime());
+        storeDetails.setAddress(secondStore.getSecondAddress());
+        storeDetails.setStoreStatus(secondStore.getSecondStatus());
+        if (secondStore.getSecondStatus().equals(Authentication.UserState.PASS.getState())){
+            SecondUserSonExample secondUserSonExample = new SecondUserSonExample();
+            secondUserSonExample.createCriteria().andUserIdEqualTo(userId)
+                    .andStoreIdEqualTo(storeId)
+                    .andIsDeletedEqualTo((byte) 0);
+            List<SecondUserSon> secondUserSons =
+                    secondUserSonMapper.selectByExample(secondUserSonExample);
+            SecondSon secondSon = secondSonMapper.selectByPrimaryKey(secondUserSons.get(0).getSonId());
+            storeDetails.setSonId(secondSon.getId());
+            storeDetails.setSonName(secondSon.getSonName());
+            storeDetails.setSonFile(secondSon.getFile());
+        }
+        if (secondStoreBalances.size()!=0){
+            storeDetails.setMoney(secondStoreBalances.get(0).getSecondBalance());
+        } else {
+            SecondStoreBalance secondStoreBalance = new SecondStoreBalance();
+            secondStoreBalance.setUserId(userId);
+            secondStoreBalance.setStoreId(storeId);
+            secondStoreBalance.setBalanceType(BanlaceEnum.Relation.MONEY.getState());
+            secondStoreBalance.setSecondBalance(0);
+            secondStoreBalance.setCreateTime(LocalDateTime.now());
+            secondStoreBalance.setModifyTime(LocalDateTime.now());
+            secondStoreBalance.setIsDeleted((short) 0);
+            secondStoreBalanceMapper.insertSelective(secondStoreBalance);
+            storeDetails.setMoney(0);
+        }
+
+        return builder.body(ResponseUtils.getResponseBody(storeDetails));
+    }
     @InitBinder
     public void initBinder(WebDataBinder binder, WebRequest request) {
         //转换日期

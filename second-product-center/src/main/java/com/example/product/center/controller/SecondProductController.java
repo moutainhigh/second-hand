@@ -423,6 +423,7 @@ public class SecondProductController {
             @ApiImplicitParam(paramType = "query", name = "storeId", value = "店铺id", required = false, type = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "isSon", value = "是否是子站点查询 0是", required = false, type = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "showType", value = "商品类型", required = false, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "product", value = "搜索的内容", required = false, type = "String"),
     })
     @RequestMapping(value = "/selectProduct", method = RequestMethod.GET)
     public ResponseEntity<JSONObject> selectProduct(
@@ -430,6 +431,7 @@ public class SecondProductController {
             @RequestParam(name = "sonId", required = false) Integer sonId,
             @RequestParam(name = "storeId", required = false) Integer storeId,
             @RequestParam(name = "showType", required = false) String showType,
+            @RequestParam(name = "product", required = false) String product,
             @RequestParam(name = "isSon", required = false) Integer isSon,
             @RequestParam(name = "categoryId", required = false) Integer categoryId
     )
@@ -449,6 +451,10 @@ public class SecondProductController {
         //筛选店铺
         if (storeId != null) {
             criteria.andStoreIdEqualTo(storeId);
+        }
+        if (product!=null){
+//            SecondProductExample.Criteria criteria1 =criteria;
+            criteria.andProductNameLike("%" + product + "%");
         }
         List<ProductList> productLists = new ArrayList<>();
 

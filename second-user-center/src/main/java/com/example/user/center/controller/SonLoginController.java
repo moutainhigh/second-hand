@@ -383,10 +383,10 @@ public class SonLoginController {
         StoreDetails storeDetails = new StoreDetails();
         storeDetails.setUserId(userId);
         storeDetails.setStoreId(storeId);
+        storeDetails.setCreateTime(secondStore.getCreateTime());
+        storeDetails.setAddress(secondStore.getSecondAddress());
+        storeDetails.setStoreStatus(secondStore.getSecondStatus());
         if (secondStoreBalances.size()!=0){
-            storeDetails.setCreateTime(secondStore.getCreateTime());
-            storeDetails.setAddress(secondStore.getSecondAddress());
-            storeDetails.setStoreStatus(secondStore.getSecondStatus());
             storeDetails.setMoney(secondStoreBalances.get(0).getSecondBalance());
         } else {
             SecondStoreBalance secondStoreBalance = new SecondStoreBalance();

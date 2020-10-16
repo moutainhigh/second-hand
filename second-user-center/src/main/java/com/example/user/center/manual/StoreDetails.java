@@ -17,6 +17,10 @@ public class StoreDetails {
     private Integer storeStatus;//店铺状态
     private String address;//店铺地址
     private LocalDateTime createTime;//创建时间
+    private Integer sonId;//子站点id
+    private String sonName;//子站点名称
+    private String sonFile;//子站点头像
+    private String sonCollegesName;//子站点学校名称
 
     public Integer getUserId() {
         return userId;
@@ -64,5 +68,37 @@ public class StoreDetails {
 
     public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
+    }
+
+    public Integer getSonId() {
+        return sonId;
+    }
+
+    public void setSonId(Integer sonId) {
+        this.sonId = sonId;
+    }
+
+    public String getSonName() {
+        return sonName;
+    }
+
+    public void setSonName(String sonName) {
+        this.sonName = sonName;
+    }
+
+    public String getSonFile() {
+        return sonFile;
+    }
+
+    public void setSonFile(String sonFile) {
+        this.sonFile = sonFile;
+    }
+
+    public String getSonCollegesName() {
+        return sonCollegesName;
+    }
+
+    public void setSonCollegesName(String sonCollegesName) {
+        this.sonCollegesName = sonCollegesName;
     }
 }
