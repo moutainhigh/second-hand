@@ -8,7 +8,7 @@
     <button onclick="send()">发送消息</button>
     <hr/>
 	<!--userno:发送消息人的编号-->
-	<div id="userno">2</div>
+	<div id="userno">1</div>
     <button onclick="closeWebSocket()">关闭WebSocket连接</button>
     <hr/>
     <div id="message"></div>
@@ -19,7 +19,7 @@
 	var userno=document.getElementById('userno').innerHTML;
     //判断当前浏览器是否支持WebSocket
     if ('WebSocket' in window) {
-        websocket = new WebSocket("ws://39.100.237.144:7004/user/websocket/"+userno);
+        websocket = new WebSocket("wss://www.tjsichuang.cn:1443/second/user/websocket/"+userno);
     }
     else {
         alert('当前浏览器 Not support websocket')

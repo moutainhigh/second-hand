@@ -17,6 +17,7 @@ public class ChatWindow {
     private String byUserFile;//被建立人头像
     private String byUserName;//被建立人姓名
     private Integer byUserId;//被建立人id
+    private Integer unread;//未读条数
     private LocalDateTime createTime;//创建时间
     private LocalDateTime modifyTime;//修改时间
 
@@ -82,5 +83,13 @@ public class ChatWindow {
 
     public void setByUserFile(String byUserFile) {
         this.byUserFile = byUserFile;
+    }
+
+    public Integer getUnread() {
+        return unread;
+    }
+
+    public void setUnread(Integer unread) {
+        this.unread = unread;
     }
 }
