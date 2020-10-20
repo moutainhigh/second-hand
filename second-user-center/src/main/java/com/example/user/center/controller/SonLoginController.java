@@ -108,7 +108,7 @@ public class SonLoginController {
         SecondUser secondUser = new SecondUser();
         secondUser.setNickName(username);
         secondUser.setUserStatus((byte) 0);
-        secondUser.setUserType(Authentication.LoginType.BOSS.getState());
+        secondUser.setUserType(Authentication.LoginType.SON.getState());
         secondUser.setIsAuthentication(0);
         secondUser.setCreateDate(LocalDateTime.now());
         secondUser.setModifyDate(LocalDateTime.now());
