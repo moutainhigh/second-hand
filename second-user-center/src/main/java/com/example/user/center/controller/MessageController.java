@@ -3,6 +3,7 @@ package com.example.user.center.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.example.user.center.config.WebSocketTest;
 import com.example.user.center.dao.SecondMessageMapper;
+import com.example.user.center.manual.MiniMessage;
 import com.example.user.center.model.SecondFile;
 import com.example.user.center.model.SecondMessage;
 import com.example.user.center.model.SecondMessageExample;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.websocket.Session;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -125,6 +127,25 @@ private SecondMessageMapper secondMessageMapper;
                 secondMessageMapper.selectByExampleWithBLOBs(secondMessageExample);
 
         return builder.body(ResponseUtils.getResponseBody(secondMessages));
+    }
+
+    @ApiOperation(value = "查询小程序消息", notes = "查询小程序消息")
+    @RequestMapping(value = "/selectMiniMessage", method = RequestMethod.GET)
+    public ResponseEntity<JSONObject> selectMiniMessage(
+    ) throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
+        SecondMessageExample secondMessageExample = new SecondMessageExample();
+        secondMessageExample.createCriteria().andIsDeletedEqualTo((byte) 0);
+        List<SecondMessage> secondMessages =
+                secondMessageMapper.selectByExampleWithBLOBs(secondMessageExample);
+        List<MiniMessage> miniMessages = new ArrayList<>();
+        secondMessages.forEach(secondMessage -> {
+            MiniMessage miniMessage = new MiniMessage();
+            miniMessage.setCreateTime(secondMessage.getCreateTime());
+            miniMessage.setSecondMessage(secondMessage);
+            miniMessages.add(miniMessage);
+        });
+        return builder.body(ResponseUtils.getResponseBody(miniMessages));
     }
 
     @ApiOperation(value = "查询消息详情", notes = "查询消息详情")
