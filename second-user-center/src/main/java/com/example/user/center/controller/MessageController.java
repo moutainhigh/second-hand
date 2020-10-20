@@ -122,8 +122,19 @@ private SecondMessageMapper secondMessageMapper;
         SecondMessageExample secondMessageExample = new SecondMessageExample();
         secondMessageExample.createCriteria().andIsDeletedEqualTo((byte) 0);
         List<SecondMessage> secondMessages =
-        secondMessageMapper.selectByExampleWithBLOBs(secondMessageExample);
+                secondMessageMapper.selectByExampleWithBLOBs(secondMessageExample);
 
         return builder.body(ResponseUtils.getResponseBody(secondMessages));
+    }
+
+    @ApiOperation(value = "查询消息详情", notes = "查询消息详情")
+    @RequestMapping(value = "/selectMessageDetails", method = RequestMethod.GET)
+    public ResponseEntity<JSONObject> selectMessageDetails(
+            Integer messageId
+    ) throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
+        SecondMessage secondMessage =
+                secondMessageMapper.selectByPrimaryKey(messageId);
+        return builder.body(ResponseUtils.getResponseBody(secondMessage));
     }
 }

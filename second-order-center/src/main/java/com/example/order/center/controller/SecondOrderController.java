@@ -276,9 +276,11 @@ public class SecondOrderController {
         List<SecondOrder> secondOrders = secondOrderMapper.selectByExample(secondOrderExample);
         List<OrderList> orderLists = new ArrayList<>();
         secondOrders.forEach(secondOrder -> {
+            SecondStore secondStore = secondStoreMapper.selectByPrimaryKey(secondOrder.getStoneId());
             SecondUserSonExample secondUserSonExample = new SecondUserSonExample();
             secondUserSonExample.createCriteria().andStoreIdEqualTo(secondOrder.getStoneId())
-            .andIsDeletedEqualTo((byte) 0);
+            .andIsDeletedEqualTo((byte) 0)
+            .andUserIdEqualTo(secondStore.getUserId());
             List<SecondUserSon> secondUserSons =
             secondUserSonMapper.selectByExample(secondUserSonExample);
             //站点
@@ -298,7 +300,7 @@ public class SecondOrderController {
             orderList.setOrderCode(secondOrder.getOrderCode());
             orderList.setOrderId(secondOrder.getId());
             orderList.setStoreId(secondOrder.getStoneId());
-            SecondStore secondStore = secondStoreMapper.selectByPrimaryKey(secondOrder.getStoneId());
+
             SecondOrderAddressExample secondOrderAddressExample = new SecondOrderAddressExample();
             secondOrderAddressExample.createCriteria()
                     .andOrderIdEqualTo(secondOrder.getId())
