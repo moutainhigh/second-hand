@@ -139,7 +139,7 @@ private static SecondMessageMapper secondMessageMapper;
      */
     @OnMessage
     public void onMessage(String message) {
-//        System.out.println("来自客户端的消息:" + message);
+        System.out.println("来自客户端的消息:" + message);
         JSONArray jsonArray= JSONArray.parseArray(message);
         List<Message> list = JSONObject.parseArray(jsonArray.toJSONString(), Message.class);
 //        session.get
