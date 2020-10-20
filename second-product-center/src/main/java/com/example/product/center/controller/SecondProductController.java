@@ -101,6 +101,9 @@ public class SecondProductController {
     //地图获取ip
     @Autowired
     private AddressService addressService;
+    //分类
+    @Autowired
+    private SecondCategoryMapper secondCategoryMapper;
 
     @RequestMapping(path = "/addProduct", method = RequestMethod.POST)
     @ApiOperation(value = "用户添加商品", notes = "用户添加商品")
@@ -463,7 +466,6 @@ public class SecondProductController {
         secondProducts.forEach(secondProduct1 -> {
 //            for(SecondProduct secondProduct1 : secondProducts){
             //物品
-
             SecondUserSonExample secondUserSonExample = new SecondUserSonExample();
             secondUserSonExample.createCriteria().andStoreIdEqualTo(secondProduct1.getStoreId())
                     .andIsDeletedEqualTo((byte) 0);
@@ -475,6 +477,10 @@ public class SecondProductController {
                 secondSon = secondSonMapper.selectByPrimaryKey(secondUserSons.get(0).getSonId());
             }
             ProductList productList = new ProductList();
+            if (secondProduct1.getCategoryId()!=null){
+                SecondCategory secondCategory = secondCategoryMapper.selectByPrimaryKey(secondProduct1.getCategoryId());
+                productList.setProductCategory(secondCategory.getSecondName());
+            }
             //商品状态
             productList.setProductState(secondProduct1.getProductState());
             //列表图

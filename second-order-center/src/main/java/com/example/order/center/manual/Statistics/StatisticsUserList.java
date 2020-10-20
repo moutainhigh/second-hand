@@ -2,13 +2,13 @@ package com.example.order.center.manual.Statistics;
 
 /**
  * @author shihao
- * @Title: StatisticsList
+ * @Title: StatisticsUserList
  * @ProjectName Second-order-center
  * @Description: 统计
  * @date Created in
  * @Version: $
  */
-public class StatisticsList {
+public class StatisticsUserList {
     private Integer userNumber;//用户数
     private Integer userGeneral;//普通用户
     private Integer userAuthentication;//学生认证

@@ -30,6 +30,7 @@ public class ProductList {
     private List<String> files;//商品图
     private String file;//列表图
     private String productState;//商品状态
+    private String productCategory;//商品分类
     /**
      * 店铺
      */
@@ -409,5 +410,13 @@ public class ProductList {
 
     public void setSellNumber(Integer sellNumber) {
         this.sellNumber = sellNumber;
+    }
+
+    public String getProductCategory() {
+        return productCategory;
+    }
+
+    public void setProductCategory(String productCategory) {
+        this.productCategory = productCategory;
     }
 }
