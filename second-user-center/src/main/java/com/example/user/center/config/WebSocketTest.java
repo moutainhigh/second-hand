@@ -80,7 +80,7 @@ private static SecondMessageMapper secondMessageMapper;
      */
     @OnOpen
     public void onOpen(@PathParam(value = "userno") String param, Session session, EndpointConfig config) {
-        System.out.println(param);
+        System.out.println("接收到客户端消息"+param);
         userno = param;//接收到发送消息的人员编号
         this.session = session;
         webSocketSet.put(param, this);//加入map中
