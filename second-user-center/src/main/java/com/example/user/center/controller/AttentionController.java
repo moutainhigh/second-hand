@@ -175,14 +175,14 @@ private SecondAttentionMapper secondAttentionMapper;//关注
             //判断关注的关系
             //自己的关注
             SecondAttentionExample secondAttentionExample1 = new SecondAttentionExample();
-            secondAttentionExample1.createCriteria().andUserIdEqualTo(secondAttention.getByUserId())
+            secondAttentionExample1.createCriteria().andUserIdEqualTo(secondAttention.getUserId())
                     .andByUserIdEqualTo(userId)
                     .andIsDeletedEqualTo((byte) 0);
             List<SecondAttention> secondAttentionList = secondAttentionMapper.selectByExample(secondAttentionExample1);
             //自己的粉丝
             SecondAttentionExample secondAttentionExample2 = new SecondAttentionExample();
             secondAttentionExample2.createCriteria().andUserIdEqualTo(userId)
-                    .andByUserIdEqualTo(secondAttention.getByUserId())
+                    .andByUserIdEqualTo(secondAttention.getUserId())
                     .andIsDeletedEqualTo((byte) 0);
             List<SecondAttention> secondAttentionList2 = secondAttentionMapper.selectByExample(secondAttentionExample2);
 
@@ -190,7 +190,7 @@ private SecondAttentionMapper secondAttentionMapper;//关注
             SecondUser secondUser = secondUserMapper.selectByPrimaryKey(secondAttention.getUserId());
             //
             AttentionList attentionList = new AttentionList();
-            attentionList.setUserId(secondAttention.getByUserId());
+            attentionList.setUserId(secondAttention.getUserId());
             attentionList.setByUserId(userId);
             attentionList.setHead(secondUser.getFile());
             attentionList.setUserName(secondUser.getNickName());
