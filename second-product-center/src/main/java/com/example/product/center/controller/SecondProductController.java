@@ -874,17 +874,20 @@ public class SecondProductController {
                 /**
                  * 地址
                  */
-                SecondProductAddress secondProductAddress = secondProductAddressMapper.selectByPrimaryKey(secondProduct.getAddressId());
-                if (secondProductAddress != null) {
+                SecondProductAddressExample secondProductAddressExample = new SecondProductAddressExample();
+                secondProductAddressExample.createCriteria().andProductIdEqualTo(secondProduct.getId())
+                        .andIsDeletedEqualTo((short) 0);
+                List<SecondProductAddress> secondProductAddresss = secondProductAddressMapper.selectByExample(secondProductAddressExample);
+                if (secondProductAddresss.size() != 0) {
                     productList.setAddressId(secondProduct.getAddressId());
-                    productList.setProvince(secondProductAddress.getSecondProvince());//省
-                    productList.setCity(secondProductAddress.getSecondCity());//市
-                    productList.setConty(secondProductAddress.getSecondConty());//区/县
-                    productList.setAddressDetail(secondProductAddress.getSecondAddressDetail());//地址详情
-                    productList.setLongitude(secondProductAddress.getLongitude());//经度
-                    productList.setLatitude(secondProductAddress.getLatitude());//纬度
-                    productList.setPhone(secondProductAddress.getPhoneNumber());//电话
-                    productList.setAddressDesc(secondProductAddress.getSecondDesc());//描述
+                    productList.setProvince(secondProductAddresss.get(0).getSecondProvince());//省
+                    productList.setCity(secondProductAddresss.get(0).getSecondCity());//市
+                    productList.setConty(secondProductAddresss.get(0).getSecondConty());//区/县
+                    productList.setAddressDetail(secondProductAddresss.get(0).getSecondAddressDetail());//地址详情
+                    productList.setLongitude(secondProductAddresss.get(0).getLongitude());//经度
+                    productList.setLatitude(secondProductAddresss.get(0).getLatitude());//纬度
+                    productList.setPhone(secondProductAddresss.get(0).getPhoneNumber());//电话
+                    productList.setAddressDesc(secondProductAddresss.get(0).getSecondDesc());//描述
                 }
 
                 /**
