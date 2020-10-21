@@ -2,10 +2,7 @@ package com.example.user.center.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.user.center.dao.*;
-import com.example.user.center.manual.Authentication;
-import com.example.user.center.manual.BanlaceEnum;
-import com.example.user.center.manual.SonList;
-import com.example.user.center.manual.StoreDetails;
+import com.example.user.center.manual.*;
 import com.example.user.center.model.*;
 import com.example.user.center.service.SonService;
 import com.google.common.collect.Lists;
@@ -422,13 +419,31 @@ public class SonLoginController {
         System.out.println(secondColleges.size());
         Map<String,Integer> map = new HashMap<>();
         for (SecondColleges list : secondColleges) {
-            SecondCity secondCity = secondCityMapper.selectByPrimaryKey(list.getCityId());
-            if(map.containsKey(secondCity.getName())) {
-                map.put(secondCity.getName(), map.get(secondCity.getName()).intValue()+1);
+            SecondCityExample secondCityExample1 = new SecondCityExample();
+            secondCityExample1.createCriteria()
+                    .andCityIdEqualTo(list.getCityId());
+            List<SecondCity> secondCitys = secondCityMapper.selectByExample(secondCityExample1);
+            if(map.containsKey(secondCitys.get(0).getName())) {
+                map.put(secondCitys.get(0).getName(), map.get(secondCitys.get(0).getName()).intValue()+1);
             }else {
-                map.put(secondCity.getName(), new Integer(1));
+                map.put(secondCitys.get(0).getName(), new Integer(1));
             }
         }
-        return builder.body(ResponseUtils.getResponseBody(map));
+        Iterator<String> iter = map.keySet().iterator();
+        List<CityStatistics> cityStatistics = new ArrayList<>();
+        while(iter.hasNext()) {
+            CityStatistics cityStatistics1 = new CityStatistics();
+            String key = iter.next();
+            cityStatistics1.setCityName(key);
+            cityStatistics1.setSonCount(map.get(key));
+            cityStatistics.add(cityStatistics1);
+            System.out.println(key+"有"+map.get(key)+"个");
+        }
+        List<CityStatistics> collect = cityStatistics.stream()
+        .sorted(Comparator.comparing(CityStatistics::getSonCount).reversed()).collect(Collectors.toList());
+//        Map map1 = new HashMap();
+//        map.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+//                .forEachOrdered(x -> map1.put(x.getKey(),x.getValue()));
+        return builder.body(ResponseUtils.getResponseBody(collect));
     }
 }

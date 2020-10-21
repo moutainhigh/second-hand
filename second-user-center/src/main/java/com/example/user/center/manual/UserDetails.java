@@ -18,6 +18,8 @@ public class UserDetails {
     private Integer evaluateNumber;//评价数量
     private Integer authentication;//是否认证 0认证
     private String attention;//关注关系
+    private Integer collectNumber;//收藏数量
+    private Integer lookNumber;//浏览数量
 
     public Integer getUserId() {
         return userId;
@@ -89,5 +91,21 @@ public class UserDetails {
 
     public void setAttention(String attention) {
         this.attention = attention;
+    }
+
+    public Integer getCollectNumber() {
+        return collectNumber;
+    }
+
+    public void setCollectNumber(Integer collectNumber) {
+        this.collectNumber = collectNumber;
+    }
+
+    public Integer getLookNumber() {
+        return lookNumber;
+    }
+
+    public void setLookNumber(Integer lookNumber) {
+        this.lookNumber = lookNumber;
     }
 }

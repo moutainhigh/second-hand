@@ -99,6 +99,9 @@ private SecondStoreMapper secondStoreMapper;
     //余额
     @Autowired
     private SecondStoreBalanceMapper secondStoreBalanceMapper;
+    //收藏想要
+    @Autowired
+    private SecondProductWantMapper secondProductWantMapper;
     @RequestMapping(path = "/wechart", method = RequestMethod.GET)
     @ApiOperation(value = "微信登录", notes = "微信登录")
     public ResponseEntity<JSONObject> wxLogin(@RequestParam(value = "code", required = false) String code,
@@ -622,7 +625,24 @@ private SecondStoreMapper secondStoreMapper;
             } else {
                 userDetails.setAttention(Attention.Relation.NO.getState());//没关系
             }
-
+//收藏
+            SecondProductWantExample secondProductWantExample = new SecondProductWantExample();
+            secondProductWantExample.createCriteria()
+                    .andIsDeletedEqualTo((short) 0)
+                    .andTypeEqualTo(WantEnum.Relation.COLLECT.getState())
+                    .andUserIdEqualTo(userId);
+            List<SecondProductWant> secondProductWants =
+                    secondProductWantMapper.selectByExample(secondProductWantExample);
+            userDetails.setCollectNumber(secondProductWants.size());
+            //浏览
+            secondProductWantExample.clear();
+            secondProductWantExample.createCriteria()
+                    .andIsDeletedEqualTo((short) 0)
+                    .andTypeEqualTo(WantEnum.Relation.LOOK.getState())
+                    .andUserIdEqualTo(userId);
+            List<SecondProductWant> secondProductWants1 =
+                    secondProductWantMapper.selectByExample(secondProductWantExample);
+            userDetails.setLookNumber(secondProductWants1.size());
         }
         return builder.body(ResponseUtils.getResponseBody(userDetails));
     }
