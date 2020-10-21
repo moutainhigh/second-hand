@@ -279,7 +279,7 @@ public class SecondProductController {
 
     ) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
-
+        System.out.println(file1);
         if (file1 != null) {
             if (secondProductMapper.selectByPrimaryKey(productId).getFile() != null) {
                 fileDelete2(secondProductMapper.selectByPrimaryKey(productId).getFile());
