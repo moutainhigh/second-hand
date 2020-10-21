@@ -197,13 +197,13 @@ private SecondAttentionMapper secondAttentionMapper;//关注
             if (secondAttentionList.size()!=0 && secondAttentionList2.size()==0){
                 attentionList.setRelation(Attention.Relation.YETATTENTION.getState());
             } //自己单向关注了
-            else if (secondAttentionList.size()==0 && secondAttentionList2.size()!=0){
+            if (secondAttentionList.size()==0 && secondAttentionList2.size()!=0){
                 attentionList.setRelation(Attention.Relation.BYATTENTION.getState());
             }//单向关注了自己
-            else if (secondAttentionList.size()!=0 && secondAttentionList2.size()!=0){
+            if (secondAttentionList.size()!=0 && secondAttentionList2.size()!=0){
                 attentionList.setRelation(Attention.Relation.EACHOTHER.getState());
             } //互相关注了
-            else{
+            if (secondAttentionList.size()==0 && secondAttentionList2.size()==0){
                 attentionList.setRelation(Attention.Relation.NO.getState());
             }
             attentions.add(attentionList);
