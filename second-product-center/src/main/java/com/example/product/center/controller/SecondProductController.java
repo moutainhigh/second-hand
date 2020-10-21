@@ -427,6 +427,7 @@ public class SecondProductController {
             @ApiImplicitParam(paramType = "query", name = "isSon", value = "是否是子站点查询 0是", required = false, type = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "showType", value = "商品类型", required = false, type = "String"),
             @ApiImplicitParam(paramType = "query", name = "product", value = "搜索的内容", required = false, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "putaway", value = "上下架 0上架的 1下架的 全部不填", required = false, type = "String"),
     })
     @RequestMapping(value = "/selectProduct", method = RequestMethod.GET)
     public ResponseEntity<JSONObject> selectProduct(
@@ -436,7 +437,8 @@ public class SecondProductController {
             @RequestParam(name = "showType", required = false) String showType,
             @RequestParam(name = "product", required = false) String product,
             @RequestParam(name = "isSon", required = false) Integer isSon,
-            @RequestParam(name = "categoryId", required = false) Integer categoryId
+            @RequestParam(name = "categoryId", required = false) Integer categoryId,
+            @RequestParam(name = "putaway", required = false) Integer putaway
     )
             throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
@@ -455,9 +457,14 @@ public class SecondProductController {
         if (storeId != null) {
             criteria.andStoreIdEqualTo(storeId);
         }
+        //搜索筛选
         if (product!=null){
 //            SecondProductExample.Criteria criteria1 =criteria;
             criteria.andProductNameLike("%" + product + "%");
+        }
+        //上下架筛选
+        if (putaway!=null){
+            criteria.andIsPutawayEqualTo(putaway);
         }
         List<ProductList> productLists = new ArrayList<>();
 
@@ -576,16 +583,19 @@ public class SecondProductController {
             /**
              * 地址
              */
-            SecondProductAddress secondProductAddress = secondProductAddressMapper.selectByPrimaryKey(secondProduct1.getAddressId());
-            if (secondProductAddress != null) {
+            SecondProductAddressExample secondProductAddressExample = new SecondProductAddressExample();
+            secondProductAddressExample.createCriteria().andProductIdEqualTo(secondProduct1.getId())
+                    .andIsDeletedEqualTo((short) 0);
+            List<SecondProductAddress> secondProductAddresss = secondProductAddressMapper.selectByExample(secondProductAddressExample);
+            if (secondProductAddresss.size() != 0) {
                 productList.setAddressId(secondProduct1.getAddressId());
-                productList.setProvince(secondProductAddress.getSecondProvince());//省
-                productList.setCity(secondProductAddress.getSecondCity());//市
-                productList.setConty(secondProductAddress.getSecondConty());//区/县
-                productList.setAddressDetail(secondProductAddress.getSecondAddressDetail());//地址详情
-                if (secondProductAddress.getLongitude() != null && secondProductAddress.getLatitude() != null) {
-                    productList.setLatitude(secondProductAddress.getLatitude());//纬度
-                    productList.setLongitude(secondProductAddress.getLongitude());//经度
+                productList.setProvince(secondProductAddresss.get(0).getSecondProvince());//省
+                productList.setCity(secondProductAddresss.get(0).getSecondCity());//市
+                productList.setConty(secondProductAddresss.get(0).getSecondConty());//区/县
+                productList.setAddressDetail(secondProductAddresss.get(0).getSecondAddressDetail());//地址详情
+                if (secondProductAddresss.get(0).getLongitude() != null && secondProductAddresss.get(0).getLatitude() != null) {
+                    productList.setLatitude(secondProductAddresss.get(0).getLatitude());//纬度
+                    productList.setLongitude(secondProductAddresss.get(0).getLongitude());//经度
                 }
 //                else {
 //                    String add =

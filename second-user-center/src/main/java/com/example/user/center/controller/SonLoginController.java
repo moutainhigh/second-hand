@@ -8,6 +8,7 @@ import com.example.user.center.manual.SonList;
 import com.example.user.center.manual.StoreDetails;
 import com.example.user.center.model.*;
 import com.example.user.center.service.SonService;
+import com.google.common.collect.Lists;
 import com.second.common.utils.Encrypt;
 import com.second.utils.response.handler.ResponseEntity;
 import com.second.utils.response.handler.ResponseUtils;
@@ -23,10 +24,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author shihao
@@ -401,5 +400,35 @@ public class SonLoginController {
             storeDetails.setMoney(0);
         }
         return builder.body(ResponseUtils.getResponseBody(storeDetails));
+    }
+
+    @RequestMapping(path = "/sonCity", method = RequestMethod.GET)
+    @ApiOperation(value = "每座城市的子站点", notes = "每座城市的子站点")
+    public ResponseEntity<JSONObject> sonCity(
+    ) throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
+        SecondCityExample secondCityExample = new SecondCityExample();
+        secondCityExample.createCriteria().andCityIdIsNotNull();
+        List<SecondCity> secondCities = secondCityMapper.selectByExample(secondCityExample);
+
+        SecondSonExample secondSonExample = new SecondSonExample();
+        secondSonExample.createCriteria().andIsDeletedEqualTo((short) 0);
+        List<SecondSon> secondSons = secondSonMapper.selectByExample(secondSonExample);
+        Set<Integer> college = secondSons.stream().map(SecondSon::getCollegoryId).collect(Collectors.toSet());
+
+        SecondCollegesExample secondCollegesExample = new SecondCollegesExample();
+        secondCollegesExample.createCriteria().andIdIn(Lists.newArrayList(college));
+        List<SecondColleges> secondColleges = secondCollegesMapper.selectByExample(secondCollegesExample);
+        System.out.println(secondColleges.size());
+        Map<String,Integer> map = new HashMap<>();
+        for (SecondColleges list : secondColleges) {
+            SecondCity secondCity = secondCityMapper.selectByPrimaryKey(list.getCityId());
+            if(map.containsKey(secondCity.getName())) {
+                map.put(secondCity.getName(), map.get(secondCity.getName()).intValue()+1);
+            }else {
+                map.put(secondCity.getName(), new Integer(1));
+            }
+        }
+        return builder.body(ResponseUtils.getResponseBody(map));
     }
 }
