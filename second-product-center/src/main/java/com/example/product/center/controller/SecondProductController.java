@@ -621,8 +621,8 @@ public class SecondProductController {
 //                }
 
 
-                productList.setPhone(secondProductAddress.getPhoneNumber());//电话
-                productList.setAddressDesc(secondProductAddress.getSecondDesc());//描述
+                productList.setPhone(secondProductAddresss.get(0).getPhoneNumber());//电话
+                productList.setAddressDesc(secondProductAddresss.get(0).getSecondDesc());//描述
             }
             /**
              * 订单
