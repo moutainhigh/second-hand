@@ -122,7 +122,7 @@ public class SecondOrderController {
 
         System.out.println(list);
                 if(list.size()!=0){
-                    response.sendError(HttpStatus.FORBIDDEN.value(), "库存不足");
+                    response.sendError(HttpStatus.FORBIDDEN.value(), "库存不足,或者商品已经卖出");
                     return builder.body(ResponseUtils.getResponseBody(list));
                 }
         //
@@ -231,8 +231,17 @@ public class SecondOrderController {
         List<goods> list = JSONObject.parseArray(jsonArray.toJSONString(), goods.class);
         List<goods> goods = new ArrayList<>();
         list.forEach(lists->{
+            //判断库存
             SecondGoods secondGoods = secondGoodsMapper.selectByPrimaryKey(lists.getGoodsId());
             if (secondGoods.getGoodsResp()<lists.getQuantity()) {
+                goods goods1 = new goods();
+                goods1.setGoodsId(lists.getGoodsId());
+                goods1.setStoneId(lists.getStoneId());
+                goods.add(goods1);
+            }
+            //判断商品是否卖出
+            SecondProduct secondProduct = secondProductMapper.selectByPrimaryKey(secondGoods.getProductId());
+            if (secondProduct.getProductState().equals(ProductEnum.ProductState.SELLOUT.getState())){
                 goods goods1 = new goods();
                 goods1.setGoodsId(lists.getGoodsId());
                 goods1.setStoneId(lists.getStoneId());

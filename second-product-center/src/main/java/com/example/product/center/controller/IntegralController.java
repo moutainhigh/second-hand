@@ -137,6 +137,7 @@ public class IntegralController {
     public String addProduct(Integer secondIntegralId,Integer StoreId,Integer goodsResp,Integer money,String productDesc){
         //创建商品
         SecondProduct secondProduct = new SecondProduct();
+        secondProduct.setProductState(ProductEnum.ProductState.SELL.getState());
         secondProduct.setProductDesc(productDesc);
         secondProduct.setProductType(ProductEnum.Relation.INTEGRAL.getState());//积分商品
         secondProduct.setShowType(ProductEnum.ShowType.COUPON.getState());//卡券

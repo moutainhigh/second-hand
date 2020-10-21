@@ -7,6 +7,8 @@ import com.example.product.center.dao.SecondProductWantMapper;
 import com.example.product.center.manual.WantEnum;
 import com.example.product.center.manual.WantProductList;
 import com.example.product.center.model.*;
+import com.example.product.center.service.Impl.WantProductServiceImpl;
+import com.example.product.center.service.WantProductService;
 import com.second.utils.response.handler.ResponseEntity;
 import com.second.utils.response.handler.ResponseUtils;
 import io.swagger.annotations.Api;
@@ -14,6 +16,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -44,6 +47,9 @@ public class SecondProductWantController {
     private SecondProductMapper secondProductMapper;
     @Autowired
     private SecondGoodsMapper secondGoodsMapper;
+    //点赞查询
+    @Autowired
+    private WantProductService wantProductService;
 
     @RequestMapping(path = "/addProduct", method = RequestMethod.POST)
     @ApiOperation(value = "商品操作", notes = "商品操作")
@@ -252,5 +258,80 @@ public class SecondProductWantController {
                 return 1;
             }
         }
+    }
+    /**
+     * 查询今天是否点赞了商品
+     */
+    @RequestMapping(path = "/selectProductPraise", method = RequestMethod.GET)
+    @ApiOperation(value = "查询今天是否点赞了商品", notes = "查询是否收藏了该商品,0没,1点了")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "productId", value = "商品id", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, type = "Integer"),
+    })
+    public ResponseEntity<JSONObject> selectProductPraise(
+            @RequestParam(value = "productId", required = false) Integer productId,
+            @RequestParam(value = "userId", required = false) Integer userId
+    ) throws JSONException {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
+        Integer a;
+        List<SecondProductWant> secondProductWants =
+        wantProductService.selectProductPraise(userId,WantEnum.Relation.PRAISE.getState(),productId);
+        if (secondProductWants.size()!=0){
+            a=1;
+        }else {
+            a=0;
+        }
+        return builder.body(ResponseUtils.getResponseBody(a));
+    }
+
+    /**
+     * 点赞和取消点赞
+     */
+    @RequestMapping(path = "/addProductPraise", method = RequestMethod.GET)
+    @ApiOperation(value = "点赞和取消点赞", notes = "点赞和取消点赞")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "productId", value = "商品id", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, type = "Integer"),
+    })
+    @Transactional(rollbackFor = {RuntimeException.class, Error.class})
+    public ResponseEntity<JSONObject> addProductPraise(
+            @RequestParam(value = "productId", required = false) Integer productId,
+            @RequestParam(value = "userId", required = false) Integer userId
+    ) throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
+        List<SecondProductWant> secondProductWants =
+                wantProductService.selectProductPraise1(userId,WantEnum.Relation.PRAISE.getState(),productId);
+        if (secondProductWants.size()==0){
+            SecondProductWant secondProductWant = new SecondProductWant();
+            secondProductWant.setUserId(userId);
+            secondProductWant.setProductId(productId);
+            secondProductWant.setType(WantEnum.Relation.PRAISE.getState());
+            secondProductWant.setCreateTime(LocalDateTime.now());
+            secondProductWant.setModifyTime(LocalDateTime.now());
+            secondProductWant.setIsDeleted((short) 0);
+            secondProductWantMapper.insertSelective(secondProductWant);
+            //添加点赞
+            redisTemplate.opsForValue().set(userId.toString()+productId.toString()+"Praise",0);
+            return builder.body(ResponseUtils.getResponseBody(0));
+        } else {
+            if (secondProductWants.get(0).getIsDeleted()==0){
+                SecondProductWant secondProductWant = secondProductWants.get(0);
+                secondProductWant.setModifyTime(LocalDateTime.now());
+                secondProductWant.setIsDeleted((short) 1);
+                //取消点赞
+                redisTemplate.opsForValue().set(userId.toString()+productId.toString()+"Praise",1);
+                secondProductWantMapper.updateByPrimaryKeySelective(secondProductWant);
+                return builder.body(ResponseUtils.getResponseBody(0));
+            } else if (secondProductWants.get(0).getIsDeleted()==1){
+                SecondProductWant secondProductWant = secondProductWants.get(0);
+                secondProductWant.setIsDeleted((short) 0);
+                secondProductWant.setModifyTime(LocalDateTime.now());
+                //添加点赞
+                redisTemplate.opsForValue().set(userId.toString()+productId.toString()+"Praise",0);
+                secondProductWantMapper.updateByPrimaryKeySelective(secondProductWant);
+                return builder.body(ResponseUtils.getResponseBody(0));
+            }
+        }
+        return builder.body(ResponseUtils.getResponseBody(0));
     }
 }
