@@ -318,8 +318,9 @@ private static SecondMessageMapper secondMessageMapper;
         for (String key : webSocketSet.keySet()) {
             try {
                 String json = "{" + "\"userId\":" + "\"" + key + "\"," + "\"byUserId\":" + "\"" + key + "\"," + "\"message\":" + "\"" +"心跳" + "\" ," + "\"type\":" + "\"" + "solo" + "\"}";
-                    webSocketSet.get(key).sendMessage(json);
-                    System.out.println("key = " + key);
+                System.out.println(webSocketSet);
+                webSocketSet.get(key).sendMessage(json);
+                    System.out.println("key = " + key+"心跳");
             } catch (IOException e) {
                 e.printStackTrace();
             }

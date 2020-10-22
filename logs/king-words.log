@@ -593,3 +593,195 @@ java.net.SocketException: Connection reset
 	at java.base/java.lang.Thread.run(Thread.java:834) ~[na:na]
 
 2020-10-22 10:02:34.267  INFO 13732 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-10-22 10:07:34.268  INFO 13732 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-10-22 10:12:34.270  INFO 13732 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-10-22 10:17:34.271  INFO 13732 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-10-22 10:22:34.272  INFO 13732 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-10-22 10:27:34.274  INFO 13732 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-10-22 10:32:34.278  INFO 13732 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-10-22 10:37:34.279  INFO 13732 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-10-22 10:38:16.594  INFO 15148 --- [main] c.e.u.c.SecondUserCenterApplication      : No active profile set, falling back to default profiles: default
+2020-10-22 10:38:18.063  INFO 15148 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode!
+2020-10-22 10:38:18.075  INFO 15148 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data repositories in DEFAULT mode.
+2020-10-22 10:38:18.219  INFO 15148 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 123ms. Found 0 repository interfaces.
+2020-10-22 10:38:18.585  INFO 15148 --- [main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=2f495156-6dd9-36d4-9a3f-e47c301e3537
+2020-10-22 10:38:18.629  INFO 15148 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.amqp.rabbit.annotation.RabbitBootstrapConfiguration' of type [org.springframework.amqp.rabbit.annotation.RabbitBootstrapConfiguration$$EnhancerBySpringCGLIB$$80a9a228] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-10-22 10:38:18.677  INFO 15148 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$ba3de3fa] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-10-22 10:38:18.709  INFO 15148 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.security.config.annotation.configuration.ObjectPostProcessorConfiguration' of type [org.springframework.security.config.annotation.configuration.ObjectPostProcessorConfiguration$$EnhancerBySpringCGLIB$$52ebac34] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-10-22 10:38:18.714  INFO 15148 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'objectPostProcessor' of type [org.springframework.security.config.annotation.configuration.AutowireBeanFactoryObjectPostProcessor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-10-22 10:38:18.715  INFO 15148 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler@3d40498a' of type [org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-10-22 10:38:18.716  INFO 15148 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration' of type [org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration$$EnhancerBySpringCGLIB$$77c04ee6] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-10-22 10:38:18.719  INFO 15148 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'methodSecurityMetadataSource' of type [org.springframework.security.access.method.DelegatingMethodSecurityMetadataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-10-22 10:38:18.733  INFO 15148 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.autoconfigure.ConfigurationPropertiesRebinderAutoConfiguration' of type [org.springframework.cloud.autoconfigure.ConfigurationPropertiesRebinderAutoConfiguration$$EnhancerBySpringCGLIB$$d657e6f7] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-10-22 10:38:19.123  INFO 15148 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 7004 (http)
+2020-10-22 10:38:19.155  INFO 15148 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2020-10-22 10:38:19.156  INFO 15148 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.16]
+2020-10-22 10:38:19.164  INFO 15148 --- [main] o.a.catalina.core.AprLifecycleListener   : The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jdk-11.0.6\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\Java\jdk1.8.0_212\bin;C:\Program Files\Java\jdk1.8.0_212\jre\bin;D:\nodejs\;C:\Users\MACHENIKE\AppData\Local\Microsoft\WindowsApps;C:\Users\MACHENIKE\AppData\Roaming\npm;D:\Microsoft VS Code\bin;.]
+2020-10-22 10:38:19.523  INFO 15148 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/user]   : Initializing Spring embedded WebApplicationContext
+2020-10-22 10:38:19.523  INFO 15148 --- [main] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 2912 ms
+2020-10-22 10:38:21.857  INFO 15148 --- [main] c.e.u.c.config.RedisCacheConfiguration   : JedisPool注入成功！！
+2020-10-22 10:38:21.858  INFO 15148 --- [main] c.e.u.c.config.RedisCacheConfiguration   : redis地址：39.100.237.144:16379
+2020-10-22 10:38:21.923  INFO 15148 --- [main] pertySourcedRequestMappingHandlerMapping : Mapped URL path [/v2/api-docs] onto method [public org.springframework.http.ResponseEntity<springfox.documentation.spring.web.json.Json> springfox.documentation.swagger2.web.Swagger2Controller.getDocumentation(java.lang.String,javax.servlet.http.HttpServletRequest)]
+2020-10-22 10:38:21.973  WARN 15148 --- [main] c.n.c.sources.URLConfigurationSource     : No URLs will be polled as dynamic configuration sources.
+2020-10-22 10:38:21.973  INFO 15148 --- [main] c.n.c.sources.URLConfigurationSource     : To enable URLs as dynamic configuration sources, define System property archaius.configurationSource.additionalUrls or make config.properties available on classpath.
+2020-10-22 10:38:21.979  WARN 15148 --- [main] c.n.c.sources.URLConfigurationSource     : No URLs will be polled as dynamic configuration sources.
+2020-10-22 10:38:21.979  INFO 15148 --- [main] c.n.c.sources.URLConfigurationSource     : To enable URLs as dynamic configuration sources, define System property archaius.configurationSource.additionalUrls or make config.properties available on classpath.
+2020-10-22 10:38:22.110  INFO 15148 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-10-22 10:38:22.600  INFO 15148 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/index.html'], []
+2020-10-22 10:38:22.600  INFO 15148 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/static/**'], []
+2020-10-22 10:38:22.600  INFO 15148 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/login_p'], []
+2020-10-22 10:38:22.600  INFO 15148 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/favicon.ico'], []
+2020-10-22 10:38:22.600  INFO 15148 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/swagger-ui.html'], []
+2020-10-22 10:38:22.601  INFO 15148 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/swagger-resources/**'], []
+2020-10-22 10:38:22.601  INFO 15148 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/images/**'], []
+2020-10-22 10:38:22.601  INFO 15148 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/webjars/**'], []
+2020-10-22 10:38:22.601  INFO 15148 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/v2/api-docs'], []
+2020-10-22 10:38:22.601  INFO 15148 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/configuration/ui'], []
+2020-10-22 10:38:22.601  INFO 15148 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/configuration/security'], []
+2020-10-22 10:38:22.601  INFO 15148 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/MiniLoginController/**'], []
+2020-10-22 10:38:22.601  INFO 15148 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/**/**'], []
+2020-10-22 10:38:22.601  INFO 15148 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/**', OPTIONS], []
+2020-10-22 10:38:22.634  INFO 15148 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@574134ba, org.springframework.security.web.context.SecurityContextPersistenceFilter@432b883, org.springframework.security.web.header.HeaderWriterFilter@1529d534, org.springframework.security.web.authentication.logout.LogoutFilter@4e9d203e, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@7207f3c2, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@2a4f1bc5, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@57063e08, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@5687ade6, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@560c3758, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@4f836d9, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@6afb240d, org.springframework.security.web.session.SessionManagementFilter@3c5cb013, org.springframework.security.web.access.ExceptionTranslationFilter@34525143, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@36017835]
+2020-10-22 10:38:22.653  INFO 15148 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
+2020-10-22 10:38:23.444  INFO 15148 --- [main] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2020-10-22 10:38:23.485  INFO 15148 --- [main] com.netflix.discovery.DiscoveryClient    : Initializing Eureka in region us-east-1
+2020-10-22 10:38:23.532  INFO 15148 --- [main] c.n.d.provider.DiscoveryJerseyProvider   : Using JSON encoding codec LegacyJacksonJson
+2020-10-22 10:38:23.532  INFO 15148 --- [main] c.n.d.provider.DiscoveryJerseyProvider   : Using JSON decoding codec LegacyJacksonJson
+2020-10-22 10:38:23.694  INFO 15148 --- [main] c.n.d.provider.DiscoveryJerseyProvider   : Using XML encoding codec XStreamXml
+2020-10-22 10:38:23.695  INFO 15148 --- [main] c.n.d.provider.DiscoveryJerseyProvider   : Using XML decoding codec XStreamXml
+2020-10-22 10:38:23.925  INFO 15148 --- [main] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-10-22 10:38:24.102  INFO 15148 --- [main] com.netflix.discovery.DiscoveryClient    : Disable delta property : false
+2020-10-22 10:38:24.102  INFO 15148 --- [main] com.netflix.discovery.DiscoveryClient    : Single vip registry refresh property : null
+2020-10-22 10:38:24.102  INFO 15148 --- [main] com.netflix.discovery.DiscoveryClient    : Force full registry fetch : false
+2020-10-22 10:38:24.103  INFO 15148 --- [main] com.netflix.discovery.DiscoveryClient    : Application is null : false
+2020-10-22 10:38:24.103  INFO 15148 --- [main] com.netflix.discovery.DiscoveryClient    : Registered Applications size is zero : true
+2020-10-22 10:38:24.103  INFO 15148 --- [main] com.netflix.discovery.DiscoveryClient    : Application version is -1: true
+2020-10-22 10:38:24.103  INFO 15148 --- [main] com.netflix.discovery.DiscoveryClient    : Getting all instance registry info from the eureka server
+2020-10-22 10:38:24.281  INFO 15148 --- [main] com.netflix.discovery.DiscoveryClient    : The response status is 200
+2020-10-22 10:38:24.285  INFO 15148 --- [main] com.netflix.discovery.DiscoveryClient    : Starting heartbeat executor: renew interval is: 30
+2020-10-22 10:38:24.287  INFO 15148 --- [main] c.n.discovery.InstanceInfoReplicator     : InstanceInfoReplicator onDemand update allowed rate per min is 4
+2020-10-22 10:38:24.291  INFO 15148 --- [main] com.netflix.discovery.DiscoveryClient    : Discovery Client initialized at timestamp 1603334304290 with initial instances count: 2
+2020-10-22 10:38:24.295  INFO 15148 --- [main] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application user-center with eureka with status UP
+2020-10-22 10:38:24.295  INFO 15148 --- [main] com.netflix.discovery.DiscoveryClient    : Saw local status change event StatusChangeEvent [timestamp=1603334304295, current=UP, previous=STARTING]
+2020-10-22 10:38:24.297  INFO 15148 --- [DiscoveryClient-InstanceInfoReplicator-0] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_USER-CENTER/DESKTOP-E4IRNU3:user-center:7004: registering service...
+2020-10-22 10:38:24.301  INFO 15148 --- [main] d.s.w.p.DocumentationPluginsBootstrapper : Context refreshed
+2020-10-22 10:38:24.317  INFO 15148 --- [main] d.s.w.p.DocumentationPluginsBootstrapper : Found 1 custom documentation plugin(s)
+2020-10-22 10:38:24.339  INFO 15148 --- [DiscoveryClient-InstanceInfoReplicator-0] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_USER-CENTER/DESKTOP-E4IRNU3:user-center:7004 - registration status: 204
+2020-10-22 10:38:24.351  INFO 15148 --- [main] s.d.s.w.s.ApiListingReferenceScanner     : Scanning for api listing references
+2020-10-22 10:38:24.544  INFO 15148 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: fileUpLoadUsingPOST_1
+2020-10-22 10:38:24.571  INFO 15148 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: fileUpLoadUsingPOST_2
+2020-10-22 10:38:24.571  INFO 15148 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: getProductUsingGET_1
+2020-10-22 10:38:24.571  INFO 15148 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: getProductUsingHEAD_1
+2020-10-22 10:38:24.572  INFO 15148 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: getProductUsingPOST_1
+2020-10-22 10:38:24.573  INFO 15148 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: getProductUsingPUT_1
+2020-10-22 10:38:24.573  INFO 15148 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: getProductUsingPATCH_1
+2020-10-22 10:38:24.573  INFO 15148 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: getProductUsingDELETE_1
+2020-10-22 10:38:24.574  INFO 15148 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: getProductUsingOPTIONS_1
+2020-10-22 10:38:24.574  INFO 15148 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: getProductUsingTRACE_1
+2020-10-22 10:38:24.584  INFO 15148 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: LoginUsingPOST_1
+2020-10-22 10:38:24.585  INFO 15148 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: UserDetailsUsingGET_1
+2020-10-22 10:38:24.597  INFO 15148 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: UserDetailsUsingGET_2
+2020-10-22 10:38:24.599  INFO 15148 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: authenticationDisposeUsingPOST_1
+2020-10-22 10:38:24.600  INFO 15148 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: authenticationFileUsingPOST_1
+2020-10-22 10:38:24.601  INFO 15148 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: authenticationListUsingGET_1
+2020-10-22 10:38:24.608  INFO 15148 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: wxLoginUsingGET_1
+2020-10-22 10:38:24.620  INFO 15148 --- [main] o.s.a.r.c.CachingConnectionFactory       : Attempting to connect to: [39.100.237.144:5672]
+2020-10-22 10:38:24.751  INFO 15148 --- [main] o.s.a.r.c.CachingConnectionFactory       : Created new connection: rabbitConnectionFactory#5bb3dee7:0/SimpleConnection@443819d5 [delegate=amqp://sw@39.100.237.144:5672/, localPort= 57418]
+2020-10-22 10:38:25.189  INFO 15148 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 7004 (http) with context path '/user'
+2020-10-22 10:38:25.192  INFO 15148 --- [main] c.e.u.c.SecondUserCenterApplication      : Started SecondUserCenterApplication in 9.983 seconds (JVM running for 12.262)
+2020-10-22 10:42:32.892  INFO 18288 --- [main] c.e.u.c.SecondUserCenterApplication      : No active profile set, falling back to default profiles: default
+2020-10-22 10:42:34.206  INFO 18288 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode!
+2020-10-22 10:42:34.208  INFO 18288 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data repositories in DEFAULT mode.
+2020-10-22 10:42:34.366  INFO 18288 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 139ms. Found 0 repository interfaces.
+2020-10-22 10:42:34.725  INFO 18288 --- [main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=2f495156-6dd9-36d4-9a3f-e47c301e3537
+2020-10-22 10:42:34.768  INFO 18288 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.amqp.rabbit.annotation.RabbitBootstrapConfiguration' of type [org.springframework.amqp.rabbit.annotation.RabbitBootstrapConfiguration$$EnhancerBySpringCGLIB$$80a9a228] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-10-22 10:42:34.818  INFO 18288 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$ba3de3fa] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-10-22 10:42:34.848  INFO 18288 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.security.config.annotation.configuration.ObjectPostProcessorConfiguration' of type [org.springframework.security.config.annotation.configuration.ObjectPostProcessorConfiguration$$EnhancerBySpringCGLIB$$52ebac34] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-10-22 10:42:34.855  INFO 18288 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'objectPostProcessor' of type [org.springframework.security.config.annotation.configuration.AutowireBeanFactoryObjectPostProcessor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-10-22 10:42:34.856  INFO 18288 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler@28e94c2' of type [org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-10-22 10:42:34.860  INFO 18288 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration' of type [org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration$$EnhancerBySpringCGLIB$$77c04ee6] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-10-22 10:42:34.864  INFO 18288 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'methodSecurityMetadataSource' of type [org.springframework.security.access.method.DelegatingMethodSecurityMetadataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-10-22 10:42:34.879  INFO 18288 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.autoconfigure.ConfigurationPropertiesRebinderAutoConfiguration' of type [org.springframework.cloud.autoconfigure.ConfigurationPropertiesRebinderAutoConfiguration$$EnhancerBySpringCGLIB$$d657e6f7] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-10-22 10:42:35.229  INFO 18288 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 7004 (http)
+2020-10-22 10:42:35.254  INFO 18288 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2020-10-22 10:42:35.254  INFO 18288 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.16]
+2020-10-22 10:42:35.261  INFO 18288 --- [main] o.a.catalina.core.AprLifecycleListener   : The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jdk-11.0.6\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\Java\jdk1.8.0_212\bin;C:\Program Files\Java\jdk1.8.0_212\jre\bin;D:\nodejs\;C:\Users\MACHENIKE\AppData\Local\Microsoft\WindowsApps;C:\Users\MACHENIKE\AppData\Roaming\npm;D:\Microsoft VS Code\bin;.]
+2020-10-22 10:42:35.586  INFO 18288 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/user]   : Initializing Spring embedded WebApplicationContext
+2020-10-22 10:42:35.587  INFO 18288 --- [main] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 2651 ms
+2020-10-22 10:42:37.558  INFO 18288 --- [main] c.e.u.c.config.RedisCacheConfiguration   : JedisPool注入成功！！
+2020-10-22 10:42:37.559  INFO 18288 --- [main] c.e.u.c.config.RedisCacheConfiguration   : redis地址：39.100.237.144:16379
+2020-10-22 10:42:37.620  INFO 18288 --- [main] pertySourcedRequestMappingHandlerMapping : Mapped URL path [/v2/api-docs] onto method [public org.springframework.http.ResponseEntity<springfox.documentation.spring.web.json.Json> springfox.documentation.swagger2.web.Swagger2Controller.getDocumentation(java.lang.String,javax.servlet.http.HttpServletRequest)]
+2020-10-22 10:42:37.660  WARN 18288 --- [main] c.n.c.sources.URLConfigurationSource     : No URLs will be polled as dynamic configuration sources.
+2020-10-22 10:42:37.660  INFO 18288 --- [main] c.n.c.sources.URLConfigurationSource     : To enable URLs as dynamic configuration sources, define System property archaius.configurationSource.additionalUrls or make config.properties available on classpath.
+2020-10-22 10:42:37.664  WARN 18288 --- [main] c.n.c.sources.URLConfigurationSource     : No URLs will be polled as dynamic configuration sources.
+2020-10-22 10:42:37.664  INFO 18288 --- [main] c.n.c.sources.URLConfigurationSource     : To enable URLs as dynamic configuration sources, define System property archaius.configurationSource.additionalUrls or make config.properties available on classpath.
+2020-10-22 10:42:37.786  INFO 18288 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-10-22 10:42:38.276  INFO 18288 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/index.html'], []
+2020-10-22 10:42:38.276  INFO 18288 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/static/**'], []
+2020-10-22 10:42:38.276  INFO 18288 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/login_p'], []
+2020-10-22 10:42:38.277  INFO 18288 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/favicon.ico'], []
+2020-10-22 10:42:38.277  INFO 18288 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/swagger-ui.html'], []
+2020-10-22 10:42:38.277  INFO 18288 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/swagger-resources/**'], []
+2020-10-22 10:42:38.277  INFO 18288 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/images/**'], []
+2020-10-22 10:42:38.277  INFO 18288 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/webjars/**'], []
+2020-10-22 10:42:38.277  INFO 18288 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/v2/api-docs'], []
+2020-10-22 10:42:38.277  INFO 18288 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/configuration/ui'], []
+2020-10-22 10:42:38.277  INFO 18288 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/configuration/security'], []
+2020-10-22 10:42:38.277  INFO 18288 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/MiniLoginController/**'], []
+2020-10-22 10:42:38.277  INFO 18288 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/**/**'], []
+2020-10-22 10:42:38.277  INFO 18288 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/**', OPTIONS], []
+2020-10-22 10:42:38.308  INFO 18288 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@71842e18, org.springframework.security.web.context.SecurityContextPersistenceFilter@6d2f910b, org.springframework.security.web.header.HeaderWriterFilter@43414b88, org.springframework.security.web.authentication.logout.LogoutFilter@45cddfd3, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@2c6d442d, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@5687ade6, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@227c0cf7, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@51d76ad3, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@4a7c8cb7, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@39f7cc46, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@13cc3984, org.springframework.security.web.session.SessionManagementFilter@13fad0c7, org.springframework.security.web.access.ExceptionTranslationFilter@f09c282, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@1f05d08c]
+2020-10-22 10:42:38.326  INFO 18288 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
+2020-10-22 10:42:39.065  INFO 18288 --- [main] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2020-10-22 10:42:39.093  INFO 18288 --- [main] com.netflix.discovery.DiscoveryClient    : Initializing Eureka in region us-east-1
+2020-10-22 10:42:39.139  INFO 18288 --- [main] c.n.d.provider.DiscoveryJerseyProvider   : Using JSON encoding codec LegacyJacksonJson
+2020-10-22 10:42:39.139  INFO 18288 --- [main] c.n.d.provider.DiscoveryJerseyProvider   : Using JSON decoding codec LegacyJacksonJson
+2020-10-22 10:42:39.293  INFO 18288 --- [main] c.n.d.provider.DiscoveryJerseyProvider   : Using XML encoding codec XStreamXml
+2020-10-22 10:42:39.293  INFO 18288 --- [main] c.n.d.provider.DiscoveryJerseyProvider   : Using XML decoding codec XStreamXml
+2020-10-22 10:42:39.491  INFO 18288 --- [main] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-10-22 10:42:39.659  INFO 18288 --- [main] com.netflix.discovery.DiscoveryClient    : Disable delta property : false
+2020-10-22 10:42:39.660  INFO 18288 --- [main] com.netflix.discovery.DiscoveryClient    : Single vip registry refresh property : null
+2020-10-22 10:42:39.660  INFO 18288 --- [main] com.netflix.discovery.DiscoveryClient    : Force full registry fetch : false
+2020-10-22 10:42:39.660  INFO 18288 --- [main] com.netflix.discovery.DiscoveryClient    : Application is null : false
+2020-10-22 10:42:39.660  INFO 18288 --- [main] com.netflix.discovery.DiscoveryClient    : Registered Applications size is zero : true
+2020-10-22 10:42:39.660  INFO 18288 --- [main] com.netflix.discovery.DiscoveryClient    : Application version is -1: true
+2020-10-22 10:42:39.660  INFO 18288 --- [main] com.netflix.discovery.DiscoveryClient    : Getting all instance registry info from the eureka server
+2020-10-22 10:42:39.784  INFO 18288 --- [main] com.netflix.discovery.DiscoveryClient    : The response status is 200
+2020-10-22 10:42:39.787  INFO 18288 --- [main] com.netflix.discovery.DiscoveryClient    : Starting heartbeat executor: renew interval is: 30
+2020-10-22 10:42:39.789  INFO 18288 --- [main] c.n.discovery.InstanceInfoReplicator     : InstanceInfoReplicator onDemand update allowed rate per min is 4
+2020-10-22 10:42:39.793  INFO 18288 --- [main] com.netflix.discovery.DiscoveryClient    : Discovery Client initialized at timestamp 1603334559792 with initial instances count: 2
+2020-10-22 10:42:39.796  INFO 18288 --- [main] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application user-center with eureka with status UP
+2020-10-22 10:42:39.797  INFO 18288 --- [main] com.netflix.discovery.DiscoveryClient    : Saw local status change event StatusChangeEvent [timestamp=1603334559797, current=UP, previous=STARTING]
+2020-10-22 10:42:39.799  INFO 18288 --- [DiscoveryClient-InstanceInfoReplicator-0] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_USER-CENTER/DESKTOP-E4IRNU3:user-center:7004: registering service...
+2020-10-22 10:42:39.802  INFO 18288 --- [main] d.s.w.p.DocumentationPluginsBootstrapper : Context refreshed
+2020-10-22 10:42:39.816  INFO 18288 --- [main] d.s.w.p.DocumentationPluginsBootstrapper : Found 1 custom documentation plugin(s)
+2020-10-22 10:42:39.832  INFO 18288 --- [DiscoveryClient-InstanceInfoReplicator-0] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_USER-CENTER/DESKTOP-E4IRNU3:user-center:7004 - registration status: 204
+2020-10-22 10:42:39.844  INFO 18288 --- [main] s.d.s.w.s.ApiListingReferenceScanner     : Scanning for api listing references
+2020-10-22 10:42:40.028  INFO 18288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: fileUpLoadUsingPOST_1
+2020-10-22 10:42:40.051  INFO 18288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: fileUpLoadUsingPOST_2
+2020-10-22 10:42:40.052  INFO 18288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: getProductUsingGET_1
+2020-10-22 10:42:40.053  INFO 18288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: getProductUsingHEAD_1
+2020-10-22 10:42:40.053  INFO 18288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: getProductUsingPOST_1
+2020-10-22 10:42:40.053  INFO 18288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: getProductUsingPUT_1
+2020-10-22 10:42:40.054  INFO 18288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: getProductUsingPATCH_1
+2020-10-22 10:42:40.055  INFO 18288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: getProductUsingDELETE_1
+2020-10-22 10:42:40.055  INFO 18288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: getProductUsingOPTIONS_1
+2020-10-22 10:42:40.055  INFO 18288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: getProductUsingTRACE_1
+2020-10-22 10:42:40.063  INFO 18288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: LoginUsingPOST_1
+2020-10-22 10:42:40.065  INFO 18288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: UserDetailsUsingGET_1
+2020-10-22 10:42:40.077  INFO 18288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: UserDetailsUsingGET_2
+2020-10-22 10:42:40.079  INFO 18288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: authenticationDisposeUsingPOST_1
+2020-10-22 10:42:40.080  INFO 18288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: authenticationFileUsingPOST_1
+2020-10-22 10:42:40.081  INFO 18288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: authenticationListUsingGET_1
+2020-10-22 10:42:40.088  INFO 18288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: wxLoginUsingGET_1
+2020-10-22 10:42:40.097  INFO 18288 --- [main] o.s.a.r.c.CachingConnectionFactory       : Attempting to connect to: [39.100.237.144:5672]
+2020-10-22 10:42:40.246  INFO 18288 --- [main] o.s.a.r.c.CachingConnectionFactory       : Created new connection: rabbitConnectionFactory#20d3fff4:0/SimpleConnection@495cac83 [delegate=amqp://sw@39.100.237.144:5672/, localPort= 57626]
+2020-10-22 10:42:40.696  INFO 18288 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 7004 (http) with context path '/user'
+2020-10-22 10:42:40.699  INFO 18288 --- [main] c.e.u.c.SecondUserCenterApplication      : Started SecondUserCenterApplication in 9.511 seconds (JVM running for 10.974)
+2020-10-22 10:47:39.663  INFO 18288 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-10-22 10:47:59.398  WARN 18288 --- [AMQP Connection 39.100.237.144:5672] c.r.c.impl.ForgivingExceptionHandler     : An unexpected connection driver error occured (Exception message: Connection reset)
+2020-10-22 10:47:59.401 ERROR 18288 --- [AMQP Connection 39.100.237.144:5672] o.s.a.r.c.CachingConnectionFactory       : Channel shutdown: connection error
+2020-10-22 10:47:59.825  INFO 18288 --- [SimpleAsyncTaskExecutor-1] o.s.a.r.l.SimpleMessageListenerContainer : Restarting Consumer@4f75c627: tags=[[amq.ctag-1iL0BnBNuMFD9XIIjkAzUA]], channel=Cached Rabbit Channel: AMQChannel(amqp://sw@39.100.237.144:5672/,1), conn: Proxy@581da9e6 Shared Rabbit Connection: SimpleConnection@495cac83 [delegate=amqp://sw@39.100.237.144:5672/, localPort= 57626], acknowledgeMode=AUTO local queue size=0
+2020-10-22 10:47:59.828  INFO 18288 --- [SimpleAsyncTaskExecutor-2] o.s.a.r.c.CachingConnectionFactory       : Attempting to connect to: [39.100.237.144:5672]
+2020-10-22 10:48:00.472  INFO 18288 --- [SimpleAsyncTaskExecutor-2] o.s.a.r.c.CachingConnectionFactory       : Created new connection: rabbitConnectionFactory#20d3fff4:1/SimpleConnection@250eb7e4 [delegate=amqp://sw@39.100.237.144:5672/, localPort= 58033]
+2020-10-22 10:52:39.666  INFO 18288 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
