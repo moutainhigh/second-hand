@@ -18,10 +18,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -67,7 +64,7 @@ public class EvaluateController {
                                                 Integer orderDetails,
                                                 String evaluate,
                                                 Integer parentEvaluateId,
-                                                List<String> files)
+                                                  @RequestParam(value ="files")List<String> files)
             throws JSONException {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
         SecondOrderDetail secondOrderDetail = secondOrderDetailMapper.selectByPrimaryKey(orderDetails);

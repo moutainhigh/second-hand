@@ -785,3 +785,10 @@ java.net.SocketException: Connection reset
 2020-10-22 10:47:59.828  INFO 18288 --- [SimpleAsyncTaskExecutor-2] o.s.a.r.c.CachingConnectionFactory       : Attempting to connect to: [39.100.237.144:5672]
 2020-10-22 10:48:00.472  INFO 18288 --- [SimpleAsyncTaskExecutor-2] o.s.a.r.c.CachingConnectionFactory       : Created new connection: rabbitConnectionFactory#20d3fff4:1/SimpleConnection@250eb7e4 [delegate=amqp://sw@39.100.237.144:5672/, localPort= 58033]
 2020-10-22 10:52:39.666  INFO 18288 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-10-22 10:57:39.668  INFO 18288 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-10-22 11:02:39.670  INFO 18288 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-10-22 11:07:39.673  INFO 18288 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-10-22 11:12:39.674  INFO 18288 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-10-22 11:17:39.676  INFO 18288 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-10-22 11:22:39.677  INFO 18288 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-10-22 11:27:39.678  INFO 18288 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
