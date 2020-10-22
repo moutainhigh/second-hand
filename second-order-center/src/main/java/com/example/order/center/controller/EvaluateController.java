@@ -79,6 +79,7 @@ public class EvaluateController {
         secondEvaluate.setIsDeleted((short) 0);
         secondEvaluateMapper.insertSelective(secondEvaluate);
         //
+        System.out.println(files);
         for (String file : files){
             SecondEvaluateFile secondEvaluateFile = new SecondEvaluateFile();
             secondEvaluateFile.setEvaluateId(secondEvaluate.getId());
@@ -86,6 +87,7 @@ public class EvaluateController {
             secondEvaluateFile.setCreateTime(LocalDateTime.now());
             secondEvaluateFile.setModifyTime(LocalDateTime.now());
             secondEvaluateFile.setIsDeleted((short) 0);
+            secondEvaluateFileMapper.insertSelective(secondEvaluateFile);
         }
         return builder.body(ResponseUtils.getResponseBody(0));
     }
