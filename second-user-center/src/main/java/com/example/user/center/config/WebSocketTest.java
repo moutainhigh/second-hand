@@ -18,6 +18,7 @@ import com.example.user.center.model.SecondUserExample;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -80,7 +81,7 @@ private static SecondMessageMapper secondMessageMapper;
      */
     @OnOpen
     public void onOpen(@PathParam(value = "userno") String param, Session session, EndpointConfig config) {
-        System.out.println("接收到客户端消息"+param);
+        System.out.println("接入连接用户id:"+param);
         userno = param;//接收到发送消息的人员编号
         this.session = session;
         webSocketSet.put(param, this);//加入map中
@@ -310,7 +311,20 @@ private static SecondMessageMapper secondMessageMapper;
             secondChatMapper.insertSelective(secondChat);
         });
     }
-
+    @Scheduled(cron = "0/5 * * * * ?")
+//    或直接指定时间间隔，例如：5秒
+//    @Scheduled(fixedRate=58*1000)
+    private void configureTasks() throws Exception{
+        for (String key : webSocketSet.keySet()) {
+            try {
+                String json = "{" + "\"userId\":" + "\"" + key + "\"," + "\"byUserId\":" + "\"" + key + "\"," + "\"message\":" + "\"" +"心跳" + "\" ," + "\"type\":" + "\"" + "solo" + "\"}";
+                    webSocketSet.get(key).sendMessage(json);
+                    System.out.println("key = " + key);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
     public static synchronized int getOnlineCount() {
         return onlineCount;
     }
