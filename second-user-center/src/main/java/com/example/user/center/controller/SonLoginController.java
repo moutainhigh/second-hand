@@ -14,13 +14,20 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -62,6 +69,19 @@ public class SonLoginController {
     //店铺余额
     @Autowired
     private SecondStoreBalanceMapper secondStoreBalanceMapper;
+    //订单
+    @Autowired
+    private SecondOrderMapper secondOrderMapper;
+    //
+    @Autowired
+    private SecondUserSonMapper secondUserSonMapper;
+    @InitBinder
+    public void initBinder(WebDataBinder binder, WebRequest request) {
+        //转换日期
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));// CustomDateEditor为自定义日期编辑器
+    }
+
     @RequestMapping(path = "/addSon", method = RequestMethod.POST)
     @ApiOperation(value = "创建子站点", notes = "创建子站点")
     @ApiImplicitParams({
@@ -404,10 +424,6 @@ public class SonLoginController {
     public ResponseEntity<JSONObject> sonCity(
     ) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
-        SecondCityExample secondCityExample = new SecondCityExample();
-        secondCityExample.createCriteria().andCityIdIsNotNull();
-        List<SecondCity> secondCities = secondCityMapper.selectByExample(secondCityExample);
-
         SecondSonExample secondSonExample = new SecondSonExample();
         secondSonExample.createCriteria().andIsDeletedEqualTo((short) 0);
         List<SecondSon> secondSons = secondSonMapper.selectByExample(secondSonExample);
@@ -445,5 +461,60 @@ public class SonLoginController {
 //        map.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
 //                .forEachOrdered(x -> map1.put(x.getKey(),x.getValue()));
         return builder.body(ResponseUtils.getResponseBody(collect));
+    }
+
+    @RequestMapping(path = "/sonTransactionAmount", method = RequestMethod.GET)
+    @ApiOperation(value = "每个子站点交易金额", notes = "每个子站点交易金额")
+    public ResponseEntity<JSONObject> sonTransactionAmount(
+            Date startTime,
+            Date endTime
+    ) throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
+        SecondOrderExample secondOrderExample = new SecondOrderExample();
+        SecondOrderExample.Criteria criteria = secondOrderExample.createCriteria()
+                .andIsDeletedEqualTo((byte) 0)
+                .andOrderTypeEqualTo("user");
+        if (startTime!=null && endTime!=null){
+            Instant instant = startTime.toInstant();//开始时间
+            Instant instant1 = endTime.toInstant();//结束时间
+            //date转LocalDateTime
+            ZoneId zoneId = ZoneId.systemDefault();
+            LocalDateTime localDateTime = instant.atZone(zoneId).toLocalDateTime();
+            LocalDateTime localDateTime1 = instant1.atZone(zoneId).toLocalDateTime();
+            criteria.andCreateTimeGreaterThanOrEqualTo(localDateTime)
+                    .andCreateTimeLessThanOrEqualTo(localDateTime1);
+        }
+        List<SecondOrder> secondOrders =
+                secondOrderMapper.selectByExample(secondOrderExample);
+        List<SonTransactionAmount> sonTransactionAmounts = new ArrayList<>();
+        secondOrders.forEach(secondOrder -> {
+            SonTransactionAmount sonTransactionAmount = new SonTransactionAmount();
+            SecondStore secondStore = secondStoreMapper.selectByPrimaryKey(secondOrder.getStoneId());
+            SecondUserSonExample secondUserSonExample = new SecondUserSonExample();
+            secondUserSonExample.createCriteria().andIsDeletedEqualTo((byte) 0)
+                    .andUserIdEqualTo(secondStore.getUserId())
+                    .andStoreIdEqualTo(secondStore.getId());
+            List<SecondUserSon> secondUserSons =
+                    secondUserSonMapper.selectByExample(secondUserSonExample);
+            SecondSon secondSon = secondSonMapper.selectByPrimaryKey(secondUserSons.get(0).getSonId());
+            sonTransactionAmount.setSonName(secondSon.getSonName());
+            sonTransactionAmount.setMoney(secondOrder.getAmount());
+            sonTransactionAmounts.add(sonTransactionAmount);
+        });
+        Set<String> sonName =
+        sonTransactionAmounts.stream().map(SonTransactionAmount::getSonName).collect(Collectors.toSet());
+
+        List<SonTransactionAmount> sonTransactionAmounts1 = new ArrayList<>();
+        sonName.forEach(s -> {
+            Integer moneys =
+            sonTransactionAmounts.stream().filter(a->a.getSonName().equals(s))
+                    .mapToInt(SonTransactionAmount::getMoney).sum();
+            SonTransactionAmount sonTransactionAmount1 = new SonTransactionAmount();
+            sonTransactionAmount1.setSonName(s);
+            sonTransactionAmount1.setMoney(moneys);
+            sonTransactionAmounts1.add(sonTransactionAmount1);
+        });
+
+        return builder.body(ResponseUtils.getResponseBody(sonTransactionAmounts1));
     }
 }
