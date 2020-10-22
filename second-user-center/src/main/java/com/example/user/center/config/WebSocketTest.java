@@ -241,7 +241,7 @@ private static SecondMessageMapper secondMessageMapper;
                 List<Message> list = new ArrayList<>();
                 JSONArray jsonArray1= JSONArray.parseArray(messages);
                 List<Message> list1 = JSONObject.parseArray(jsonArray1.toJSONString(), Message.class);
-                System.out.println(object);
+//                System.out.println(object);
                 if (object!=null){
                     JSONArray jsonArray= JSONArray.parseArray(String.valueOf(object));
                     list = JSONObject.parseArray(jsonArray.toJSONString(), Message.class);
@@ -318,7 +318,7 @@ private static SecondMessageMapper secondMessageMapper;
         for (String key : webSocketSet.keySet()) {
             try {
                 String json = "{" + "\"userId\":" + "\"" + key + "\"," + "\"byUserId\":" + "\"" + key + "\"," + "\"message\":" + "\"" +"心跳" + "\" ," + "\"type\":" + "\"" + "solo" + "\"}";
-                System.out.println(webSocketSet);
+                System.out.println("连接的用户"+webSocketSet);
                 webSocketSet.get(key).sendMessage(json);
                     System.out.println("key = " + key+"心跳");
             } catch (IOException e) {
