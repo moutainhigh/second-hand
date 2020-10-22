@@ -87,7 +87,6 @@ private static SecondMessageMapper secondMessageMapper;
         webSocketSet.put(param, this);//加入map中
         addOnlineCount();           //在线数加1
         Object object = redisTemplate.opsForValue().get(param+"sendAll");
-//        System.out.println(object);
         if (object!=null){
             JSONArray jsonArray= JSONArray.parseArray(String.valueOf(object));
             List<Message> list = JSONObject.parseArray(jsonArray.toJSONString(), Message.class);
@@ -207,7 +206,6 @@ private static SecondMessageMapper secondMessageMapper;
 //        SecondMessage secondMessage  = new SecondMessage();
 //        secondMessage.setHeadline("测试");
 //        int a =  secondMessageMapper.insertSelective(secondMessage);
-//        System.out.println(a);
         String now = getNowTime();
 //        String sendMessage = message.split("[|]")[0];
         String sendMessage = message;
@@ -218,7 +216,6 @@ private static SecondMessageMapper secondMessageMapper;
                 .andIdDeletedEqualTo((byte) 0);
         List<SecondUser> secondUsers =
         secondUserMapper.selectByExample(secondUserExample);
-//        System.out.println(secondUsers);
         List<String> keys = new ArrayList<>();
         for (String key : webSocketSet.keySet()) {
             try {
@@ -241,7 +238,6 @@ private static SecondMessageMapper secondMessageMapper;
                 List<Message> list = new ArrayList<>();
                 JSONArray jsonArray1= JSONArray.parseArray(messages);
                 List<Message> list1 = JSONObject.parseArray(jsonArray1.toJSONString(), Message.class);
-//                System.out.println(object);
                 if (object!=null){
                     JSONArray jsonArray= JSONArray.parseArray(String.valueOf(object));
                     list = JSONObject.parseArray(jsonArray.toJSONString(), Message.class);
@@ -317,7 +313,7 @@ private static SecondMessageMapper secondMessageMapper;
     private void configureTasks() throws Exception{
         for (String key : webSocketSet.keySet()) {
             try {
-                String json = "{" + "\"userId\":" + "\"" + key + "\"," + "\"byUserId\":" + "\"" + key + "\"," + "\"message\":" + "\"" +"心跳" + "\" ," + "\"type\":" + "\"" + "solo" + "\"}";
+                String json = "{" + "\"userId\":" + "\"" + key + "\"," + "\"byUserId\":" + "\"" + key + "\"," + "\"message\":" + "\"" +"心跳" + "\" ," + "\"type\":" + "\"" + "heartbeat" + "\"}";
                 System.out.println("连接的用户"+webSocketSet);
                 webSocketSet.get(key).sendMessage(json);
                     System.out.println("key = " + key+"心跳");
