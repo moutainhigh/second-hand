@@ -521,8 +521,12 @@ private SecondStoreMapper secondStoreMapper;
             userList.setBuyProductNum(orders.size());//购买数量
             secondOrderExample.clear();
             secondOrderExample.createCriteria().andStoneIdEqualTo(secondStores.get(0).getId())
-                    .andOrderStatusEqualTo(OrderEnum.OrderStatus.EVALUATE.getOrderStatus())
-                    .andOrderStatusEqualTo(OrderEnum.OrderStatus.CONTROVERSIAL.getOrderStatus());
+                    .andOrderStatusEqualTo(OrderEnum.OrderStatus.EVALUATE.getOrderStatus());
+            SecondOrderExample.Criteria criteria =
+                    secondOrderExample.createCriteria()
+                            .andOrderStatusEqualTo(OrderEnum.OrderStatus.CONTROVERSIAL.getOrderStatus());
+            secondOrderExample.or(criteria);
+
             List<SecondOrder> secondOrders = secondOrderMapper.selectByExample(secondOrderExample);
             if (secondOrders.size()!=0){
                 Integer Income = secondOrders.stream().mapToInt(SecondOrder::getAmount).sum();
@@ -532,8 +536,10 @@ private SecondStoreMapper secondStoreMapper;
             }
             secondOrderExample.clear();
             secondOrderExample.createCriteria().andUserIdEqualTo(secondUser.getId())
-                    .andOrderStatusEqualTo(OrderEnum.OrderStatus.EVALUATE.getOrderStatus())
+                    .andOrderStatusEqualTo(OrderEnum.OrderStatus.EVALUATE.getOrderStatus());
+            SecondOrderExample.Criteria criteria1 =secondOrderExample.createCriteria()
                     .andOrderStatusEqualTo(OrderEnum.OrderStatus.CONTROVERSIAL.getOrderStatus());
+            secondOrderExample.or(criteria1);
             List<SecondOrder> secondOrders1 = secondOrderMapper.selectByExample(secondOrderExample);
             if (secondOrders1.size()!=0){
                 Integer Expend= secondOrders1.stream().mapToInt(SecondOrder::getAmount).sum();
