@@ -23,8 +23,8 @@ FROM
 WHERE
 	to_id = #{userId}
 	AND from_id = #{byUserId}
-	OR to_id = 2
-	AND from_id = 1
+	OR to_id = #{byUserId}
+	AND from_id = #{userId}
 ORDER BY
 	send_time DESC
     </select>
