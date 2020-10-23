@@ -1179,3 +1179,130 @@ java.net.SocketException: Connection reset
 2020-10-23 16:37:18.053  WARN 14044 --- [http-nio-7004-exec-1] com.zaxxer.hikari.HikariConfig           : dataSource - idleTimeout is close to or more than maxLifetime, disabling it.
 2020-10-23 16:37:18.053  INFO 14044 --- [http-nio-7004-exec-1] com.zaxxer.hikari.HikariDataSource       : dataSource - Starting...
 2020-10-23 16:37:18.831  INFO 14044 --- [http-nio-7004-exec-1] com.zaxxer.hikari.HikariDataSource       : dataSource - Start completed.
+2020-10-23 16:42:12.888  INFO 14044 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-10-23 16:47:12.890  INFO 14044 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-10-23 16:52:12.892  INFO 14044 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-10-23 16:57:12.894  INFO 14044 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-10-23 17:02:12.895  INFO 14044 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-10-23 17:07:12.897  INFO 14044 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-10-23 17:24:58.763  INFO 3760 --- [main] c.e.p.c.SecondProductCenterApplication   : No active profile set, falling back to default profiles: default
+2020-10-23 17:25:01.666  INFO 3760 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode!
+2020-10-23 17:25:01.678  INFO 3760 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data repositories in DEFAULT mode.
+2020-10-23 17:25:01.865  INFO 3760 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 162ms. Found 0 repository interfaces.
+2020-10-23 17:25:02.301  INFO 3760 --- [main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=bb743f22-8767-31d1-bc4d-93a27e9b787c
+2020-10-23 17:25:02.356  INFO 3760 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.amqp.rabbit.annotation.RabbitBootstrapConfiguration' of type [org.springframework.amqp.rabbit.annotation.RabbitBootstrapConfiguration$$EnhancerBySpringCGLIB$$7cf81d76] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-10-23 17:25:02.419  INFO 3760 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$b68c5f48] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-10-23 17:25:02.451  INFO 3760 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.autoconfigure.ConfigurationPropertiesRebinderAutoConfiguration' of type [org.springframework.cloud.autoconfigure.ConfigurationPropertiesRebinderAutoConfiguration$$EnhancerBySpringCGLIB$$d2a66245] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-10-23 17:25:02.972  INFO 3760 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 7002 (http)
+2020-10-23 17:25:03.016  INFO 3760 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2020-10-23 17:25:03.017  INFO 3760 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.16]
+2020-10-23 17:25:03.029  INFO 3760 --- [main] o.a.catalina.core.AprLifecycleListener   : The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jdk-11.0.6\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\Java\jdk1.8.0_212\bin;C:\Program Files\Java\jdk1.8.0_212\jre\bin;D:\nodejs\;C:\Users\MACHENIKE\AppData\Local\Microsoft\WindowsApps;C:\Users\MACHENIKE\AppData\Roaming\npm;D:\Microsoft VS Code\bin;.]
+2020-10-23 17:25:03.427  INFO 3760 --- [main] o.a.c.c.C.[.[localhost].[/product]       : Initializing Spring embedded WebApplicationContext
+2020-10-23 17:25:03.427  INFO 3760 --- [main] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 4558 ms
+2020-10-23 17:25:05.048  INFO 3760 --- [main] pertySourcedRequestMappingHandlerMapping : Mapped URL path [/v2/api-docs] onto method [public org.springframework.http.ResponseEntity<springfox.documentation.spring.web.json.Json> springfox.documentation.swagger2.web.Swagger2Controller.getDocumentation(java.lang.String,javax.servlet.http.HttpServletRequest)]
+2020-10-23 17:25:05.080  WARN 3760 --- [main] c.n.c.sources.URLConfigurationSource     : No URLs will be polled as dynamic configuration sources.
+2020-10-23 17:25:05.081  INFO 3760 --- [main] c.n.c.sources.URLConfigurationSource     : To enable URLs as dynamic configuration sources, define System property archaius.configurationSource.additionalUrls or make config.properties available on classpath.
+2020-10-23 17:25:05.085  WARN 3760 --- [main] c.n.c.sources.URLConfigurationSource     : No URLs will be polled as dynamic configuration sources.
+2020-10-23 17:25:05.086  INFO 3760 --- [main] c.n.c.sources.URLConfigurationSource     : To enable URLs as dynamic configuration sources, define System property archaius.configurationSource.additionalUrls or make config.properties available on classpath.
+2020-10-23 17:25:05.227  INFO 3760 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-10-23 17:25:05.859  INFO 3760 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
+2020-10-23 17:25:06.678  INFO 3760 --- [main] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2020-10-23 17:25:06.820  INFO 3760 --- [main] com.netflix.discovery.DiscoveryClient    : Initializing Eureka in region us-east-1
+2020-10-23 17:25:07.018  INFO 3760 --- [main] c.n.d.provider.DiscoveryJerseyProvider   : Using JSON encoding codec LegacyJacksonJson
+2020-10-23 17:25:07.018  INFO 3760 --- [main] c.n.d.provider.DiscoveryJerseyProvider   : Using JSON decoding codec LegacyJacksonJson
+2020-10-23 17:25:07.192  INFO 3760 --- [main] c.n.d.provider.DiscoveryJerseyProvider   : Using XML encoding codec XStreamXml
+2020-10-23 17:25:07.192  INFO 3760 --- [main] c.n.d.provider.DiscoveryJerseyProvider   : Using XML decoding codec XStreamXml
+2020-10-23 17:25:07.452  INFO 3760 --- [main] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-10-23 17:25:07.614  INFO 3760 --- [main] com.netflix.discovery.DiscoveryClient    : Disable delta property : false
+2020-10-23 17:25:07.614  INFO 3760 --- [main] com.netflix.discovery.DiscoveryClient    : Single vip registry refresh property : null
+2020-10-23 17:25:07.614  INFO 3760 --- [main] com.netflix.discovery.DiscoveryClient    : Force full registry fetch : false
+2020-10-23 17:25:07.615  INFO 3760 --- [main] com.netflix.discovery.DiscoveryClient    : Application is null : false
+2020-10-23 17:25:07.615  INFO 3760 --- [main] com.netflix.discovery.DiscoveryClient    : Registered Applications size is zero : true
+2020-10-23 17:25:07.615  INFO 3760 --- [main] com.netflix.discovery.DiscoveryClient    : Application version is -1: true
+2020-10-23 17:25:07.615  INFO 3760 --- [main] com.netflix.discovery.DiscoveryClient    : Getting all instance registry info from the eureka server
+2020-10-23 17:25:07.827  INFO 3760 --- [main] com.netflix.discovery.DiscoveryClient    : The response status is 200
+2020-10-23 17:25:07.830  INFO 3760 --- [main] com.netflix.discovery.DiscoveryClient    : Starting heartbeat executor: renew interval is: 30
+2020-10-23 17:25:07.832  INFO 3760 --- [main] c.n.discovery.InstanceInfoReplicator     : InstanceInfoReplicator onDemand update allowed rate per min is 4
+2020-10-23 17:25:07.835  INFO 3760 --- [main] com.netflix.discovery.DiscoveryClient    : Discovery Client initialized at timestamp 1603445107835 with initial instances count: 1
+2020-10-23 17:25:07.837  INFO 3760 --- [main] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application product-center with eureka with status UP
+2020-10-23 17:25:07.837  INFO 3760 --- [main] com.netflix.discovery.DiscoveryClient    : Saw local status change event StatusChangeEvent [timestamp=1603445107837, current=UP, previous=STARTING]
+2020-10-23 17:25:07.839  INFO 3760 --- [DiscoveryClient-InstanceInfoReplicator-0] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_PRODUCT-CENTER/DESKTOP-E4IRNU3:product-center:7002: registering service...
+2020-10-23 17:25:07.844  INFO 3760 --- [main] d.s.w.p.DocumentationPluginsBootstrapper : Context refreshed
+2020-10-23 17:25:07.857  INFO 3760 --- [main] d.s.w.p.DocumentationPluginsBootstrapper : Found 1 custom documentation plugin(s)
+2020-10-23 17:25:07.878  INFO 3760 --- [DiscoveryClient-InstanceInfoReplicator-0] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_PRODUCT-CENTER/DESKTOP-E4IRNU3:product-center:7002 - registration status: 204
+2020-10-23 17:25:07.888  INFO 3760 --- [main] s.d.s.w.s.ApiListingReferenceScanner     : Scanning for api listing references
+2020-10-23 17:25:08.029  WARN 3760 --- [main] s.d.s.w.r.p.ParameterDataTypeReader      : Trying to infer dataType java.lang.Integer[]
+2020-10-23 17:25:08.037  INFO 3760 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: deletedUsingPOST_1
+2020-10-23 17:25:08.055  INFO 3760 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: addProductUsingPOST_1
+2020-10-23 17:25:08.063  INFO 3760 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: deleteProductUsingPOST_1
+2020-10-23 17:25:08.098  INFO 3760 --- [main] o.s.a.r.c.CachingConnectionFactory       : Attempting to connect to: [39.100.237.144:5672]
+2020-10-23 17:25:08.247  INFO 3760 --- [main] o.s.a.r.c.CachingConnectionFactory       : Created new connection: rabbitConnectionFactory#587400a9:0/SimpleConnection@3638120f [delegate=amqp://sw@39.100.237.144:5672/, localPort= 51165]
+2020-10-23 17:25:08.800  INFO 3760 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 7002 (http) with context path '/product'
+2020-10-23 17:25:08.803  INFO 3760 --- [main] c.e.p.c.SecondProductCenterApplication   : Started SecondProductCenterApplication in 14.905 seconds (JVM running for 19.909)
+2020-10-23 17:25:08.932  INFO 3760 --- [http-nio-7002-exec-1] o.a.c.c.C.[.[localhost].[/product]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2020-10-23 17:25:08.932  INFO 3760 --- [http-nio-7002-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2020-10-23 17:25:08.942  INFO 3760 --- [http-nio-7002-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 10 ms
+2020-10-23 17:26:58.041  WARN 3760 --- [http-nio-7002-exec-3] com.zaxxer.hikari.HikariConfig           : dataSource - idleTimeout is close to or more than maxLifetime, disabling it.
+2020-10-23 17:26:58.041  INFO 3760 --- [http-nio-7002-exec-3] com.zaxxer.hikari.HikariDataSource       : dataSource - Starting...
+2020-10-23 17:26:58.378  INFO 3760 --- [http-nio-7002-exec-3] com.zaxxer.hikari.HikariDataSource       : dataSource - Start completed.
+2020-10-23 17:30:07.618  INFO 3760 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-10-23 17:31:09.762  INFO 10472 --- [main] c.e.p.c.SecondProductCenterApplication   : No active profile set, falling back to default profiles: default
+2020-10-23 17:31:11.775  INFO 10472 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode!
+2020-10-23 17:31:11.779  INFO 10472 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data repositories in DEFAULT mode.
+2020-10-23 17:31:11.981  INFO 10472 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 180ms. Found 0 repository interfaces.
+2020-10-23 17:31:12.409  INFO 10472 --- [main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=bb743f22-8767-31d1-bc4d-93a27e9b787c
+2020-10-23 17:31:12.461  INFO 10472 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.amqp.rabbit.annotation.RabbitBootstrapConfiguration' of type [org.springframework.amqp.rabbit.annotation.RabbitBootstrapConfiguration$$EnhancerBySpringCGLIB$$e6361b18] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-10-23 17:31:12.510  INFO 10472 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$1fca5cea] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-10-23 17:31:12.537  INFO 10472 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.autoconfigure.ConfigurationPropertiesRebinderAutoConfiguration' of type [org.springframework.cloud.autoconfigure.ConfigurationPropertiesRebinderAutoConfiguration$$EnhancerBySpringCGLIB$$3be45fe7] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-10-23 17:31:12.871  INFO 10472 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 7002 (http)
+2020-10-23 17:31:12.897  INFO 10472 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2020-10-23 17:31:12.897  INFO 10472 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.16]
+2020-10-23 17:31:12.905  INFO 10472 --- [main] o.a.catalina.core.AprLifecycleListener   : The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jdk-11.0.6\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\Java\jdk1.8.0_212\bin;C:\Program Files\Java\jdk1.8.0_212\jre\bin;D:\nodejs\;C:\Users\MACHENIKE\AppData\Local\Microsoft\WindowsApps;C:\Users\MACHENIKE\AppData\Roaming\npm;D:\Microsoft VS Code\bin;.]
+2020-10-23 17:31:13.270  INFO 10472 --- [main] o.a.c.c.C.[.[localhost].[/product]       : Initializing Spring embedded WebApplicationContext
+2020-10-23 17:31:13.271  INFO 10472 --- [main] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 3474 ms
+2020-10-23 17:31:15.133  INFO 10472 --- [main] pertySourcedRequestMappingHandlerMapping : Mapped URL path [/v2/api-docs] onto method [public org.springframework.http.ResponseEntity<springfox.documentation.spring.web.json.Json> springfox.documentation.swagger2.web.Swagger2Controller.getDocumentation(java.lang.String,javax.servlet.http.HttpServletRequest)]
+2020-10-23 17:31:15.175  WARN 10472 --- [main] c.n.c.sources.URLConfigurationSource     : No URLs will be polled as dynamic configuration sources.
+2020-10-23 17:31:15.175  INFO 10472 --- [main] c.n.c.sources.URLConfigurationSource     : To enable URLs as dynamic configuration sources, define System property archaius.configurationSource.additionalUrls or make config.properties available on classpath.
+2020-10-23 17:31:15.179  WARN 10472 --- [main] c.n.c.sources.URLConfigurationSource     : No URLs will be polled as dynamic configuration sources.
+2020-10-23 17:31:15.180  INFO 10472 --- [main] c.n.c.sources.URLConfigurationSource     : To enable URLs as dynamic configuration sources, define System property archaius.configurationSource.additionalUrls or make config.properties available on classpath.
+2020-10-23 17:31:15.412  INFO 10472 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-10-23 17:31:15.898  INFO 10472 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
+2020-10-23 17:31:16.734  INFO 10472 --- [main] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2020-10-23 17:31:16.767  INFO 10472 --- [main] com.netflix.discovery.DiscoveryClient    : Initializing Eureka in region us-east-1
+2020-10-23 17:31:16.977  INFO 10472 --- [main] c.n.d.provider.DiscoveryJerseyProvider   : Using JSON encoding codec LegacyJacksonJson
+2020-10-23 17:31:16.977  INFO 10472 --- [main] c.n.d.provider.DiscoveryJerseyProvider   : Using JSON decoding codec LegacyJacksonJson
+2020-10-23 17:31:17.129  INFO 10472 --- [main] c.n.d.provider.DiscoveryJerseyProvider   : Using XML encoding codec XStreamXml
+2020-10-23 17:31:17.129  INFO 10472 --- [main] c.n.d.provider.DiscoveryJerseyProvider   : Using XML decoding codec XStreamXml
+2020-10-23 17:31:17.350  INFO 10472 --- [main] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-10-23 17:31:17.528  INFO 10472 --- [main] com.netflix.discovery.DiscoveryClient    : Disable delta property : false
+2020-10-23 17:31:17.528  INFO 10472 --- [main] com.netflix.discovery.DiscoveryClient    : Single vip registry refresh property : null
+2020-10-23 17:31:17.528  INFO 10472 --- [main] com.netflix.discovery.DiscoveryClient    : Force full registry fetch : false
+2020-10-23 17:31:17.528  INFO 10472 --- [main] com.netflix.discovery.DiscoveryClient    : Application is null : false
+2020-10-23 17:31:17.528  INFO 10472 --- [main] com.netflix.discovery.DiscoveryClient    : Registered Applications size is zero : true
+2020-10-23 17:31:17.528  INFO 10472 --- [main] com.netflix.discovery.DiscoveryClient    : Application version is -1: true
+2020-10-23 17:31:17.529  INFO 10472 --- [main] com.netflix.discovery.DiscoveryClient    : Getting all instance registry info from the eureka server
+2020-10-23 17:31:17.789  INFO 10472 --- [main] com.netflix.discovery.DiscoveryClient    : The response status is 200
+2020-10-23 17:31:17.804  INFO 10472 --- [main] com.netflix.discovery.DiscoveryClient    : Starting heartbeat executor: renew interval is: 30
+2020-10-23 17:31:17.810  INFO 10472 --- [main] c.n.discovery.InstanceInfoReplicator     : InstanceInfoReplicator onDemand update allowed rate per min is 4
+2020-10-23 17:31:17.815  INFO 10472 --- [main] com.netflix.discovery.DiscoveryClient    : Discovery Client initialized at timestamp 1603445477814 with initial instances count: 2
+2020-10-23 17:31:17.817  INFO 10472 --- [main] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application product-center with eureka with status UP
+2020-10-23 17:31:17.818  INFO 10472 --- [main] com.netflix.discovery.DiscoveryClient    : Saw local status change event StatusChangeEvent [timestamp=1603445477818, current=UP, previous=STARTING]
+2020-10-23 17:31:17.821  INFO 10472 --- [DiscoveryClient-InstanceInfoReplicator-0] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_PRODUCT-CENTER/DESKTOP-E4IRNU3:product-center:7002: registering service...
+2020-10-23 17:31:17.827  INFO 10472 --- [main] d.s.w.p.DocumentationPluginsBootstrapper : Context refreshed
+2020-10-23 17:31:17.847  INFO 10472 --- [main] d.s.w.p.DocumentationPluginsBootstrapper : Found 1 custom documentation plugin(s)
+2020-10-23 17:31:17.883  INFO 10472 --- [DiscoveryClient-InstanceInfoReplicator-0] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_PRODUCT-CENTER/DESKTOP-E4IRNU3:product-center:7002 - registration status: 204
+2020-10-23 17:31:17.904  INFO 10472 --- [main] s.d.s.w.s.ApiListingReferenceScanner     : Scanning for api listing references
+2020-10-23 17:31:18.161  WARN 10472 --- [main] s.d.s.w.r.p.ParameterDataTypeReader      : Trying to infer dataType java.lang.Integer[]
+2020-10-23 17:31:18.172  INFO 10472 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: deletedUsingPOST_1
+2020-10-23 17:31:18.187  INFO 10472 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: addProductUsingPOST_1
+2020-10-23 17:31:18.194  INFO 10472 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: deleteProductUsingPOST_1
+2020-10-23 17:31:18.210  INFO 10472 --- [main] o.s.a.r.c.CachingConnectionFactory       : Attempting to connect to: [39.100.237.144:5672]
+2020-10-23 17:31:18.388  INFO 10472 --- [main] o.s.a.r.c.CachingConnectionFactory       : Created new connection: rabbitConnectionFactory#47666b39:0/SimpleConnection@51c0346d [delegate=amqp://sw@39.100.237.144:5672/, localPort= 51745]
+2020-10-23 17:31:18.673  INFO 10472 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 7002 (http) with context path '/product'
+2020-10-23 17:31:18.678  INFO 10472 --- [main] c.e.p.c.SecondProductCenterApplication   : Started SecondProductCenterApplication in 11.489 seconds (JVM running for 14.998)
+2020-10-23 17:31:22.539  INFO 10472 --- [http-nio-7002-exec-1] o.a.c.c.C.[.[localhost].[/product]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2020-10-23 17:31:22.540  INFO 10472 --- [http-nio-7002-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2020-10-23 17:31:22.557  INFO 10472 --- [http-nio-7002-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 17 ms
+2020-10-23 17:31:58.350  WARN 10472 --- [http-nio-7002-exec-1] com.zaxxer.hikari.HikariConfig           : dataSource - idleTimeout is close to or more than maxLifetime, disabling it.
+2020-10-23 17:31:58.350  INFO 10472 --- [http-nio-7002-exec-1] com.zaxxer.hikari.HikariDataSource       : dataSource - Starting...
+2020-10-23 17:32:00.170  INFO 10472 --- [http-nio-7002-exec-1] com.zaxxer.hikari.HikariDataSource       : dataSource - Start completed.

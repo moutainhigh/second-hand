@@ -32,6 +32,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -428,6 +429,7 @@ public class SecondProductController {
             @ApiImplicitParam(paramType = "query", name = "showType", value = "商品类型", required = false, type = "String"),
             @ApiImplicitParam(paramType = "query", name = "product", value = "搜索的内容", required = false, type = "String"),
             @ApiImplicitParam(paramType = "query", name = "putaway", value = "上下架 0上架的 1下架的 全部不填", required = false, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "price", value = "价格筛选 0升序 1降序", required = false, type = "Integer"),
     })
     @RequestMapping(value = "/selectProduct", method = RequestMethod.GET)
     public ResponseEntity<JSONObject> selectProduct(
@@ -438,6 +440,7 @@ public class SecondProductController {
             @RequestParam(name = "product", required = false) String product,
             @RequestParam(name = "isSon", required = false) Integer isSon,
             @RequestParam(name = "categoryId", required = false) Integer categoryId,
+            @RequestParam(name = "price", required = false) Integer price,
             @RequestParam(name = "putaway", required = false) Integer putaway
     )
             throws Exception {
@@ -669,6 +672,14 @@ public class SecondProductController {
         List<ProductList> productLists1 = new ArrayList<>();
         productLists1 = productLists.stream().filter(a -> a.getIsStoreDeleted() == 0 && a.getSecondStatus() == 0)
                 .collect(Collectors.toList());
+if (price!=null && price==1){
+    productLists1 = productLists1.stream()
+            .sorted(Comparator.comparing(ProductList::getPrice).reversed()).collect(Collectors.toList());
+}else if (price!=null && price==0){
+    productLists1 = productLists1.stream()
+            .sorted(Comparator.comparing(ProductList::getPrice)).collect(Collectors.toList());
+}
+
 //        String json = JSONObject.toJSONString(productLists1);
         /**
          * 筛选认证子站点学校2公里商品
