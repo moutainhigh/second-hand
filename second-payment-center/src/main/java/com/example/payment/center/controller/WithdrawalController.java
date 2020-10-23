@@ -324,10 +324,12 @@ public class WithdrawalController {
             System.out.println(secondWithdrawal.getId());
             secondWithdrawal.setWithdrawalState(WithdrawalEnum.WithdrawalState.getWithdrawalState(type).getWithdrawalState());
             secondWithdrawalMapper.updateByPrimaryKeySelective(secondWithdrawal);
-
+            System.out.println(secondWithdrawals.get(0).getWithdrawalType());
+            System.out.println(type);
             if (secondWithdrawals.get(0).getWithdrawalType().equals(WithdrawalEnum.WithdrawalSource.USER.getWithdrawalSource())
             && type.equals(WithdrawalEnum.WithdrawalState.COMPLETE.getWithdrawalState())){
                 //如果提现人是用户给子站点加余额
+                System.out.println("返现");
                 SecondUserSonExample secondUserSonExample = new SecondUserSonExample();
                 secondUserSonExample.createCriteria()
                         .andUserIdEqualTo(secondWithdrawals.get(0).getUserId())
