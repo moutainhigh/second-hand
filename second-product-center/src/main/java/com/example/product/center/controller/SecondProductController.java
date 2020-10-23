@@ -280,11 +280,11 @@ public class SecondProductController {
     ) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
         System.out.println(file1+":file1");
-        if (file1 != null) {
-            if (secondProductMapper.selectByPrimaryKey(productId).getFile() != null&& !secondProductMapper.selectByPrimaryKey(productId).getFile().equals(file1)) {
-                fileDelete2(secondProductMapper.selectByPrimaryKey(productId).getFile());
-            }
-        }
+//        if (file1 != null) {
+//            if (secondProductMapper.selectByPrimaryKey(productId).getFile() != null&& !secondProductMapper.selectByPrimaryKey(productId).getFile().equals(file1)) {
+//                fileDelete2(secondProductMapper.selectByPrimaryKey(productId).getFile());
+//            }
+//        }
         SecondProduct secondProduct = new SecondProduct();
         secondProduct.setId(productId);
         secondProduct.setProductType(ProductEnum.Relation.GENERAL.getState());//普通商品
