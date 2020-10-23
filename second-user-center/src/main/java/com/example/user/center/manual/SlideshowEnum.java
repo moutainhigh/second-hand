@@ -9,7 +9,7 @@ package com.example.user.center.manual;
  * @Version: $
  */
 public class SlideshowEnum {
-    //轮播图
+    //轮播图 分类 和 首页
     public static enum SlideshowType {
         HOMEPAGE("homepage"),//首页轮播图
         CATEGORY("category");//分类轮播图
