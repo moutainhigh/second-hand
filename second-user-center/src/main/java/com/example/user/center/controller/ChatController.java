@@ -160,10 +160,24 @@ public class ChatController {
             @ApiImplicitParam(paramType = "query", name = "ByUserId", value = "收消息用户id", required = true, type = "Integer"),
     })
     public ResponseEntity<JSONObject> delChatWindow(
-            @RequestParam(value = "userId", required = false) Integer userId
+            @RequestParam(value = "userId", required = false) Integer userId,
+            @RequestParam(value = "ByUserId", required = false) Integer ByUserId
     ) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
-        redisTemplate.delete(String.valueOf(userId)+"window");
+        List<ChatWindow> chatWindows = new ArrayList<>();
+        Object object =
+                redisTemplate.opsForValue().get(String.valueOf(userId)+"window");
+        chatWindows = JSON.parseObject(String.valueOf(object), new TypeReference<List<ChatWindow>>(){});
+        //        redisTemplate.delete(String.valueOf(userId)+"window");
+        for (int i=0;i<chatWindows.size();i++){
+            if (chatWindows.get(i).getUserId().equals(userId) && chatWindows.get(i).getByUserId().equals(ByUserId));{
+                chatWindows.remove(i);
+
+                String json = JSONObject.toJSONString(chatWindows);
+                System.out.println(json);
+                redisTemplate.opsForValue().set(String.valueOf(userId)+"window",json);
+            }
+        }
         return builder.body(ResponseUtils.getResponseBody(0));
     }
     /**
