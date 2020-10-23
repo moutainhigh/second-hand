@@ -9,10 +9,10 @@ package com.example.user.center.manual;
  * @Version: $
  */
 public class SlideshowEnum {
-    //支付状态
+    //轮播图
     public static enum SlideshowType {
-        HOMEPAGE("homepage"),
-        CATEGORY("category");//取消
+        HOMEPAGE("homepage"),//首页轮播图
+        CATEGORY("category");//分类轮播图
         private String slideshowType;
         SlideshowType(String slideshowType) {
             this.slideshowType = slideshowType;

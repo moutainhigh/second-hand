@@ -71,7 +71,7 @@ public class FileController {
 //        ip=ip.getLocalHost();
 //        String localname=ip.getHostName();
 //        String localip=ip.getHostAddress();
-        String s = "http://"+getV4IP()+":7004/user/File/getPicture?id=";
+        String s = "https://www.tjsichuang.cn:1443/second/user/File/getPicture?id=";
 //        String s = "http://39.100.237.144:7004/user/File/getPicture?id=";
         return builder.body(ResponseUtils.getResponseBody(s+String.valueOf(fileDesc.getId())));
     }
