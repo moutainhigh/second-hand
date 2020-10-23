@@ -521,14 +521,14 @@ private SecondStoreMapper secondStoreMapper;
             userList.setBuyProductNum(orders.size());//购买数量
             secondOrderExample.clear();
             secondOrderExample.createCriteria().andStoneIdEqualTo(secondStores.get(0).getId())
-                    .andOrderStatusEqualTo(OrderEnum.OrderStatus.EVALUATE.getOrderStatus());
-            SecondOrderExample.Criteria criteria =
-                    secondOrderExample.createCriteria()
-                            .andOrderStatusEqualTo(OrderEnum.OrderStatus.CONTROVERSIAL.getOrderStatus());
-            secondOrderExample.or(criteria);
+                    .andOrderStatusEqualTo(OrderEnum.OrderStatus.COMPLETE.getOrderStatus());
+            secondOrderExample.or()// CONTROVERSIAL EVALUATE
+                    .andStoneIdEqualTo(secondStores.get(0).getId())
+                    .andOrderStatusEqualTo(OrderEnum.OrderStatus.EVALUATE.getOrderStatus());;
 
             List<SecondOrder> secondOrders = secondOrderMapper.selectByExample(secondOrderExample);
             if (secondOrders.size()!=0){
+//                System.out.println(secondOrders.toString());
                 Integer Income = secondOrders.stream().mapToInt(SecondOrder::getAmount).sum();
                 userList.setIncome(Income);//收入
             }else {
@@ -538,7 +538,8 @@ private SecondStoreMapper secondStoreMapper;
             secondOrderExample.createCriteria().andUserIdEqualTo(secondUser.getId())
                     .andOrderStatusEqualTo(OrderEnum.OrderStatus.EVALUATE.getOrderStatus());
             SecondOrderExample.Criteria criteria1 =secondOrderExample.createCriteria()
-                    .andOrderStatusEqualTo(OrderEnum.OrderStatus.CONTROVERSIAL.getOrderStatus());
+                    .andUserIdEqualTo(secondUser.getId())
+                    .andOrderStatusEqualTo(OrderEnum.OrderStatus.COMPLETE.getOrderStatus());
             secondOrderExample.or(criteria1);
             List<SecondOrder> secondOrders1 = secondOrderMapper.selectByExample(secondOrderExample);
             if (secondOrders1.size()!=0){
