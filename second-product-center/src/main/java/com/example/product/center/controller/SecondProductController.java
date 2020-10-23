@@ -218,7 +218,7 @@ public class SecondProductController {
         secondGoods.setModifyTime(LocalDateTime.now());
         secondGoodsMapper.insertSelective(secondGoods);
         //商品图片
-        if (file != null) {
+        if (file.length != 0) {
             for (String fie : file) {
                 SecondProductPictrue secondProductPictrue = new SecondProductPictrue();
                 secondProductPictrue.setProductId(secondProduct.getId());
@@ -361,7 +361,7 @@ public class SecondProductController {
         secondGoods.setModifyTime(LocalDateTime.now());
         secondGoodsMapper.updateByExampleSelective(secondGoods, secondGoodsExample);
         //商品图片
-        if (file != null) {
+        if (file.length != 0) {
             for (String fie : file) {
                 SecondProductPictrue secondProductPictrue = new SecondProductPictrue();
                 secondProductPictrue.setProductId(secondProduct.getId());
