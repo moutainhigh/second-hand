@@ -686,7 +686,7 @@ if (price!=null && price==1){
          */
         System.out.println(sonId);
         System.out.println(isSon);
-        if (sonId != null && isSon == null) {
+        if (sonId != null && isSon == 1) {
             System.out.println("筛选两公里");
             SecondSon secondSon = secondSonMapper.selectByPrimaryKey(sonId);
             SecondColleges secondColleges = secondCollegesMapper.selectByPrimaryKey(secondSon.getCollegoryId());
