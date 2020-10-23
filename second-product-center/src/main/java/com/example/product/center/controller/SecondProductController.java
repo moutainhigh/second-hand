@@ -687,24 +687,26 @@ if (price!=null && price==1){
         System.out.println(sonId);
         System.out.println(isSon);
         if (sonId != null && isSon == 1) {
-            System.out.println("筛选两公里");
-            SecondSon secondSon = secondSonMapper.selectByPrimaryKey(sonId);
-            SecondColleges secondColleges = secondCollegesMapper.selectByPrimaryKey(secondSon.getCollegoryId());
-            SecondCityExample secondCityExample = new SecondCityExample();
-            secondCityExample.createCriteria().andCityIdEqualTo(secondColleges.getCityId());
-            List<SecondCity> secondCity = secondCityMapper.selectByExample(secondCityExample);
-            String address = secondCity.get(0).getName() + secondColleges.getName();
-            JSONObject a = addressService.getIngAndLat(address);
-            AddressList list = JSON.parseObject(String.valueOf(a), new TypeReference<AddressList>() {
-            });
-            System.out.println(list.getResult().get(0).getLocation());
-            String lat = list.getResult().get(0).getLocation().get(0).getLat();
-            String lng = list.getResult().get(0).getLocation().get(0).getLng();
-            double distance = 2;
             productLists1 =
-                    productLists1.stream()
-                            .filter(s -> getDistance(Double.parseDouble(s.getLatitude()), Double.parseDouble(s.getLongitude()), Double.parseDouble(lat), Double.parseDouble(lng)) < distance)
-                            .collect(Collectors.toList());
+                    productLists1.stream().filter(s-> s.getSonId().equals(sonId)).collect(Collectors.toList());
+//            System.out.println("筛选两公里");
+//            SecondSon secondSon = secondSonMapper.selectByPrimaryKey(sonId);
+//            SecondColleges secondColleges = secondCollegesMapper.selectByPrimaryKey(secondSon.getCollegoryId());
+//            SecondCityExample secondCityExample = new SecondCityExample();
+//            secondCityExample.createCriteria().andCityIdEqualTo(secondColleges.getCityId());
+//            List<SecondCity> secondCity = secondCityMapper.selectByExample(secondCityExample);
+//            String address = secondCity.get(0).getName() + secondColleges.getName();
+//            JSONObject a = addressService.getIngAndLat(address);
+//            AddressList list = JSON.parseObject(String.valueOf(a), new TypeReference<AddressList>() {
+//            });
+//            System.out.println(list.getResult().get(0).getLocation());
+//            String lat = list.getResult().get(0).getLocation().get(0).getLat();
+//            String lng = list.getResult().get(0).getLocation().get(0).getLng();
+//            double distance = 2;
+//            productLists1 =
+//                    productLists1.stream()
+//                            .filter(s -> getDistance(Double.parseDouble(s.getLatitude()), Double.parseDouble(s.getLongitude()), Double.parseDouble(lat), Double.parseDouble(lng)) < distance)
+//                            .collect(Collectors.toList());
         }
         if (sonId != null && isSon == 0) {
             productLists1 =
@@ -1014,5 +1016,20 @@ if (price!=null && price==1){
 
 //        System.out.println(s);//单位公里
         return s;
+    }
+
+    public static void main(String[] args) {
+        double radLat1 = rad(39.992779);
+        double radLat2 = rad(39.97776);
+        double a = radLat1 - radLat2;
+        double b = rad(116.310692) - rad(116.354584);
+        double s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2)
+                + Math.cos(radLat1) * Math.cos(radLat2)
+                * Math.pow(Math.sin(b / 2), 2)));
+        s = s * EARTH_RADIUS;
+        s = Math.round(s * 10000d) / 10000d;
+//        s = s * 1000;//单位m
+
+        System.out.println(s);//单位公里
     }
 }
