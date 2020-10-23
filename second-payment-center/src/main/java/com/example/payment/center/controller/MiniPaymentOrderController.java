@@ -223,7 +223,7 @@ public class MiniPaymentOrderController {
         data.put("fee_type", "CNY");
         data.put("total_fee", String.valueOf(Amount));
         data.put("spbill_create_ip", req.getRemoteAddr());
-        data.put("notify_url", "https://http://39.100.237.144:7005/payment/payment/handleWxpay");
+        data.put("notify_url", "https://www.tjsichuang.cn:1443/payment/payment/handleWxpay");
         data.put("trade_type", "JSAPI");
         data.put("openid", openId);
         String sign = WXPayUtil.generateSignature(data, config.getKey());
@@ -430,7 +430,7 @@ public ResponseEntity<JSONObject> completePaymentAfter(
             data.put("total_fee", String.valueOf(payOrder.getAmount()));
 
             data.put("spbill_create_ip", req.getRemoteAddr());
-            data.put("notify_url", "https://http://39.100.237.144:7005/payment/payment/handleWxpay");
+            data.put("notify_url", "https://www.tjsichuang.cn:1443/payment/payment/handleWxpay");
 
             data.put("out_trade_no", String.valueOf(payOrder.getId()));
             data.put("op_user_id", miniProgramConfig.getMchID());
@@ -501,6 +501,7 @@ public ResponseEntity<JSONObject> completePaymentAfter(
     public void refund(HttpServletRequest request, HttpServletResponse response) throws Exception {
 //		MiniProgramConfig config = new MiniProgramConfig();
 //        MiniProgramConfig miniProgramConfig = new MiniProgramConfig();
+        System.out.println("回调");
         BufferedReader br = new BufferedReader(new InputStreamReader((ServletInputStream) request.getInputStream()));
         String line = null;
         StringBuilder sb = new StringBuilder();
