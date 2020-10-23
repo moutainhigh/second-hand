@@ -307,21 +307,21 @@ private static SecondMessageMapper secondMessageMapper;
             secondChatMapper.insertSelective(secondChat);
         });
     }
-//    @Scheduled(cron = "0/5 * * * * ?")
-////    或直接指定时间间隔，例如：5秒
-////    @Scheduled(fixedRate=58*1000)
-//    private void configureTasks() throws Exception{
-//        for (String key : webSocketSet.keySet()) {
-//            try {
-//                String json = "{" + "\"userId\":" + "\"" + key + "\"," + "\"byUserId\":" + "\"" + key + "\"," + "\"message\":" + "\"" +"心跳" + "\" ," + "\"type\":" + "\"" + "heartbeat" + "\"}";
-//                System.out.println("连接的用户"+webSocketSet);
-//                webSocketSet.get(key).sendMessage(json);
-//                    System.out.println("key = " + key+"心跳");
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
+    @Scheduled(cron = "0/5 * * * * ?")
+//    或直接指定时间间隔，例如：5秒
+//    @Scheduled(fixedRate=58*1000)
+    private void configureTasks() throws Exception{
+        for (String key : webSocketSet.keySet()) {
+            try {
+                String json = "{" + "\"userId\":" + "\"" + key + "\"," + "\"byUserId\":" + "\"" + key + "\"," + "\"message\":" + "\"" +"心跳" + "\" ," + "\"type\":" + "\"" + "heartbeat" + "\"}";
+                System.out.println("连接的用户"+webSocketSet);
+                webSocketSet.get(key).sendMessage(json);
+                    System.out.println("key = " + key+"心跳");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
     public static synchronized int getOnlineCount() {
         return onlineCount;
     }
