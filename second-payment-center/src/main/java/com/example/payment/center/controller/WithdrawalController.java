@@ -128,6 +128,7 @@ public class WithdrawalController {
 //                                                    @RequestParam(value = "sonId", required = false) Integer sonId,
                                                     HttpServletResponse response) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
+        Integer numMoney = withdrawalMoney;
         SecondStoreBalanceExample secondStoreBalanceExample = new SecondStoreBalanceExample();
         secondStoreBalanceExample.createCriteria().andStoreIdEqualTo(storeId)
                 .andBalanceTypeEqualTo(BanlaceEnum.Relation.MONEY.getState())
@@ -210,7 +211,7 @@ public class WithdrawalController {
             secondWithdrawal.setSource(source);
             secondWithdrawal.setWithdrawalMark(getC(null));
             secondWithdrawal.setPhone(phone);
-            secondWithdrawal.setWithdrawalMoney(withdrawalMoney);
+            secondWithdrawal.setWithdrawalMoney(numMoney);
             secondWithdrawal.setRealityMoney(realityMoney);
             secondWithdrawal.setWithdrawalAccount(withdrawalAccount);
             secondWithdrawal.setWithdrawalName(withdrawalName);
@@ -231,7 +232,7 @@ public class WithdrawalController {
             secondStoreBalanceDetail.setUserId(userId);
             secondStoreBalanceDetail.setPayDesc("提现");
             secondStoreBalanceDetail.setStoreId(storeId);
-            secondStoreBalanceDetail.setAmount(-withdrawalMoney);
+            secondStoreBalanceDetail.setAmount(-numMoney);
             secondStoreBalanceDetail.setDetailType(BanlaceEnum.Relation.MONEY.getState());
             secondStoreBalanceDetail.setIncomeExpenses(BanlaceEnum.incomeExpenses.PAY.getState());
             secondStoreBalanceDetail.setCreateTime(LocalDateTime.now());
