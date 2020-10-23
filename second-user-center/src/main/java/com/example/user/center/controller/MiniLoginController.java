@@ -159,6 +159,8 @@ private SecondStoreMapper secondStoreMapper;
             secondSon = secondSonMapper.selectByPrimaryKey(secondUserSons.get(0).getSonId());
         }
         map.put("sonId", secondSon.getId());
+        map.put("sonName", secondSon.getSonName());
+//        map.put("college", secondSon.getcoll)
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
         return builder.body(ResponseUtils.getResponseBody(map));
     }
