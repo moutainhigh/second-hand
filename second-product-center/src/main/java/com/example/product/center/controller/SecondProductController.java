@@ -684,6 +684,8 @@ if (price!=null && price==1){
         /**
          * 筛选认证子站点学校2公里商品
          */
+        System.out.println(sonId);
+        System.out.println(isSon);
         if (sonId != null && isSon == null) {
             System.out.println("筛选两公里");
             SecondSon secondSon = secondSonMapper.selectByPrimaryKey(sonId);
