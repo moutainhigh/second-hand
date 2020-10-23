@@ -164,13 +164,15 @@ public class ChatController {
             @RequestParam(value = "ByUserId", required = false) Integer ByUserId
     ) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
+        System.out.println(userId);
+        System.out.println(ByUserId);
         List<ChatWindow> chatWindows = new ArrayList<>();
         Object object =
                 redisTemplate.opsForValue().get(String.valueOf(userId)+"window");
         chatWindows = JSON.parseObject(String.valueOf(object), new TypeReference<List<ChatWindow>>(){});
         //        redisTemplate.delete(String.valueOf(userId)+"window");
         for (int i=0;i<chatWindows.size();i++){
-            if (chatWindows.get(i).getUserId().equals(userId) && chatWindows.get(i).getByUserId().equals(ByUserId));{
+            if (chatWindows.get(i).getUserId().equals(userId) && chatWindows.get(i).getByUserId().equals(ByUserId)){
                 chatWindows.remove(i);
 
                 String json = JSONObject.toJSONString(chatWindows);
