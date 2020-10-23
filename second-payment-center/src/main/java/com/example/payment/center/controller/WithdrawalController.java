@@ -354,7 +354,7 @@ public class WithdrawalController {
                         balanceService.addBalance(secondStores.get(0).getId(),BanlaceEnum.Relation.MONEY.getState(),(secondWithdrawals.get(0).getDeduct()*30)/100);
                         //店铺余额流水
                         SecondStoreBalanceDetail secondStoreBalanceDetail = new SecondStoreBalanceDetail();
-                        secondStoreBalanceDetail.setUserId(userId);
+                        secondStoreBalanceDetail.setUserId(secondSon.getUserId());
                         secondStoreBalanceDetail.setPayDesc("提现反钱");
                         secondStoreBalanceDetail.setStoreId(secondStores.get(0).getId());
                         secondStoreBalanceDetail.setAmount((secondWithdrawals.get(0).getDeduct()*30)/100);
