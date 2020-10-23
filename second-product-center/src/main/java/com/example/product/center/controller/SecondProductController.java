@@ -685,6 +685,7 @@ if (price!=null && price==1){
          * 筛选认证子站点学校2公里商品
          */
         if (sonId != null && isSon == null) {
+            System.out.println("筛选两公里");
             SecondSon secondSon = secondSonMapper.selectByPrimaryKey(sonId);
             SecondColleges secondColleges = secondCollegesMapper.selectByPrimaryKey(secondSon.getCollegoryId());
             SecondCityExample secondCityExample = new SecondCityExample();
