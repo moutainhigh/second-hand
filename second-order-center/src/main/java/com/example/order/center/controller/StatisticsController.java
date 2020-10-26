@@ -5,9 +5,9 @@ import com.example.order.center.dao.SecondOrderMapper;
 import com.example.order.center.dao.SecondUserMapper;
 import com.example.order.center.manual.Authentication;
 import com.example.order.center.manual.OrderEnum;
-import com.example.order.center.manual.Statistics.StatisticsOrderList;
-import com.example.order.center.manual.Statistics.StatisticsUserList;
+import com.example.order.center.manual.Statistics.*;
 import com.example.order.center.model.*;
+import com.example.order.center.service.StatisticsService;
 import com.second.utils.response.handler.ResponseEntity;
 import com.second.utils.response.handler.ResponseUtils;
 import io.swagger.annotations.Api;
@@ -26,6 +26,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -53,6 +54,9 @@ public class StatisticsController {
     //订单
     @Autowired
     private SecondOrderMapper secondOrderMapper;
+    //
+    @Autowired
+    private StatisticsService statisticsService;
     @ApiOperation(value = "用户统计", notes = "用户统计")
 //    @Transactional(rollbackFor = {RuntimeException.class, Error.class})
     @RequestMapping(value = "/userStatistics", method = RequestMethod.GET)
@@ -168,5 +172,69 @@ public class StatisticsController {
                     .andCreateTimeLessThanOrEqualTo(localDateTime1);
         }
         return builder.body(ResponseUtils.getResponseBody(0));
+    }
+
+    //商家端小程序统计
+    @ApiOperation(value = "商品统计", notes = "商品统计")
+    @RequestMapping(value = "/MiniStore", method = RequestMethod.GET)
+    public ResponseEntity<JSONObject> MiniStore(Integer storeId)
+            throws JSONException {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
+        List<StatisticsAmount> statisticsAmounts =
+        statisticsService.dataAmount(storeId);
+        //每天最大收入
+        Optional<Integer> max = statisticsAmounts.stream()
+                .map(StatisticsAmount::getAmount).reduce(Integer::max);
+        //日均收入
+        double avg = statisticsAmounts.stream()
+                .collect(Collectors.averagingInt(StatisticsAmount::getAmount));
+        Integer dayAmount = (int) Math.ceil(avg);
+        //七日的收入
+        List<StatisticsDaySum> statisticsDaySums = statisticsService.dayAmount(storeId);
+        StatisticsMiniStore statisticsMiniStore = new StatisticsMiniStore();
+        System.out.println(statisticsDaySums.get(0));
+        if (statisticsDaySums.size()!=0 && statisticsDaySums.get(0) != null){
+            statisticsMiniStore.setSevenAmount(statisticsDaySums.get(0).getSum());
+        }else {
+            statisticsMiniStore.setSevenAmount(0);
+        }
+        statisticsMiniStore.setDaySum(dayAmount);
+        statisticsMiniStore.setDayMax(max.get());
+        SecondOrderExample secondOrderExample = new SecondOrderExample();
+        SecondOrderExample.Criteria criteria =
+        secondOrderExample.createCriteria()
+                .andIsDeletedEqualTo((byte) 0);
+        if (storeId!=null){
+            criteria.andStoneIdEqualTo(storeId);
+        }
+//                .andOrderStatusNotEqualTo(OrderEnum.OrderStatus.PAYMENT.getOrderStatus());
+        List<SecondOrder> secondOrders =
+                secondOrderMapper.selectByExample(secondOrderExample);
+        statisticsMiniStore.setOrderNumber(secondOrders.size());
+        criteria.andOrderStatusNotEqualTo(OrderEnum.OrderStatus.PAYMENT.getOrderStatus());
+        List<SecondOrder> secondOrders1 =
+        secondOrderMapper.selectByExample(secondOrderExample);
+        statisticsMiniStore.setPaymentOrder(secondOrders1.size());
+        secondOrderExample.clear();
+        SecondOrderExample.Criteria criteria1 =
+                secondOrderExample.createCriteria()
+                        .andOrderStatusEqualTo(OrderEnum.OrderStatus.EVALUATE.getOrderStatus())
+                        .andIsDeletedEqualTo((byte) 0);
+        if (storeId!=null){
+            criteria1.andStoneIdEqualTo(storeId);
+        }
+        SecondOrderExample.Criteria criteria2 =
+                secondOrderExample.createCriteria()
+                        .andOrderStatusEqualTo(OrderEnum.OrderStatus.COMPLETE.getOrderStatus())
+                        .andIsDeletedEqualTo((byte) 0);
+        if (storeId!=null){
+            criteria2.andStoneIdEqualTo(storeId);
+        }
+        secondOrderExample.or(criteria2);
+        List<SecondOrder> secondOrders2 =
+                secondOrderMapper.selectByExample(secondOrderExample);
+        statisticsMiniStore.setCancelOrder(secondOrders2.size());
+        return builder.body(ResponseUtils.getResponseBody(statisticsMiniStore));
+
     }
 }

@@ -2557,3 +2557,8 @@ io.lettuce.core.RedisCommandTimeoutException: Command timed out after 10 second(
 2020-10-23 21:46:19.605  INFO 10744 --- [http-nio-7004-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 13 ms
 2020-10-23 21:46:19.772  INFO 10744 --- [http-nio-7004-exec-1] io.lettuce.core.EpollProvider            : Starting without optional epoll library
 2020-10-23 21:46:19.774  INFO 10744 --- [http-nio-7004-exec-1] io.lettuce.core.KqueueProvider           : Starting without optional kqueue library
+2020-10-23 21:51:14.352  INFO 10744 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-10-23 21:52:24.786  WARN 10744 --- [http-nio-7004-exec-5] com.zaxxer.hikari.HikariConfig           : dataSource - idleTimeout is close to or more than maxLifetime, disabling it.
+2020-10-23 21:52:24.786  INFO 10744 --- [http-nio-7004-exec-5] com.zaxxer.hikari.HikariDataSource       : dataSource - Starting...
+2020-10-23 21:52:25.109  INFO 10744 --- [http-nio-7004-exec-5] com.zaxxer.hikari.HikariDataSource       : dataSource - Start completed.
+2020-10-23 21:56:14.355  INFO 10744 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration

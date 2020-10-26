@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.order.center.manual.dao.StatisticsMapper">
+    <resultMap id="BaseResultMap" type="com.example.order.center.manual.Statistics.StatisticsAmount">
+        <result column="date" jdbcType="TIMESTAMP" property="date" />
+        <result column="coun" jdbcType="INTEGER" property="coun" />
+        <result column="amount" jdbcType="INTEGER" property="Amount" />
+    </resultMap>
+    <resultMap id="DayBaseResultMap" type="com.example.order.center.manual.Statistics.StatisticsDaySum">
+        <result column="amount" jdbcType="INTEGER" property="sum" />
+    </resultMap>
+    <select id="dataAmount" resultMap="BaseResultMap">
+SELECT
+	date_format( create_time, '%Y-%m-%d' ) date,
+	count( * ) coun,
+	CONCAT( SUM( amount ) ) AS amount
+FROM
+	second_order
+WHERE
+        1 = 1
+        <if test="stoneId != null and stoneId != ''">
+            AND stone_id = #{stoneId}
+        </if>
+GROUP BY
+	date_format( create_time, '%Y-%m-%d' );
+    </select>
+
+    <select id="dayAmount" resultMap="DayBaseResultMap">
+        SELECT
+        CONCAT( SUM( amount ) ) AS amount
+        FROM
+        second_order
+        WHERE
+        DATE_SUB( CURDATE( ), INTERVAL 7 DAY ) &lt;= date( create_time )
+        <if test="stoneId != null and stoneId != ''">
+            AND stone_id = #{stoneId}
+        </if>
+    </select>
+</mapper>
