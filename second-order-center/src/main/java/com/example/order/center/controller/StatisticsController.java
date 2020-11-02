@@ -19,6 +19,8 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -27,6 +29,7 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
 
 /**
@@ -150,7 +153,7 @@ public class StatisticsController {
         statisticsOrderList.setComplete(secondOrders4.size());
         return builder.body(ResponseUtils.getResponseBody(statisticsOrderList));
     }
-    //商品
+    //商品统计后台
     @ApiOperation(value = "商品统计", notes = "商品统计")
     @RequestMapping(value = "/productStatistics", method = RequestMethod.GET)
     public ResponseEntity<JSONObject> productStatistics(Date startTime,
@@ -179,10 +182,10 @@ public class StatisticsController {
     @RequestMapping(value = "/MiniStore", method = RequestMethod.GET)
     public ResponseEntity<JSONObject> MiniStore(Integer storeId)
             throws JSONException {
-        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
-        List<StatisticsAmount> statisticsAmounts =
-        statisticsService.dataAmount(storeId);
-        //每天最大收入
+                ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
+                List<StatisticsAmount> statisticsAmounts =
+                statisticsService.dataAmount(storeId);
+        //        //每天最大收入
         Optional<Integer> max = statisticsAmounts.stream()
                 .map(StatisticsAmount::getAmount).reduce(Integer::max);
         //日均收入
@@ -203,6 +206,7 @@ public class StatisticsController {
         SecondOrderExample secondOrderExample = new SecondOrderExample();
         SecondOrderExample.Criteria criteria =
         secondOrderExample.createCriteria()
+
                 .andIsDeletedEqualTo((byte) 0);
         if (storeId!=null){
             criteria.andStoneIdEqualTo(storeId);
