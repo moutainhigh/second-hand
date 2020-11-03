@@ -28,10 +28,7 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
 
@@ -275,12 +272,16 @@ public class StatisticsController {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
         Calendar cal = Calendar.getInstance();
         Integer year = cal.get(Calendar.YEAR);
-        SecondUserSonExample secondUserSonExample = new SecondUserSonExample();
-        secondUserSonExample.createCriteria().andSonIdEqualTo(sonId)
-                .andIsDeletedEqualTo((byte) 0);
-        List<SecondUserSon> secondUserSons =
-                secondUserSonMapper.selectByExample(secondUserSonExample);
-        List<Integer> storeIntList=secondUserSons.stream().map(SecondUserSon::getStoreId).collect(Collectors.toList());
+        List<Integer> storeIntList= new ArrayList<>();
+        if (sonId != 0){
+            SecondUserSonExample secondUserSonExample = new SecondUserSonExample();
+            secondUserSonExample.createCriteria().andSonIdEqualTo(sonId)
+                    .andIsDeletedEqualTo((byte) 0);
+            List<SecondUserSon> secondUserSons =
+                    secondUserSonMapper.selectByExample(secondUserSonExample);
+            storeIntList = secondUserSons.stream().map(SecondUserSon::getStoreId).collect(Collectors.toList());
+        }
+
         return builder.body(ResponseUtils.getResponseBody(statisticsService.monthAmount(sonId,year,storeIntList)));
 
     }
