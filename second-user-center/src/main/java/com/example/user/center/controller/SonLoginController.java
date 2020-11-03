@@ -75,6 +75,8 @@ public class SonLoginController {
     //
     @Autowired
     private SecondUserSonMapper secondUserSonMapper;
+    @Autowired
+    private SecondStoreBalanceDetailMapper secondStoreBalanceDetailMapper;
     @InitBinder
     public void initBinder(WebDataBinder binder, WebRequest request) {
         //转换日期
@@ -516,5 +518,60 @@ public class SonLoginController {
         });
 
         return builder.body(ResponseUtils.getResponseBody(sonTransactionAmounts1));
+    }
+    @RequestMapping(path = "/sonStoreDetails", method = RequestMethod.GET)
+    @ApiOperation(value = "子站点店铺详情", notes = "子站点店铺详情")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "storeId", value = "店铺id", required = true, type = "Integer"),
+    })
+    public ResponseEntity<JSONObject> sonStoreDetails(
+            Integer userId,
+            Integer storeId
+    ) throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
+        SecondStore secondStore = secondStoreMapper.selectByPrimaryKey(storeId);
+        SecondStoreBalanceExample secondStoreBalanceExample = new SecondStoreBalanceExample();
+        secondStoreBalanceExample.createCriteria()
+                .andUserIdEqualTo(userId)
+                .andStoreIdEqualTo(storeId)
+                .andBalanceTypeEqualTo(BanlaceEnum.Relation.MONEY.getState())
+                .andIsDeletedEqualTo((short) 0);
+        List<SecondStoreBalance> secondStoreBalances =
+                secondStoreBalanceMapper.selectByExample(secondStoreBalanceExample);
+        SecondStoreBalanceDetailExample secondStoreBalanceDetailExample = new SecondStoreBalanceDetailExample();
+        secondStoreBalanceDetailExample.createCriteria().andUserIdEqualTo(userId)
+                .andStoreIdEqualTo(storeId)
+                .andIsDeletedEqualTo((short) 0)
+                .andDetailTypeEqualTo(BanlaceEnum.Relation.MONEY.getState())
+                .andIncomeExpensesEqualTo(BanlaceEnum.incomeExpenses.PUT.getState());
+        List<SecondStoreBalanceDetail> secondStoreBalanceDetails =
+                secondStoreBalanceDetailMapper.selectByExample(secondStoreBalanceDetailExample);
+        Integer sumMoney = secondStoreBalanceDetails.stream().mapToInt(SecondStoreBalanceDetail::getAmount).sum();
+        StoreDetails storeDetails = new StoreDetails();
+
+        storeDetails.setUserId(userId);
+        storeDetails.setStoreId(storeId);
+        storeDetails.setCreateTime(secondStore.getCreateTime());
+        storeDetails.setAddress(secondStore.getSecondAddress());
+        storeDetails.setStoreStatus(secondStore.getSecondStatus());
+        if (secondStoreBalances.size()!=0){
+            storeDetails.setMoney(secondStoreBalances.get(0).getSecondBalance());
+            storeDetails.setSumMoney(sumMoney+secondStoreBalances.get(0).getSecondBalance());
+        } else {
+            SecondStoreBalance secondStoreBalance = new SecondStoreBalance();
+            secondStoreBalance.setUserId(userId);
+            secondStoreBalance.setStoreId(storeId);
+            secondStoreBalance.setBalanceType(BanlaceEnum.Relation.MONEY.getState());
+            secondStoreBalance.setSecondBalance(0);
+            secondStoreBalance.setCreateTime(LocalDateTime.now());
+            secondStoreBalance.setModifyTime(LocalDateTime.now());
+            secondStoreBalance.setIsDeleted((short) 0);
+            secondStoreBalanceMapper.insertSelective(secondStoreBalance);
+            storeDetails.setMoney(0);
+            storeDetails.setSumMoney(sumMoney+secondStoreBalances.get(0).getSecondBalance());
+        }
+
+        return builder.body(ResponseUtils.getResponseBody(storeDetails));
     }
 }

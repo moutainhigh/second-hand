@@ -3,11 +3,13 @@ package com.example.order.center.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.example.order.center.dao.SecondOrderMapper;
 import com.example.order.center.dao.SecondUserMapper;
+import com.example.order.center.dao.SecondUserSonMapper;
 import com.example.order.center.manual.Authentication;
 import com.example.order.center.manual.OrderEnum;
 import com.example.order.center.manual.Statistics.*;
 import com.example.order.center.model.*;
 import com.example.order.center.service.StatisticsService;
+import com.google.common.collect.Lists;
 import com.second.utils.response.handler.ResponseEntity;
 import com.second.utils.response.handler.ResponseUtils;
 import io.swagger.annotations.Api;
@@ -26,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -60,11 +63,14 @@ public class StatisticsController {
     //
     @Autowired
     private StatisticsService statisticsService;
+    @Autowired
+    private SecondUserSonMapper secondUserSonMapper;
     @ApiOperation(value = "用户统计", notes = "用户统计")
 //    @Transactional(rollbackFor = {RuntimeException.class, Error.class})
     @RequestMapping(value = "/userStatistics", method = RequestMethod.GET)
     public ResponseEntity<JSONObject> userStatistics(Date startTime,
-                                                     Date endTime
+                                                     Date endTime,
+                                                     Integer sonId
     )
             throws JSONException {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
@@ -82,6 +88,7 @@ public class StatisticsController {
             criteria.andCreateDateGreaterThanOrEqualTo(localDateTime)
                     .andCreateDateLessThanOrEqualTo(localDateTime1);
         }
+
         List<SecondUser> secondUsers =
         secondUserMapper.selectByExample(secondUserExample);
         StatisticsUserList statisticsUserList = new StatisticsUserList();
@@ -97,6 +104,15 @@ public class StatisticsController {
                 .filter(a->a.getUserType().equals(Authentication.LoginType.USERWX.getState())
                         && a.getIsAuthentication().equals(Authentication.UserState.PASS.getState()))
                 .collect(Collectors.toList());
+        if (sonId!=null){
+            SecondUserSonExample secondUserSonExample = new SecondUserSonExample();
+            secondUserSonExample.createCriteria().andSonIdEqualTo(sonId)
+                    .andIsDeletedEqualTo((byte) 0);
+            List<SecondUserSon> secondUserSons =
+            secondUserSonMapper.selectByExample(secondUserSonExample);
+            List<Integer>  userIntList=secondUserSons.stream().map(SecondUserSon::getUserId).collect(Collectors.toList());
+            secondUsers2 = secondUsers2.stream().filter(s -> userIntList.contains(s.getId())).collect(Collectors.toList());
+        }
         statisticsUserList.setUserAuthentication(secondUsers2.size());
         //筛选商家店铺用户
         List<SecondUser> secondUsers3 = secondUsers.stream()
@@ -110,7 +126,8 @@ public class StatisticsController {
     @ApiOperation(value = "订单统计", notes = "订单统计")
     @RequestMapping(value = "/orderStatistics", method = RequestMethod.GET)
     public ResponseEntity<JSONObject> orderStatistics(Date startTime,
-                                                     Date endTime
+                                                     Date endTime,
+                                                      Integer sonId
     )
             throws JSONException {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
@@ -126,6 +143,15 @@ public class StatisticsController {
             LocalDateTime localDateTime1 = instant1.atZone(zoneId).toLocalDateTime();
             criteria.andCreateTimeGreaterThanOrEqualTo(localDateTime)
                     .andCreateTimeLessThanOrEqualTo(localDateTime1);
+        }
+        if (sonId!=null){
+            SecondUserSonExample secondUserSonExample = new SecondUserSonExample();
+            secondUserSonExample.createCriteria().andSonIdEqualTo(sonId)
+                    .andIsDeletedEqualTo((byte) 0);
+            List<SecondUserSon> secondUserSons =
+                    secondUserSonMapper.selectByExample(secondUserSonExample);
+            List<Integer>  storeIntList=secondUserSons.stream().map(SecondUserSon::getStoreId).collect(Collectors.toList());
+            criteria.andStoneIdIn(Lists.newArrayList(storeIntList));
         }
         List<SecondOrder> secondOrders =
                 secondOrderMapper.selectByExample(secondOrderExample);
@@ -239,6 +265,23 @@ public class StatisticsController {
                 secondOrderMapper.selectByExample(secondOrderExample);
         statisticsMiniStore.setCancelOrder(secondOrders2.size());
         return builder.body(ResponseUtils.getResponseBody(statisticsMiniStore));
+
+    }
+    //商家端小程序统计
+    @ApiOperation(value = "后台每月收入图标", notes = "后台每月收入图标")
+    @RequestMapping(value = "/backendData", method = RequestMethod.GET)
+    public ResponseEntity<JSONObject> backendData(Integer sonId)
+            throws JSONException {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
+        Calendar cal = Calendar.getInstance();
+        Integer year = cal.get(Calendar.YEAR);
+        SecondUserSonExample secondUserSonExample = new SecondUserSonExample();
+        secondUserSonExample.createCriteria().andSonIdEqualTo(sonId)
+                .andIsDeletedEqualTo((byte) 0);
+        List<SecondUserSon> secondUserSons =
+                secondUserSonMapper.selectByExample(secondUserSonExample);
+        List<Integer> storeIntList=secondUserSons.stream().map(SecondUserSon::getStoreId).collect(Collectors.toList());
+        return builder.body(ResponseUtils.getResponseBody(statisticsService.monthAmount(sonId,year,storeIntList)));
 
     }
 }

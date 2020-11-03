@@ -14,6 +14,7 @@ public class StoreDetails {
     private Integer userId;//用户id
     private Integer storeId;//店铺id
     private Integer money;//店铺余额
+    private Integer sumMoney;//总额
     private Integer storeStatus;//店铺状态
     private String address;//店铺地址
     private LocalDateTime createTime;//创建时间
@@ -100,5 +101,13 @@ public class StoreDetails {
 
     public void setSonCollegesName(String sonCollegesName) {
         this.sonCollegesName = sonCollegesName;
+    }
+
+    public Integer getSumMoney() {
+        return sumMoney;
+    }
+
+    public void setSumMoney(Integer sumMoney) {
+        this.sumMoney = sumMoney;
     }
 }

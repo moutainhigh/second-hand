@@ -1,5 +1,6 @@
 package com.example.order.center.service.Impl;
 
+import com.example.order.center.manual.Statistics.MonthAmount;
 import com.example.order.center.manual.Statistics.StatisticsAmount;
 import com.example.order.center.manual.Statistics.StatisticsDaySum;
 import com.example.order.center.manual.dao.StatisticsMapper;
@@ -30,4 +31,10 @@ public class StatisticsServiceImpl implements StatisticsService {
     public List<StatisticsDaySum> dayAmount(Integer stoneId) {
         return statisticsMapper.dayAmount(stoneId);
     }
+
+    @Override
+    public List<MonthAmount> monthAmount(Integer sonId, Integer year, List<Integer> stores) {
+        return statisticsMapper.monthAmount(sonId,year,stores);
+    }
+
 }

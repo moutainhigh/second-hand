@@ -9,6 +9,21 @@
     <resultMap id="DayBaseResultMap" type="com.example.order.center.manual.Statistics.StatisticsDaySum">
         <result column="amount" jdbcType="INTEGER" property="sum" />
     </resultMap>
+
+    <resultMap id="MonthBaseResultMap" type="com.example.order.center.manual.Statistics.MonthAmount">
+        <result column="january" jdbcType="INTEGER" property="january" />
+        <result column="february" jdbcType="INTEGER" property="february" />
+        <result column="march" jdbcType="INTEGER" property="march" />
+        <result column="april" jdbcType="INTEGER" property="april" />
+        <result column="may" jdbcType="INTEGER" property="may" />
+        <result column="june" jdbcType="INTEGER" property="june" />
+        <result column="july" jdbcType="INTEGER" property="july" />
+        <result column="august" jdbcType="INTEGER" property="august" />
+        <result column="september" jdbcType="INTEGER" property="september" />
+        <result column="october" jdbcType="INTEGER" property="october" />
+        <result column="november" jdbcType="INTEGER" property="november" />
+        <result column="december" jdbcType="INTEGER" property="december" />
+    </resultMap>
     <select id="dataAmount" resultMap="BaseResultMap">
 SELECT
 	date_format( create_time, '%Y-%m-%d' ) date,
@@ -35,5 +50,32 @@ GROUP BY
         <if test="stoneId != null and stoneId != ''">
             AND stone_id = #{stoneId}
         </if>
+    </select>
+
+    <select id="monthAmount" resultMap="MonthBaseResultMap">
+SELECT
+	sum( CASE MONTH ( a.create_time ) WHEN '1' THEN a.amount ELSE 0 END ) AS january,
+	sum( CASE MONTH ( a.create_time ) WHEN '2' THEN a.amount ELSE 0 END ) AS february,
+	sum( CASE MONTH ( a.create_time ) WHEN '3' THEN a.amount ELSE 0 END ) AS march,
+	sum( CASE MONTH ( a.create_time ) WHEN '4' THEN a.amount ELSE 0 END ) AS april,
+	sum( CASE MONTH ( a.create_time ) WHEN '5' THEN a.amount ELSE 0 END ) AS may,
+	sum( CASE MONTH ( a.create_time ) WHEN '6' THEN a.amount ELSE 0 END ) AS june,
+	sum( CASE MONTH ( a.create_time ) WHEN '7' THEN a.amount ELSE 0 END ) AS july,
+	sum( CASE MONTH ( a.create_time ) WHEN '8' THEN a.amount ELSE 0 END ) AS august,
+	sum( CASE MONTH ( a.create_time ) WHEN '9' THEN a.amount ELSE 0 END ) AS september,
+	sum( CASE MONTH ( a.create_time ) WHEN '10' THEN a.amount ELSE 0 END ) AS october,
+	sum( CASE MONTH ( a.create_time ) WHEN '11' THEN a.amount ELSE 0 END ) AS november,
+	sum( CASE MONTH ( a.create_time ) WHEN '12' THEN a.amount ELSE 0 END ) AS december
+FROM
+	second_order a
+WHERE
+    a.is_deleted = 0
+        <if test="sonId != 1">
+            and a.stone_id in
+            <foreach collection="stores" item="store" open="(" close=")" separator=",">
+                #{store}
+            </foreach>
+        </if>
+        and YEAR ( a.create_time ) = #{year}
     </select>
 </mapper>

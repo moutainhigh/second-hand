@@ -1,5 +1,6 @@
 package com.example.order.center.service;
 
+import com.example.order.center.manual.Statistics.MonthAmount;
 import com.example.order.center.manual.Statistics.StatisticsAmount;
 import com.example.order.center.manual.Statistics.StatisticsDaySum;
 import org.apache.ibatis.annotations.Param;
@@ -27,4 +28,12 @@ public interface StatisticsService {
      * @return
      */
     List<StatisticsDaySum> dayAmount(@Param("stoneId")Integer stoneId);
+    /**
+     * 每月
+     * @param sonId 子站点id
+     * @param year 哪一年
+     * @param stores 店铺数组
+     * @return
+     */
+    List<MonthAmount> monthAmount(@Param("sonId")Integer sonId,@Param("year")Integer year,@Param("stores")List<Integer> stores);
 }
