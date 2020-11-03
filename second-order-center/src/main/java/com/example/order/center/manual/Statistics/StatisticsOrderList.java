@@ -14,6 +14,7 @@ public class StatisticsOrderList {
     private Integer pickUp;//待提货
     private Integer evaluate;//待评价
     private Integer complete;//已完成
+    private Integer total;//收入总额
 
     public Integer getOrderNumber() {
         return orderNumber;
@@ -53,5 +54,13 @@ public class StatisticsOrderList {
 
     public void setComplete(Integer complete) {
         this.complete = complete;
+    }
+
+    public Integer getTotal() {
+        return total;
+    }
+
+    public void setTotal(Integer total) {
+        this.total = total;
     }
 }

@@ -154,6 +154,16 @@ public class StatisticsController {
                 secondOrderMapper.selectByExample(secondOrderExample);
         StatisticsOrderList statisticsOrderList = new StatisticsOrderList();
         statisticsOrderList.setOrderNumber(secondOrders.size());
+        //收入总额
+        List<SecondOrder> secondOrders4 =
+                secondOrders.stream().filter(
+                a->!a.getOrderStatus().equals(OrderEnum.OrderStatus.PAYMENT.getOrderStatus())
+                        && !a.getOrderStatus().equals(OrderEnum.OrderStatus.CONTROVERSIAL.getOrderStatus()
+                        )&& !a.getOrderStatus().equals(OrderEnum.OrderStatus.CANCEL.getOrderStatus())
+                )
+                        .collect(Collectors.toList());
+        Integer tolal = secondOrders4.stream().mapToInt(SecondOrder::getAmount).sum();
+        statisticsOrderList.setTotal(tolal);
         //待发货
         List<SecondOrder> secondOrders1 = secondOrders.stream().filter(
                 a->a.getOrderStatus().equals(OrderEnum.OrderStatus.PROCESS.getOrderStatus())
