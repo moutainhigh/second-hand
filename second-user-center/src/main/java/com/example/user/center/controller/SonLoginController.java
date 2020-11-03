@@ -166,6 +166,15 @@ public class SonLoginController {
         secondAuth.setModifyDate(LocalDateTime.now());
         secondAuth.setIsDeleted((byte) 0);
         secondAuthMapper.insertSelective(secondAuth);
+        SecondStoreBalance secondStoreBalance = new SecondStoreBalance();
+        secondStoreBalance.setUserId(userId);
+        secondStoreBalance.setStoreId(secondStore.getId());
+        secondStoreBalance.setBalanceType(BanlaceEnum.Relation.MONEY.getState());
+        secondStoreBalance.setSecondBalance(0);
+        secondStoreBalance.setCreateTime(LocalDateTime.now());
+        secondStoreBalance.setModifyTime(LocalDateTime.now());
+        secondStoreBalance.setIsDeleted((short) 0);
+        secondStoreBalanceMapper.insertSelective(secondStoreBalance);
         return builder.body(ResponseUtils.getResponseBody(0));
     }
     @RequestMapping(path = "/updateSon", method = RequestMethod.POST)
@@ -398,7 +407,17 @@ public class SonLoginController {
                 .andIsDeletedEqualTo((short) 0);
         List<SecondStoreBalance> secondStoreBalances =
                 secondStoreBalanceMapper.selectByExample(secondStoreBalanceExample);
+        SecondStoreBalanceDetailExample secondStoreBalanceDetailExample = new SecondStoreBalanceDetailExample();
+        secondStoreBalanceDetailExample.createCriteria().andUserIdEqualTo(userId)
+                .andStoreIdEqualTo(storeId)
+                .andIsDeletedEqualTo((short) 0)
+                .andDetailTypeEqualTo(BanlaceEnum.Relation.MONEY.getState())
+                .andIncomeExpensesEqualTo(BanlaceEnum.incomeExpenses.PUT.getState());
+        List<SecondStoreBalanceDetail> secondStoreBalanceDetails =
+                secondStoreBalanceDetailMapper.selectByExample(secondStoreBalanceDetailExample);
+        Integer sumMoney = secondStoreBalanceDetails.stream().mapToInt(SecondStoreBalanceDetail::getAmount).sum();
         StoreDetails storeDetails = new StoreDetails();
+
         storeDetails.setUserId(userId);
         storeDetails.setStoreId(storeId);
         storeDetails.setCreateTime(secondStore.getCreateTime());
@@ -406,6 +425,7 @@ public class SonLoginController {
         storeDetails.setStoreStatus(secondStore.getSecondStatus());
         if (secondStoreBalances.size()!=0){
             storeDetails.setMoney(secondStoreBalances.get(0).getSecondBalance());
+            storeDetails.setSumMoney(sumMoney+secondStoreBalances.get(0).getSecondBalance());
         } else {
             SecondStoreBalance secondStoreBalance = new SecondStoreBalance();
             secondStoreBalance.setUserId(userId);
@@ -417,6 +437,7 @@ public class SonLoginController {
             secondStoreBalance.setIsDeleted((short) 0);
             secondStoreBalanceMapper.insertSelective(secondStoreBalance);
             storeDetails.setMoney(0);
+            storeDetails.setSumMoney(sumMoney+secondStoreBalances.get(0).getSecondBalance());
         }
         return builder.body(ResponseUtils.getResponseBody(storeDetails));
     }
