@@ -280,6 +280,22 @@ public class StatisticsController {
             List<SecondUserSon> secondUserSons =
                     secondUserSonMapper.selectByExample(secondUserSonExample);
             storeIntList = secondUserSons.stream().map(SecondUserSon::getStoreId).collect(Collectors.toList());
+            if (storeIntList.size()==0){
+                MonthAmount monthAmount = new MonthAmount();
+                monthAmount.setJanuary(0);
+                monthAmount.setFebruary(0);
+                monthAmount.setMarch(0);
+                monthAmount.setApril(0);
+                monthAmount.setMay(0);
+                monthAmount.setJune(0);
+                monthAmount.setJuly(0);
+                monthAmount.setAugust(0);
+                monthAmount.setSeptember(0);
+                monthAmount.setOctober(0);
+                monthAmount.setNovember(0);
+                monthAmount.setDecember(0);
+                return builder.body(ResponseUtils.getResponseBody(monthAmount));
+            }
         }
 
         return builder.body(ResponseUtils.getResponseBody(statisticsService.monthAmount(sonId,year,storeIntList)));
