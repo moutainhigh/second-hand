@@ -148,6 +148,16 @@ public class StatisticsController {
             List<SecondUserSon> secondUserSons =
                     secondUserSonMapper.selectByExample(secondUserSonExample);
             List<Integer>  storeIntList=secondUserSons.stream().map(SecondUserSon::getStoreId).collect(Collectors.toList());
+            if (storeIntList.size()!=0){
+                StatisticsOrderList statisticsOrderList = new StatisticsOrderList();
+                statisticsOrderList.setTotal(0);
+                statisticsOrderList.setComplete(0);
+                statisticsOrderList.setEvaluate(0);
+                statisticsOrderList.setPickUp(0);
+                statisticsOrderList.setProcess(0);
+                statisticsOrderList.setOrderNumber(0);
+                return builder.body(ResponseUtils.getResponseBody(statisticsOrderList));
+            }
             criteria.andStoneIdIn(Lists.newArrayList(storeIntList));
         }
         List<SecondOrder> secondOrders =
