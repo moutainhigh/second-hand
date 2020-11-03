@@ -148,7 +148,7 @@ public class StatisticsController {
             List<SecondUserSon> secondUserSons =
                     secondUserSonMapper.selectByExample(secondUserSonExample);
             List<Integer>  storeIntList=secondUserSons.stream().map(SecondUserSon::getStoreId).collect(Collectors.toList());
-            if (storeIntList.size()!=0){
+            if (storeIntList.size()==0){
                 StatisticsOrderList statisticsOrderList = new StatisticsOrderList();
                 statisticsOrderList.setTotal(0);
                 statisticsOrderList.setComplete(0);
