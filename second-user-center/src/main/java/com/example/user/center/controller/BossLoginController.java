@@ -197,7 +197,7 @@ public class BossLoginController {
                 .andFileEqualTo(file)
                 .andFileTypeEqualTo(type);
         SecondSlideshow secondSlideshow = new SecondSlideshow();
-        secondSlideshow.setIsDeleted((byte) 0);
+        secondSlideshow.setIsDeleted((byte) 1);
         secondSlideshowMapper.updateByExampleSelective(secondSlideshow,secondSlideshowExample);
         fileDelete2(file);
         return builder.body(ResponseUtils.getResponseBody(0));
@@ -225,7 +225,8 @@ public class BossLoginController {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
         SecondSlideshowExample secondSlideshowExample = new SecondSlideshowExample();
         secondSlideshowExample.createCriteria()
-                .andFileTypeEqualTo(type);
+                .andFileTypeEqualTo(type)
+        .andIsDeletedEqualTo((byte) 0);
         List<SecondSlideshow> secondSlideshows =
         secondSlideshowMapper.selectByExample(secondSlideshowExample);
 
