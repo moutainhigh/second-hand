@@ -128,6 +128,10 @@ public class WithdrawalController {
                                                     @RequestParam(value = "sonId", required = false) Integer sonId,
                                                     HttpServletResponse response) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
+        if (withdrawalMoney == null||withdrawalMoney==0){
+            response.sendError(HttpStatus.FORBIDDEN.value(), "请输入正确的提现金额");
+            return builder.body(ResponseUtils.getResponseBody(1));
+        }
         Integer numMoney = withdrawalMoney;
         SecondStoreBalanceExample secondStoreBalanceExample = new SecondStoreBalanceExample();
         secondStoreBalanceExample.createCriteria().andStoreIdEqualTo(storeId)
