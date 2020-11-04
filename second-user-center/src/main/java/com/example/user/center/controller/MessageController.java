@@ -43,9 +43,9 @@ public class MessageController {
     private WebSocketTest webSocketTest;
 @Autowired
 private SecondMessageMapper secondMessageMapper;
-    @ApiOperation(value = "上传图片", notes = "上传图片")
-    @RequestMapping(value = "/fileUpLoad", method = RequestMethod.POST)
-    public ResponseEntity<JSONObject> fileUpLoad(String message) throws Exception {
+    @ApiOperation(value = "发送公告消息", notes = "发送公告消息")
+    @RequestMapping(value = "/announcement", method = RequestMethod.POST)
+    public ResponseEntity<JSONObject> announcement(String message) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
         webSocketTest.onMessage(message);
         return builder.body(ResponseUtils.getResponseBody(0));
