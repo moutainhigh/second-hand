@@ -231,4 +231,14 @@ public class BossLoginController {
 
         return builder.body(ResponseUtils.getResponseBody(secondSlideshows));
     }
+    /**
+     * 商家查询
+     */
+    @ApiOperation(value = "商家查询", notes = "商家查询")
+    @RequestMapping(value = "/selectBoss", method = RequestMethod.GET)
+    public ResponseEntity<JSONObject> selectBoss() throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
+        SecondBoss secondBoss = secondBossMapper.selectByPrimaryKey(1);
+        return builder.body(ResponseUtils.getResponseBody(secondBoss));
+    }
 }

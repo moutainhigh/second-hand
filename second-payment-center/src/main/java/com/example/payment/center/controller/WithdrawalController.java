@@ -115,7 +115,7 @@ public class WithdrawalController {
             @ApiImplicitParam(paramType = "query", name = "methodId", value = "取款方式id", required = true, type = "String"),
             @ApiImplicitParam(paramType = "query", name = "storeId", value = "店铺id", required = true, type = "String"),
             @ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, type = "String"),
-//            @ApiImplicitParam(paramType = "query", name = "sonId", value = "子站点id", required = true, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "sonId", value = "子站点id,zi站点提现填", required = true, type = "String"),
     })
     public ResponseEntity<JSONObject> addWithdrawal(@RequestParam(value = "source", required = false) String source,
                                                     @RequestParam(value = "phone", required = false) String phone,
@@ -125,7 +125,7 @@ public class WithdrawalController {
                                                     @RequestParam(value = "methodId", required = false) String methodId,
                                                     @RequestParam(value = "storeId", required = false) Integer storeId,
                                                     @RequestParam(value = "userId", required = false) Integer userId,
-//                                                    @RequestParam(value = "sonId", required = false) Integer sonId,
+                                                    @RequestParam(value = "sonId", required = false) Integer sonId,
                                                     HttpServletResponse response) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
         Integer numMoney = withdrawalMoney;
@@ -222,7 +222,7 @@ public class WithdrawalController {
 //            secondWithdrawal.setMethodId(methodId);
             secondWithdrawal.setUserId(userId);
             secondWithdrawal.setStoreId(storeId);
-//            secondWithdrawal.setSonId(sonId);
+            secondWithdrawal.setSonId(sonId);
             secondWithdrawal.setCreateDate(LocalDateTime.now());
             secondWithdrawal.setModifyDate(LocalDateTime.now());
             secondWithdrawal.setIsDeleted((byte) 0);
