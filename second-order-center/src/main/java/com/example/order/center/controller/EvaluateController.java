@@ -2,13 +2,11 @@ package com.example.order.center.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.example.order.center.dao.SecondEvaluateFileMapper;
-import com.example.order.center.dao.SecondEvaluateMapper;
-import com.example.order.center.dao.SecondOrderDetailMapper;
-import com.example.order.center.dao.SecondUserMapper;
+import com.example.order.center.dao.*;
 import com.example.order.center.manual.Evaluate;
 import com.example.order.center.manual.goods;
 import com.example.order.center.model.*;
+import com.google.common.collect.Lists;
 import com.second.utils.response.handler.ResponseEntity;
 import com.second.utils.response.handler.ResponseUtils;
 import io.swagger.annotations.Api;
@@ -23,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author shihao
@@ -49,6 +49,12 @@ public class EvaluateController {
     //用户
     @Autowired
     private SecondUserMapper secondUserMapper;
+@Autowired
+    SecondStoreMapper secondStoreMapper;
+@Autowired
+private SecondProductMapper secondProductMapper;
+@Autowired
+private SecondGoodsMapper secondGoodsMapper;
     @ApiOperation(value = "添加评价", notes = "添加评价")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, type = "Integer"),
@@ -104,7 +110,24 @@ public class EvaluateController {
         SecondEvaluateExample secondEvaluateExample = new SecondEvaluateExample();
         SecondEvaluateExample.Criteria criteria = secondEvaluateExample.createCriteria().andIsDeletedEqualTo((short) 0);
         if (userId!=null&&goodsId==null){
-            criteria.andUserIdEqualTo(userId);
+            SecondStoreExample secondStoreExample = new SecondStoreExample();
+            secondStoreExample.createCriteria().andUserIdEqualTo(userId)
+                    .andIsDeletedEqualTo((short) 0);
+            List<SecondStore> secondStores = secondStoreMapper.selectByExample(secondStoreExample);
+            SecondProductExample secondProductExample = new SecondProductExample();
+            secondProductExample.createCriteria()
+                    .andStoreIdEqualTo(secondStores.get(0).getId())
+                    .andIsDeletedEqualTo((short) 0);
+            List<SecondProduct> secondProducts =
+            secondProductMapper.selectByExample(secondProductExample);
+            Set<Integer> productIds =
+            secondProducts.stream().map(SecondProduct::getId).collect(Collectors.toSet());
+                    SecondGoodsExample secondGoodsExample = new SecondGoodsExample();
+            secondGoodsExample.createCriteria().andProductIdIn(Lists.newArrayList(productIds));
+            List<SecondGoods> secondGoods =
+                    secondGoodsMapper.selectByExample(secondGoodsExample);
+            Set<Integer> goodsIds = secondGoods.stream().map(SecondGoods::getId).collect(Collectors.toSet());
+            criteria.andGoodsIdIn(Lists.newArrayList(goodsIds));
         }
         if (userId==null&&goodsId!=null){
             criteria.andGoodsIdEqualTo(goodsId);
