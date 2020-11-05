@@ -448,12 +448,6 @@ public class SecondProductController {
     )
             throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
-        System.out.println(sonId);
-        System.out.println(storeId);
-        System.out.println(isSon);
-        System.out.println(price);
-        System.out.println(putaway);
-        System.out.println(categoryId);
         //商品列表
         SecondProductExample secondProductExample = new SecondProductExample();
         SecondProductExample.Criteria criteria = secondProductExample.createCriteria().andIsDeletedEqualTo((short) 0)
