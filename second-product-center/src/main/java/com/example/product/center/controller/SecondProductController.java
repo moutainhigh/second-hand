@@ -142,6 +142,7 @@ public class SecondProductController {
     ) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
         //地址
+        System.out.println(addressId);
         SecondStore secondStore = secondStoreMapper.selectByPrimaryKey(storeId);
         if (!secondStore.getSecondStatus().equals(Authentication.State.PASS.getState())){
             response.sendError(HttpStatus.FORBIDDEN.value(), "没有认证");
@@ -154,7 +155,9 @@ public class SecondProductController {
             List<SecondStoreAddress> secondStoreAddresses =
                     secondStoreAddressMapper.selectByExample(secondStoreAddressExample);
             addressId = secondStoreAddresses.get(0).getId();
+            System.out.println(addressId);
         }
+        System.out.println(addressId);
         //
         SecondProduct secondProduct = new SecondProduct();
         secondProduct.setProductState(ProductEnum.ProductState.SELL.getState());
