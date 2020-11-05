@@ -219,17 +219,20 @@ public class SecondProductController {
         secondGoods.setModifyTime(LocalDateTime.now());
         secondGoodsMapper.insertSelective(secondGoods);
         //商品图片
-        if (file.length != 0) {
-            for (String fie : file) {
-                SecondProductPictrue secondProductPictrue = new SecondProductPictrue();
-                secondProductPictrue.setProductId(secondProduct.getId());
-                secondProductPictrue.setFile(fie);
-                secondProductPictrue.setCreateTime(LocalDateTime.now());
-                secondProductPictrue.setModifyTime(LocalDateTime.now());
-                secondProductPictrue.setIsDeleted((short) 0);
-                secondProductPictrueMapper.insertSelective(secondProductPictrue);
+        if (file!=null){
+            if (file.length != 0) {
+                for (String fie : file) {
+                    SecondProductPictrue secondProductPictrue = new SecondProductPictrue();
+                    secondProductPictrue.setProductId(secondProduct.getId());
+                    secondProductPictrue.setFile(fie);
+                    secondProductPictrue.setCreateTime(LocalDateTime.now());
+                    secondProductPictrue.setModifyTime(LocalDateTime.now());
+                    secondProductPictrue.setIsDeleted((short) 0);
+                    secondProductPictrueMapper.insertSelective(secondProductPictrue);
+                }
             }
         }
+
         //标签
         if (labelIds != null) {
             for (Integer labelId : labelIds) {
