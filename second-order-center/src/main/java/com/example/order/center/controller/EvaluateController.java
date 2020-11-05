@@ -130,7 +130,8 @@ public class EvaluateController {
                 Set<Integer> goodsIds = secondGoods.stream().map(SecondGoods::getId).collect(Collectors.toSet());
                 criteria.andGoodsIdIn(Lists.newArrayList(goodsIds));
             }else {
-                return builder.body(ResponseUtils.getResponseBody(1));
+                List<Evaluate> evaluatesNULL = new ArrayList<>();
+                return builder.body(ResponseUtils.getResponseBody(evaluatesNULL));
             }
         }
         if (userId==null&&goodsId!=null){
