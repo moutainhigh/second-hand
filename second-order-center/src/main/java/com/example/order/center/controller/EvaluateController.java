@@ -122,12 +122,16 @@ public class EvaluateController {
             secondProductMapper.selectByExample(secondProductExample);
             Set<Integer> productIds =
             secondProducts.stream().map(SecondProduct::getId).collect(Collectors.toSet());
-                    SecondGoodsExample secondGoodsExample = new SecondGoodsExample();
-            secondGoodsExample.createCriteria().andProductIdIn(Lists.newArrayList(productIds));
-            List<SecondGoods> secondGoods =
-                    secondGoodsMapper.selectByExample(secondGoodsExample);
-            Set<Integer> goodsIds = secondGoods.stream().map(SecondGoods::getId).collect(Collectors.toSet());
-            criteria.andGoodsIdIn(Lists.newArrayList(goodsIds));
+            if (productIds.size()!=0){
+                SecondGoodsExample secondGoodsExample = new SecondGoodsExample();
+                secondGoodsExample.createCriteria().andProductIdIn(Lists.newArrayList(productIds));
+                List<SecondGoods> secondGoods =
+                        secondGoodsMapper.selectByExample(secondGoodsExample);
+                Set<Integer> goodsIds = secondGoods.stream().map(SecondGoods::getId).collect(Collectors.toSet());
+                criteria.andGoodsIdIn(Lists.newArrayList(goodsIds));
+            }else {
+                return builder.body(ResponseUtils.getResponseBody(1));
+            }
         }
         if (userId==null&&goodsId!=null){
             criteria.andGoodsIdEqualTo(goodsId);

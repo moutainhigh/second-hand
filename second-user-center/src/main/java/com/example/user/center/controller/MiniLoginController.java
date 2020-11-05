@@ -5,6 +5,7 @@ import com.example.user.center.config.WxLoginConfig;
 import com.example.user.center.dao.*;
 import com.example.user.center.manual.*;
 import com.example.user.center.model.*;
+import com.google.common.collect.Lists;
 import com.second.common.service.FileMangeService;
 import com.second.common.utils.Encrypt;
 import com.second.utils.response.handler.ResponseEntity;
@@ -102,6 +103,8 @@ private SecondStoreMapper secondStoreMapper;
     //收藏想要
     @Autowired
     private SecondProductWantMapper secondProductWantMapper;
+    @Autowired
+    private SecondGoodsMapper secondGoodsMapper;
     @RequestMapping(path = "/wechart", method = RequestMethod.GET)
     @ApiOperation(value = "微信登录", notes = "微信登录")
     public ResponseEntity<JSONObject> wxLogin(@RequestParam(value = "code", required = false) String code,
@@ -604,12 +607,30 @@ private SecondStoreMapper secondStoreMapper;
                 .andIsDeletedEqualTo((byte) 0);
         List<SecondAttention> secondAttentions1 = secondAttentionMapper.selectByExample(secondAttentionExample);
         userDetails.setMyFansNumber(secondAttentions1.size());//粉丝数量
-        SecondEvaluateExample secondEvaluateExample = new SecondEvaluateExample();
-        secondEvaluateExample.createCriteria().andUserIdEqualTo(userId)
+        //评价
+        SecondProductExample secondProductExample = new SecondProductExample();
+        secondProductExample.createCriteria()
+                .andStoreIdEqualTo(secondStores.get(0).getId())
                 .andIsDeletedEqualTo((short) 0);
-        List<SecondEvaluate> secondEvaluates=
-        secondEvaluateMapper.selectByExample(secondEvaluateExample);
-        userDetails.setEvaluateNumber(secondEvaluates.size());//评价数量
+        List<SecondProduct> secondProducts =
+                secondProductMapper.selectByExample(secondProductExample);
+        Set<Integer> productIds =
+                secondProducts.stream().map(SecondProduct::getId).collect(Collectors.toSet());
+        if (productIds.size()!=0){
+            SecondGoodsExample secondGoodsExample = new SecondGoodsExample();
+            secondGoodsExample.createCriteria().andProductIdIn(Lists.newArrayList(productIds));
+            List<SecondGoods> secondGoods =
+                    secondGoodsMapper.selectByExample(secondGoodsExample);
+            Set<Integer> goodsIds = secondGoods.stream().map(SecondGoods::getId).collect(Collectors.toSet());
+            SecondEvaluateExample secondEvaluateExample = new SecondEvaluateExample();
+            secondEvaluateExample.createCriteria().andGoodsIdIn(Lists.newArrayList(goodsIds))
+                    .andIsDeletedEqualTo((short) 0);
+            List<SecondEvaluate> secondEvaluates=
+                    secondEvaluateMapper.selectByExample(secondEvaluateExample);
+            userDetails.setEvaluateNumber(secondEvaluates.size());//评价数量
+        }else {
+            userDetails.setEvaluateNumber(0);//评价数量
+        }
         if (myUserId!=null){
             //被关注
             secondAttentionExample.clear();
