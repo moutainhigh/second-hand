@@ -49,12 +49,12 @@ public class EvaluateController {
     //用户
     @Autowired
     private SecondUserMapper secondUserMapper;
-@Autowired
-    SecondStoreMapper secondStoreMapper;
-@Autowired
-private SecondProductMapper secondProductMapper;
-@Autowired
-private SecondGoodsMapper secondGoodsMapper;
+    @Autowired
+    private SecondStoreMapper secondStoreMapper;
+    @Autowired
+    private SecondProductMapper secondProductMapper;
+    @Autowired
+    private SecondGoodsMapper secondGoodsMapper;
     @ApiOperation(value = "添加评价", notes = "添加评价")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, type = "Integer"),
