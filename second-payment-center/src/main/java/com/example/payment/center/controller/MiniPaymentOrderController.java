@@ -299,7 +299,7 @@ public ResponseEntity<JSONObject> completePaymentAfter(
     for (SecondOrder secondOrder:secondOrders){
         if (PaymentTypeEnum.getPaymentTypeEnum(secondOrder.getPaymentName()).equals(PaymentTypeEnum.WECHART)) {
             SecondTransactionFlowExample e = new SecondTransactionFlowExample();
-            e.createCriteria().andOutTradeNoEqualTo(String.valueOf(payOrder.getId()));
+            e.createCriteria().andOutTradeNoEqualTo(String.valueOf(payOrder.getId())+"siwei");
             List<SecondTransactionFlow> secondTransactionFlows = secondTransactionFlowMapper.selectByExample(e);
             if (!secondTransactionFlows.isEmpty()) {
                 SecondTransactionFlow hfTansactionFlow = secondTransactionFlows.get(0);
