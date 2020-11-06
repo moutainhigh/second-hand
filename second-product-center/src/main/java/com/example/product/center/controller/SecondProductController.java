@@ -14,6 +14,7 @@ import com.example.product.center.service.AddressService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Lists;
 import com.second.common.service.FileMangeService;
 import com.second.utils.response.handler.ResponseEntity;
 import com.second.utils.response.handler.ResponseUtils;
@@ -34,6 +35,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -439,13 +441,13 @@ public class SecondProductController {
     })
     @RequestMapping(value = "/selectProduct", method = RequestMethod.GET)
     public ResponseEntity<JSONObject> selectProduct(
-            Integer pageNum, Integer pageSize,
             @RequestParam(name = "sonId", required = false) Integer sonId,
             @RequestParam(name = "storeId", required = false) Integer storeId,
             @RequestParam(name = "showType", required = false) String showType,
             @RequestParam(name = "product", required = false) String product,
             @RequestParam(name = "isSon", required = false) Integer isSon,
             @RequestParam(name = "categoryId", required = false) Integer categoryId,
+            @RequestParam(name = "stairCategoryId", required = false) Integer stairCategoryId,
             @RequestParam(name = "price", required = false) Integer price,
             @RequestParam(name = "putaway", required = false) Integer putaway
     )
@@ -462,6 +464,27 @@ public class SecondProductController {
 //筛选类目
         if (categoryId != null) {
             criteria.andCategoryIdEqualTo(categoryId);
+        }
+        //筛选一级分类
+        if (stairCategoryId != null){
+            //根据一级查二级
+            SecondCategoryExample secondCategoryExample = new SecondCategoryExample();
+            secondCategoryExample.createCriteria()
+                        .andParentCategoryIdEqualTo(stairCategoryId)
+                    .andIsDeletedEqualTo((short) 0);
+            List<SecondCategory> secondCategories =
+                    secondCategoryMapper.selectByExample(secondCategoryExample);
+            Set<Integer> second = secondCategories.stream().map(SecondCategory::getId).collect(Collectors.toSet());
+            secondCategoryExample.clear();
+            secondCategoryExample.createCriteria()
+                    .andParentCategoryIdIn(Lists.newArrayList(second))
+                    .andIsDeletedEqualTo((short) 0);
+            List<SecondCategory> secondCategories1 =
+                    secondCategoryMapper.selectByExample(secondCategoryExample);
+            //三级类目id
+            Set<Integer> three = secondCategories1.stream().map(SecondCategory::getId).collect(Collectors.toSet());
+            criteria.andCategoryIdIn(Lists.newArrayList(three));
+
         }
         //筛选店铺
         if (storeId != null) {
