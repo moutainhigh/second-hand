@@ -69,6 +69,7 @@
 
     //发送消息
     function send() {
+        console.log(websocket.readyState+"fasong")
 		var message = document.getElementById('text').value;//要发送的消息内容
 		var now=getNowFormatDate();//获取当前时间
 		document.getElementById('message').innerHTML += (now+"发送人："+userno+'<br/>'+"---"+message) + '<br/>';

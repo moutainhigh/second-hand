@@ -315,6 +315,7 @@ private static SecondMessageMapper secondMessageMapper;
             try {
                 String json = "{" + "\"userId\":" + "\"" + key + "\"," + "\"byUserId\":" + "\"" + key + "\"," + "\"message\":" + "\"" +"心跳" + "\" ," + "\"type\":" + "\"" + "heartbeat" + "\"}";
                 System.out.println("连接的用户"+webSocketSet);
+                System.out.println("在线人数"+getOnlineCount());
                 webSocketSet.get(key).sendMessage(json);
                     System.out.println("key = " + key+"心跳");
             } catch (IOException e) {

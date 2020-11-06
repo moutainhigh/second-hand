@@ -218,7 +218,7 @@ public class MiniPaymentOrderController {
         data.put("appid", config.getAppID());
         data.put("mch_id", config.getMchID());
         data.put("body", "订单支付");
-        data.put("out_trade_no", orderCode);
+        data.put("out_trade_no", orderCode+"siwei");
         data.put("device_info", req.getRemoteHost());
         data.put("fee_type", "CNY");
         data.put("total_fee", String.valueOf(Amount));
