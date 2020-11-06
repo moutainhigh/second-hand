@@ -218,7 +218,7 @@ public class MiniPaymentOrderController {
         data.put("appid", config.getAppID());
         data.put("mch_id", config.getMchID());
         data.put("body", "订单支付");
-        data.put("out_trade_no", orderCode+"siwei");
+        data.put("out_trade_no", String.valueOf(orderCode)+"siwei");
         data.put("device_info", req.getRemoteHost());
         data.put("fee_type", "CNY");
         data.put("total_fee", String.valueOf(Amount));
@@ -432,7 +432,7 @@ public ResponseEntity<JSONObject> completePaymentAfter(
             data.put("spbill_create_ip", req.getRemoteAddr());
             data.put("notify_url", "https://www.tjsichuang.cn:1443/payment/payment/handleWxpay");
 
-            data.put("out_trade_no", String.valueOf(payOrder.getId()));
+            data.put("out_trade_no", String.valueOf(payOrder.getId())+"siwei");
             data.put("op_user_id", miniProgramConfig.getMchID());
             data.put("refund_fee_type", "CNY");
             if (secondOrders!=null){
