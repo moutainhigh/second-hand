@@ -135,7 +135,9 @@ private SecondMessageMapper secondMessageMapper;
     ) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
         SecondMessageExample secondMessageExample = new SecondMessageExample();
-        secondMessageExample.createCriteria().andIsDeletedEqualTo((byte) 0);
+        secondMessageExample.createCriteria().andIsDeletedEqualTo((byte) 0)
+        ;
+        secondMessageExample.setOrderByClause("create_time desc");
         List<SecondMessage> secondMessages =
                 secondMessageMapper.selectByExampleWithBLOBs(secondMessageExample);
         List<MiniMessage> miniMessages = new ArrayList<>();

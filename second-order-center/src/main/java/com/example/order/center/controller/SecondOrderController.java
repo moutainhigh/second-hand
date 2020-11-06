@@ -264,6 +264,7 @@ public class SecondOrderController {
     public ResponseEntity<JSONObject> selectOrder(String orderType,String OrderStatus,Integer sonId,Integer userId,String showType,Integer storeId) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
         SecondOrderExample secondOrderExample = new SecondOrderExample();
+        secondOrderExample.setOrderByClause("create_time desc");
         if (OrderStatus.equals(OrderEnum.OrderStatus.ALL.getOrderStatus())){
             SecondOrderExample.Criteria criteria = secondOrderExample.createCriteria().andIsDeletedEqualTo((byte) 0)
                     .andOrderStatusNotEqualTo(OrderEnum.OrderStatus.PAYMENT.getOrderStatus())
