@@ -92,6 +92,8 @@ public class SonLoginController {
             @ApiImplicitParam(paramType = "query", name = "password", value = "登录密码", required = true, type = "String"),
             @ApiImplicitParam(paramType = "query", name = "collegoryId", value = "学校id", required = true, type = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "service", value = "客服", required = true, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "weChat", value = "微信", required = true, type = "String"),
 
     })
     public ResponseEntity<JSONObject> addSon(
@@ -101,6 +103,8 @@ public class SonLoginController {
             @RequestParam(value = "file", required = false) String file,
                                                           @RequestParam(value = "collegoryId", required = false) Integer collegoryId,
                                                           @RequestParam(value = "userId", required = false) Integer userId,
+                                                          @RequestParam(value = "service", required = false) String service,
+                                                          @RequestParam(value = "weChat", required = false) String weChat,
                                                           HttpServletResponse response, HttpServletRequest request) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
         //看下此学校是否已经有了子站点
@@ -144,6 +148,8 @@ public class SonLoginController {
         userId = secondUser.getId();
         //创建子站点
         SecondSon secondSon = new SecondSon();
+        secondSon.setWeChat(weChat);
+        secondSon.setService(service);
         secondSon.setFile(file);
         secondSon.setUserId(userId);
         secondSon.setCollegoryId(collegoryId);
