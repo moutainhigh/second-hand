@@ -22,6 +22,8 @@ public class StoreDetails {
     private String sonName;//子站点名称
     private String sonFile;//子站点头像
     private String sonCollegesName;//子站点学校名称
+    private String service;//子站点客服
+    private String weChat;//子站点微信
 
     public Integer getUserId() {
         return userId;
@@ -109,5 +111,21 @@ public class StoreDetails {
 
     public void setSumMoney(Integer sumMoney) {
         this.sumMoney = sumMoney;
+    }
+
+    public String getService() {
+        return service;
+    }
+
+    public void setService(String service) {
+        this.service = service;
+    }
+
+    public String getWeChat() {
+        return weChat;
+    }
+
+    public void setWeChat(String weChat) {
+        this.weChat = weChat;
     }
 }

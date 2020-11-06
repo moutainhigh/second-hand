@@ -748,6 +748,8 @@ private SecondStoreMapper secondStoreMapper;
                     secondUserSonMapper.selectByExample(secondUserSonExample);
             SecondSon secondSon = secondSonMapper.selectByPrimaryKey(secondUserSons.get(0).getSonId());
             storeDetails.setSonId(secondSon.getId());
+            storeDetails.setService(secondSon.getService());
+            storeDetails.setWeChat(secondSon.getWeChat());
             storeDetails.setSonName(secondSon.getSonName());
             storeDetails.setSonFile(secondSon.getFile());
         }
