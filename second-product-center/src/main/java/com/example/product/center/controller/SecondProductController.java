@@ -453,6 +453,7 @@ public class SecondProductController {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
         //商品列表
         SecondProductExample secondProductExample = new SecondProductExample();
+        secondProductExample.setOrderByClause("create_time desc");
         SecondProductExample.Criteria criteria = secondProductExample.createCriteria().andIsDeletedEqualTo((short) 0)
                 .andIsPutawayEqualTo(ProductEnum.IsPutaway.PUTAWAY.getState())
                 .andProductTypeEqualTo(ProductEnum.Relation.GENERAL.getState())
