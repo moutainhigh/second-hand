@@ -176,15 +176,18 @@ public class BossLoginController {
             secondBoss.setSonWithdrawalCommission(sonWithdrawalCommission);
             secondBossMapper.updateByPrimaryKeySelective(secondBoss);
         }
-        for (String file:slideshow){
-            SecondSlideshow secondSlideshow = new SecondSlideshow();
-            secondSlideshow.setFile(file);
-            secondSlideshow.setFileType(SlideshowEnum.SlideshowType.HOMEPAGE.getOrderStatus());
-            secondSlideshow.setCreateDate(LocalDateTime.now());
-            secondSlideshow.setModifyDate(LocalDateTime.now());
-            secondSlideshow.setIsDeleted((byte) 0);
-            secondSlideshowMapper.insertSelective(secondSlideshow);
+        if (slideshow.length != 0){
+            for (String file:slideshow){
+                SecondSlideshow secondSlideshow = new SecondSlideshow();
+                secondSlideshow.setFile(file);
+                secondSlideshow.setFileType(SlideshowEnum.SlideshowType.HOMEPAGE.getOrderStatus());
+                secondSlideshow.setCreateDate(LocalDateTime.now());
+                secondSlideshow.setModifyDate(LocalDateTime.now());
+                secondSlideshow.setIsDeleted((byte) 0);
+                secondSlideshowMapper.insertSelective(secondSlideshow);
+            }
         }
+
         return builder.body(ResponseUtils.getResponseBody(0));
     }
     @ApiOperation(value = "删除首页轮播图", notes = "删除首页轮播图")
