@@ -388,7 +388,7 @@ private SecondStoreMapper secondStoreMapper;
         });
         if (sonId != null){
             List<AuthenticationList> authenticationList1 =
-            authenticationList.stream().filter(a->a.getSonId()==sonId).collect(Collectors.toList());
+            authenticationList.stream().filter(a-> a.getSonId().equals(sonId)).collect(Collectors.toList());
             return builder.body(ResponseUtils.getResponseBody(authenticationList1));
         }
         return builder.body(ResponseUtils.getResponseBody(authenticationList));
@@ -497,15 +497,15 @@ private SecondStoreMapper secondStoreMapper;
             userList.setUserId(secondUser.getId());
             userList.setUserFIle(secondUser.getFile());
             userList.setNickName(secondUser.getNickName());
-            SecondAuthenticationExample secondAuthenticationExample = new SecondAuthenticationExample();
-            secondAuthenticationExample.createCriteria().andUserIdEqualTo(secondUser.getId())
-                    .andAuthenticationStateEqualTo(IsAuthentication)
-            .andIsDeletedEqualTo((byte) 0);
-            List<SecondAuthentication> secondAuthentication =
-                    secondAuthenticationMapper.selectByExample(secondAuthenticationExample);
-            if (secondAuthentication.size()!=0){
-                userList.setCollege(secondAuthentication.get(0).getCollegesName());
-            }
+//            SecondAuthenticationExample secondAuthenticationExample = new SecondAuthenticationExample();
+//            secondAuthenticationExample.createCriteria().andUserIdEqualTo(secondUser.getId())
+//                    .andAuthenticationStateEqualTo(IsAuthentication)
+//            .andIsDeletedEqualTo((byte) 0);
+//            List<SecondAuthentication> secondAuthentication =
+//                    secondAuthenticationMapper.selectByExample(secondAuthenticationExample);
+//            if (secondAuthentication.size()!=0){
+//                userList.setCollege(secondAuthentication.get(0).getCollegesName());
+//            }
             SecondStoreExample secondStoreExample = new SecondStoreExample();
             secondStoreExample.createCriteria().andUserIdEqualTo(secondUser.getId())
                     .andIsDeletedEqualTo((short) 0)
@@ -558,6 +558,8 @@ private SecondStoreMapper secondStoreMapper;
             userLists.add(userList);
         });
         if (sonId!=null&&IsAuthentication.equals(Authentication.State.PASS.getState())){
+            System.out.println(sonId);
+            System.out.println(IsAuthentication);
             List<UserList> userLists1 = new ArrayList<>();
 
             userLists.forEach(userList -> {
@@ -574,6 +576,8 @@ private SecondStoreMapper secondStoreMapper;
                 List<SecondUserSon> secondUserSons =
                         secondUserSonMapper.selectByExample(secondUserSonExample);
                 if (secondUserSons.size()!=0){
+                    SecondSon secondSon = secondSonMapper.selectByPrimaryKey(sonId);
+                    userList.setCollege(secondSon.getSonName());
                     userLists1.add(userList);
                 }
             });
