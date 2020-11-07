@@ -89,7 +89,7 @@ public class FileController {
             byte[] file = fileManageService.downloadFile(fileDesc.getGroupName(), fileDesc.getRemoteFilename());
             InputStream sbs = new ByteArrayInputStream(file);
             ByteArrayOutputStream os = new ByteArrayOutputStream();
-            Thumbnails.of(sbs).scale(1f).outputFormat("jpg").outputQuality(0.1).toOutputStream(os);
+            Thumbnails.of(sbs).scale(1f).outputFormat("jpg").outputQuality(0.5).toOutputStream(os);
             file = os.toByteArray();
             ByteArrayInputStream stream = new ByteArrayInputStream(file);
             BufferedImage readImg = ImageIO.read(stream);
