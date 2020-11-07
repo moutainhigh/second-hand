@@ -555,7 +555,17 @@ private SecondStoreMapper secondStoreMapper;
             }
             userList.setPhone(secondStores.get(0).getPhoneNumber());
             userList.setCreateTime(secondUser.getCreateDate());
-            if (sonId!=null&&IsAuthentication.equals(Authentication.State.PASS.getState())){
+            userLists.add(userList);
+        });
+        if (sonId!=null&&IsAuthentication.equals(Authentication.State.PASS.getState())){
+            List<UserList> userLists1 = new ArrayList<>();
+
+            userLists.forEach(userList -> {
+                SecondStoreExample secondStoreExample = new SecondStoreExample();
+                secondStoreExample.createCriteria().andUserIdEqualTo(userList.getUserId())
+                        .andIsDeletedEqualTo((short) 0)
+                        .andSecondStatusEqualTo(IsAuthentication);
+                List<SecondStore> secondStores = secondStoreMapper.selectByExample(secondStoreExample);
                 SecondUserSonExample secondUserSonExample = new SecondUserSonExample();
                 secondUserSonExample.createCriteria().andUserIdEqualTo(userList.getUserId())
                         .andStoreIdEqualTo(secondStores.get(0).getId())
@@ -564,12 +574,11 @@ private SecondStoreMapper secondStoreMapper;
                 List<SecondUserSon> secondUserSons =
                         secondUserSonMapper.selectByExample(secondUserSonExample);
                 if (secondUserSons.size()!=0){
-                    userLists.add(userList);
+                    userLists1.add(userList);
                 }
-            } else {
-                userLists.add(userList);
-            }
-        });
+            });
+            return builder.body(ResponseUtils.getResponseBody(userLists1));
+        }
         return builder.body(ResponseUtils.getResponseBody(userLists));
     }
     @RequestMapping(path = "/UserDetails", method = RequestMethod.GET)
