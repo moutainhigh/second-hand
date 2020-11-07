@@ -475,6 +475,10 @@ public class SecondProductController {
             List<SecondCategory> secondCategories =
                     secondCategoryMapper.selectByExample(secondCategoryExample);
             Set<Integer> second = secondCategories.stream().map(SecondCategory::getId).collect(Collectors.toSet());
+            List<ProductList> productLists3 = new ArrayList<>();
+            if (second.size()==0){
+                return builder.body(ResponseUtils.getResponseBody(productLists3));
+            }
             secondCategoryExample.clear();
             secondCategoryExample.createCriteria()
                     .andParentCategoryIdIn(Lists.newArrayList(second))
@@ -483,6 +487,9 @@ public class SecondProductController {
                     secondCategoryMapper.selectByExample(secondCategoryExample);
             //三级类目id
             Set<Integer> three = secondCategories1.stream().map(SecondCategory::getId).collect(Collectors.toSet());
+            if (three.size()==0){
+                return builder.body(ResponseUtils.getResponseBody(productLists3));
+            }
             criteria.andCategoryIdIn(Lists.newArrayList(three));
 
         }
