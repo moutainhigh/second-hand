@@ -341,6 +341,7 @@ public class SonLoginController {
         List<SonList> sonLists = new ArrayList<>();
         secondSons.forEach(secondSon -> {
             SonList sonList = new SonList();
+            sonList.setCreateTime(secondSon.getCreateTime());
             sonList.setSonState(secondSon.getSonState());
             sonList.setId(secondSon.getId());//子站点id
             sonList.setUserId(secondSon.getUserId());

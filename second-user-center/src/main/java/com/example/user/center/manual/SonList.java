@@ -1,5 +1,7 @@
 package com.example.user.center.manual;
 
+import java.time.LocalDateTime;
+
 /**
  * @author shihao
  * @Title: SonList
@@ -21,6 +23,7 @@ public class SonList {
     private String loginUserName;
     private String sonFile;
     private String record;
+    private LocalDateTime createTime;
 
     public Integer getId() {
         return id;
@@ -116,5 +119,13 @@ public class SonList {
 
     public void setRecord(String record) {
         this.record = record;
+    }
+
+    public LocalDateTime getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(LocalDateTime createTime) {
+        this.createTime = createTime;
     }
 }
