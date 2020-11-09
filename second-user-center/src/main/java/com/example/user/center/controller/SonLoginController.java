@@ -276,6 +276,7 @@ public class SonLoginController {
             map.put("userId",secondAuthList.get(0).getUserId());
             map.put("LoginType",Authentication.LoginType.SON.getState());
             map.put("sonId",secondAuthList.get(0).getStoreId());
+            map.put("name",username);
             SecondStoreExample secondStoreExample = new SecondStoreExample();
             secondStoreExample.createCriteria().andIsDeletedEqualTo((short) 0)
                     .andUserIdEqualTo(secondAuthList.get(0).getUserId());

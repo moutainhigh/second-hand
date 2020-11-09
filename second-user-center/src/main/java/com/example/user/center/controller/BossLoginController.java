@@ -73,6 +73,7 @@ public class BossLoginController {
             map.put("token",token);
             map.put("userId",secondAuthList.get(0).getUserId());
             map.put("LoginType",Authentication.LoginType.BOSS.getState());
+            map.put("name",username);
             return builder.body(ResponseUtils.getResponseBody(map));
         } else {
             response.sendError(HttpStatus.UNAUTHORIZED.value(), "账号或者密码错误");
