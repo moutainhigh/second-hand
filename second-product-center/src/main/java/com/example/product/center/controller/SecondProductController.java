@@ -467,6 +467,7 @@ public class SecondProductController {
         }
         //筛选一级分类
         if (stairCategoryId != null){
+            System.out.println("我是一级"+stairCategoryId);
             //根据一级查二级
             SecondCategoryExample secondCategoryExample = new SecondCategoryExample();
             secondCategoryExample.createCriteria()
@@ -476,6 +477,7 @@ public class SecondProductController {
                     secondCategoryMapper.selectByExample(secondCategoryExample);
             Set<Integer> second = secondCategories.stream().map(SecondCategory::getId).collect(Collectors.toSet());
             List<ProductList> productLists3 = new ArrayList<>();
+            System.out.println(second);
             if (second.size()==0){
                 return builder.body(ResponseUtils.getResponseBody(productLists3));
             }
