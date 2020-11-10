@@ -70,6 +70,7 @@ FROM
 	second_order a
 WHERE
     a.is_deleted = 0
+        and order_status != 'payment'
         <if test="sonId != 0">
             and a.stone_id in
             <foreach collection="stores" item="store" open="(" close=")" separator=",">
