@@ -1,5 +1,7 @@
 package com.example.user.center.manual;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.time.LocalDateTime;
 
 /**
@@ -23,6 +25,7 @@ public class SonList {
     private String loginUserName;
     private String sonFile;
     private String record;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 
     public Integer getId() {

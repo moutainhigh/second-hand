@@ -1,5 +1,7 @@
 package com.example.product.center.manual;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.time.LocalDateTime;
 
 /**
@@ -18,6 +20,7 @@ public class IntegralRecordList {
     private String userName;
     private Integer integralId;
     private String integralState;//状态
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
     private Integer productId;
     private String productName;

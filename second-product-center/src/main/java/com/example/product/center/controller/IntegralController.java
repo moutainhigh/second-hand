@@ -249,7 +249,7 @@ public class IntegralController {
                 SecondStore secondStore = secondStoreMapper.selectByPrimaryKey(secondProduct.getStoreId());
                 integralList.setStoreName(secondStore.getStoreName());
                 integralList.setAddress(secondStore.getSecondAddress());
-                integralList.setCreateTime(secondStore.getCreateTime());
+                integralList.setCreateTime(secondIntegral.getCreateDate());
 
             }
             if (secondIntegral.getIntegralType().equals(IntegralEnum.Relation.WITHDRAW.getState())){

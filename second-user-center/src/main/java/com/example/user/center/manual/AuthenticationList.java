@@ -1,5 +1,7 @@
 package com.example.user.center.manual;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -51,6 +53,7 @@ public class AuthenticationList {
     /**
      * createDate 创建时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createDate;
     /**
      * secondPicture 认证上传文件

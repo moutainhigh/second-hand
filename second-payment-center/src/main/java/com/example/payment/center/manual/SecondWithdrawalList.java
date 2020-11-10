@@ -1,5 +1,6 @@
 package com.example.payment.center.manual;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.models.auth.In;
 
 import java.time.LocalDateTime;
@@ -22,6 +23,7 @@ public class SecondWithdrawalList {
     private Integer realityMoney;//实际金额
     private String WithdrawalMethod;//取款方法
     private String account;//账号
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;//创建时间
 
     public Integer getSecondWithdrawal() {
