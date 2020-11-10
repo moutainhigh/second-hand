@@ -528,6 +528,7 @@ public class SecondProductController {
             ProductList productList = new ProductList();
             if (secondProduct1.getCategoryId()!=null){
                 SecondCategory secondCategory = secondCategoryMapper.selectByPrimaryKey(secondProduct1.getCategoryId());
+                productList.setProductCategoryId(secondCategory.getId());
                 productList.setProductCategory(secondCategory.getSecondName());
             }
             //商品状态

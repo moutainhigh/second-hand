@@ -1,5 +1,6 @@
 package com.example.product.center.manual;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -26,11 +27,13 @@ public class ProductList {
     private Integer goodsId;
     private Integer price;//价格
     private Integer isPutaway;//是否上架
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;//创建时间
     private List<String> files;//商品图
     private String file;//列表图
     private String productState;//商品状态
     private String productCategory;//商品分类
+    private Integer productCategoryId;//商品类目id
     /**
      * 店铺
      */
@@ -418,5 +421,13 @@ public class ProductList {
 
     public void setProductCategory(String productCategory) {
         this.productCategory = productCategory;
+    }
+
+    public Integer getProductCategoryId() {
+        return productCategoryId;
+    }
+
+    public void setProductCategoryId(Integer productCategoryId) {
+        this.productCategoryId = productCategoryId;
     }
 }
