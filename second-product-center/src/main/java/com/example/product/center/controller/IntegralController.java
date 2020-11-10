@@ -483,10 +483,17 @@ public class IntegralController {
             response.sendError(HttpStatus.FORBIDDEN.value(), "已经被核销");
             return builder.body(ResponseUtils.getResponseBody("已经被核销"));
         }
+        SecondIntegralStrategyExample secondIntegralStrategyExample = new SecondIntegralStrategyExample();
+        secondIntegralStrategyExample.createCriteria()
+                .andIntegralIdEqualTo(secondIntegralRecord.getIntegralId());
+        List<SecondIntegralStrategy> secondIntegralStrategies =
+                secondIntegralStrategyMapper.selectByExample(secondIntegralStrategyExample);
+
+        SecondProduct secondProduct = secondProductMapper.selectByPrimaryKey(secondIntegralStrategies.get(0).getProductId());
         SecondAuthExample secondAuthExample = new SecondAuthExample();
         secondAuthExample.createCriteria().andUserIdEqualTo(userId)
                 .andLoginTypeEqualTo(Authentication.LoginType.STOREWX.getState())
-                .andStoreIdEqualTo(secondIntegralRecord.getStoreId())
+                .andStoreIdEqualTo(secondProduct.getStoreId())
                 .andIsDeletedEqualTo((byte) 0)
                 .andAuthStatusEqualTo((byte) 0);
         List<SecondAuth> secondAuths =
