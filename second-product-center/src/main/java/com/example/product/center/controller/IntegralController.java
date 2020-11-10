@@ -2,9 +2,12 @@ package com.example.product.center.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.example.product.center.dao.*;
 import com.example.product.center.manual.*;
+import com.example.product.center.manual.Address.AddressList;
 import com.example.product.center.model.*;
+import com.example.product.center.service.AddressService;
 import com.example.product.center.service.IntegralQuantityService;
 import com.google.zxing.common.BitMatrix;
 import com.second.common.utils.PageTool;
@@ -84,6 +87,15 @@ public class IntegralController {
 
     @Autowired
     private SecondUserMapper secondUserMapper;
+    //地址
+    @Autowired
+    private SecondStoreAddressMapper secondStoreAddressMapper;
+    //商品地址
+    @Autowired
+    private SecondProductAddressMapper secondProductAddressMapper;
+    //地图获取ip
+    @Autowired
+    private AddressService addressService;
     @ApiOperation(value = "添加积分商品", notes = "添加积分商品")
     @RequestMapping(value = "/addIntegralProduct", method = RequestMethod.POST)
     @Transactional(rollbackFor = {RuntimeException.class, Error.class})
@@ -136,7 +148,14 @@ public class IntegralController {
      */
     public String addProduct(Integer secondIntegralId,Integer StoreId,Integer goodsResp,Integer money,String productDesc){
         //创建商品
+        SecondStoreAddressExample secondStoreAddressExample = new SecondStoreAddressExample();
+        secondStoreAddressExample.createCriteria().andIsDeletedEqualTo((short) 0)
+                .andStoreIdEqualTo(StoreId);
+        List<SecondStoreAddress> secondStoreAddresses =
+                secondStoreAddressMapper.selectByExample(secondStoreAddressExample);
+//商品
         SecondProduct secondProduct = new SecondProduct();
+        secondProduct.setAddressId(secondStoreAddresses.get(0).getId());
         secondProduct.setProductState(ProductEnum.ProductState.SELL.getState());
         secondProduct.setProductDesc(productDesc);
         secondProduct.setProductType(ProductEnum.Relation.INTEGRAL.getState());//积分商品
@@ -147,6 +166,34 @@ public class IntegralController {
         secondProduct.setModifyTime(LocalDateTime.now());
         secondProduct.setIsDeleted((short) 0);
         secondProductMapper.insertSelective(secondProduct);
+        //地址
+        SecondStoreAddress secondStoreAddress = secondStoreAddressMapper.selectByPrimaryKey(secondStoreAddresses.get(0).getId());
+        SecondProductAddress secondProductAddress = new SecondProductAddress();
+        secondProductAddress.setProductId(secondProduct.getId());
+        secondProductAddress.setSecondProvince(secondStoreAddress.getSecondProvince());
+        secondProductAddress.setSecondCity(secondStoreAddress.getSecondCity());
+        secondProductAddress.setSecondConty(secondStoreAddress.getSecondConty());
+        secondProductAddress.setSecondAddressDetail(secondStoreAddress.getSecondAddressDetail());
+        if(secondStoreAddress.getLongitude()==null&&secondStoreAddress.getLatitude()==null){
+            String add =
+                    secondStoreAddress.getSecondProvince() + secondStoreAddress.getSecondCity()
+                            + secondStoreAddress.getSecondConty() + secondStoreAddress.getSecondAddressDetail();
+            JSONObject a = addressService.getIngAndLat(add);
+            AddressList list = JSON.parseObject(String.valueOf(a), new TypeReference<AddressList>() {
+            });
+            secondProductAddress.setLongitude(list.getResult().get(0).getLocation().get(0).getLng());
+            secondProductAddress.setLatitude(list.getResult().get(0).getLocation().get(0).getLat());
+        } else {
+            secondProductAddress.setLongitude(secondStoreAddress.getLongitude());
+            secondProductAddress.setLatitude(secondStoreAddress.getLatitude());
+        }
+        secondProductAddress.setContact(secondStoreAddress.getContact());
+        secondProductAddress.setPhoneNumber(secondStoreAddress.getPhoneNumber());
+        secondProductAddress.setSecondDesc(secondStoreAddress.getSecondDesc());
+        secondProductAddress.setCreateTime(LocalDateTime.now());
+        secondProductAddress.setModifyTime(LocalDateTime.now());
+        secondProductAddress.setIsDeleted((short) 0);
+        secondProductAddressMapper.insertSelective(secondProductAddress);
         //物品
         SecondGoods secondGoods = new SecondGoods();
         secondGoods.setProductId(secondProduct.getId());
@@ -578,8 +625,16 @@ public class IntegralController {
         List<IntegralRecordList> integralRecordLists = new ArrayList<>();
         secondIntegralRecords.forEach(secondIntegralRecord -> {
             IntegralRecordList integralRecordList = new IntegralRecordList();
-            SecondStore secondStore = secondStoreMapper.selectByPrimaryKey(secondIntegralRecord.getStoreId());
-            integralRecordList.setAddress(secondStore.getSecondAddress());
+            SecondIntegralStrategyExample secondIntegralStrategyExample1 = new SecondIntegralStrategyExample();
+            secondIntegralStrategyExample1.createCriteria().andIsDeletedEqualTo((byte) 0)
+                    .andIntegralIdEqualTo(secondIntegralRecord.getId());
+            List<SecondIntegralStrategy> secondIntegralStrategies =
+                    secondIntegralStrategyMapper.selectByExample(secondIntegralStrategyExample1);
+            if (secondIntegralStrategies.get(0).getProductId()!=null){
+                SecondProduct secondProduct = secondProductMapper.selectByPrimaryKey(secondIntegralStrategies.get(0).getProductId());
+                SecondStore secondStore = secondStoreMapper.selectByPrimaryKey(secondProduct.getStoreId());
+                integralRecordList.setAddress(secondStore.getSecondAddress());
+            }
             integralRecordList.setIntegralType(secondIntegralRecord.getIntegralType());
             integralRecordList.setRecordId(secondIntegralRecord.getId());
             integralRecordList.setUserId(secondIntegralRecord.getUserId());
