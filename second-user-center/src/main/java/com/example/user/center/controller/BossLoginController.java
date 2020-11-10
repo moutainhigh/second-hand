@@ -136,12 +136,12 @@ public class BossLoginController {
     @RequestMapping(path = "/AddBasics", method = RequestMethod.POST)
     @ApiOperation(value = "添加商家基础信息", notes = "添加商家基础信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "service", value = "客服", required = true, type = "String"),
-            @ApiImplicitParam(paramType = "query", name = "weChat", value = "微信", required = true, type = "String"),
-            @ApiImplicitParam(paramType = "query", name = "newUserIntegral", value = "新用户认证加的积分", required = true, type = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "storeWithdrawalCommission", value = "商家提现手续费率", required = true, type = "Double"),
-            @ApiImplicitParam(paramType = "query", name = "userWithdrawalCommission", value = "用户提现手续费率", required = true, type = "Double"),
-            @ApiImplicitParam(paramType = "query", name = "sonWithdrawalCommission", value = "子站点提现手续费率", required = true, type = "Double"),
+            @ApiImplicitParam(paramType = "query", name = "service", value = "客服", required = false, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "weChat", value = "微信", required = false, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "newUserIntegral", value = "新用户认证加的积分", required = false, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "storeWithdrawalCommission", value = "商家提现手续费率", required = false, type = "Double"),
+            @ApiImplicitParam(paramType = "query", name = "userWithdrawalCommission", value = "用户提现手续费率", required = false, type = "Double"),
+            @ApiImplicitParam(paramType = "query", name = "sonWithdrawalCommission", value = "子站点提现手续费率", required = false, type = "Double"),
     })
     @Transactional(rollbackFor = {RuntimeException.class, Error.class})
     public ResponseEntity<JSONObject> AddBasics(
@@ -169,6 +169,7 @@ public class BossLoginController {
         } else {
             SecondBoss secondBoss = new SecondBoss();
             secondBoss.setId(1);
+            secondBoss.setBusinessScope("12");
             secondBoss.setService(service);
             secondBoss.setWeChat(weChat);
             secondBoss.setNewUserIntegral(newUserIntegral);
