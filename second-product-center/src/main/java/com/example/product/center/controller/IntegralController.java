@@ -464,7 +464,7 @@ public class IntegralController {
     @RequestMapping(value = "/code", method = RequestMethod.POST)
     @Transactional(rollbackFor = {RuntimeException.class, Error.class})
     public ResponseEntity<JSONObject> code(
-            @RequestParam(value = "IntegralRecordId", required = false) String IntegralRecordCode,
+            @RequestParam(value = "IntegralRecordCode", required = false) String IntegralRecordCode,
             @RequestParam(value = "userId", required = false) Integer userId,
             HttpServletResponse response
     ) throws Exception {
