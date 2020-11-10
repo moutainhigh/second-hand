@@ -627,7 +627,7 @@ public class IntegralController {
             IntegralRecordList integralRecordList = new IntegralRecordList();
             SecondIntegralStrategyExample secondIntegralStrategyExample1 = new SecondIntegralStrategyExample();
             secondIntegralStrategyExample1.createCriteria().andIsDeletedEqualTo((byte) 0)
-                    .andIntegralIdEqualTo(secondIntegralRecord.getId());
+                    .andIntegralIdEqualTo(secondIntegralRecord.getIntegralId());
             List<SecondIntegralStrategy> secondIntegralStrategies1 =
                     secondIntegralStrategyMapper.selectByExample(secondIntegralStrategyExample1);
             if (secondIntegralStrategies1.get(0).getProductId()!=null){
