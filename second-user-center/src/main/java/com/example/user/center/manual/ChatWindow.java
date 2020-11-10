@@ -1,5 +1,7 @@
 package com.example.user.center.manual;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.time.LocalDateTime;
 
 /**
@@ -18,7 +20,9 @@ public class ChatWindow {
     private String byUserName;//被建立人姓名
     private Integer byUserId;//被建立人id
     private Integer unread;//未读条数
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;//创建时间
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime modifyTime;//修改时间
 
     public Integer getUserId() {

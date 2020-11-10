@@ -1,6 +1,7 @@
 package com.example.user.center.manual;
 
 import com.example.user.center.model.SecondMessage;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;
 
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
  * @Version: $
  */
 public class MiniMessage {
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
     private SecondMessage secondMessage;
 
