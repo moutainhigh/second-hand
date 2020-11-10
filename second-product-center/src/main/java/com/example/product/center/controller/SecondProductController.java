@@ -898,7 +898,8 @@ if (price!=null && price==1){
                  */
                 SecondProductPictrueExample secondProductPictrueExample = new SecondProductPictrueExample();
                 secondProductPictrueExample.createCriteria().andIsDeletedEqualTo((short) 0)
-                        .andProductIdEqualTo(secondProduct.getId());
+                        .andProductIdEqualTo(secondProduct.getId())
+                .andIsDeletedEqualTo((short) 0);
                 List<SecondProductPictrue> secondProductPictrues =
                         secondProductPictrueMapper.selectByExample(secondProductPictrueExample);
                 if (secondProductPictrues.size() != 0) {
