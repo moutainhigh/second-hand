@@ -14,6 +14,7 @@ public class IntegralRecordList {
     private Integer recordId;//积分换购id
     private Integer userId;//用户id
     private Integer storeId;//店铺id
+    private String storeName;//店铺名称
     private String userName;
     private Integer integralId;
     private String integralState;//状态
@@ -145,5 +146,13 @@ public class IntegralRecordList {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getStoreName() {
+        return storeName;
+    }
+
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
     }
 }

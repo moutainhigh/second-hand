@@ -633,6 +633,7 @@ public class IntegralController {
             if (secondIntegralStrategies1.get(0).getProductId()!=null){
                 SecondProduct secondProduct = secondProductMapper.selectByPrimaryKey(secondIntegralStrategies1.get(0).getProductId());
                 SecondStore secondStore = secondStoreMapper.selectByPrimaryKey(secondProduct.getStoreId());
+                integralRecordList.setStoreName(secondStore.getStoreName());
                 integralRecordList.setAddress(secondStore.getSecondAddress());
             }
             integralRecordList.setIntegralType(secondIntegralRecord.getIntegralType());
