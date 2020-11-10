@@ -192,8 +192,8 @@ public class BossLoginController {
 
         return builder.body(ResponseUtils.getResponseBody(0));
     }
-    @RequestMapping(path = "/AddBasics", method = RequestMethod.POST)
-    @ApiOperation(value = "添加商家基础信息", notes = "添加商家基础信息")
+    @RequestMapping(path = "/advertising", method = RequestMethod.POST)
+    @ApiOperation(value = "添加广告图", notes = "添加商家基础信息")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "service", value = "客服", required = false, type = "String"),
             @ApiImplicitParam(paramType = "query", name = "weChat", value = "微信", required = false, type = "String"),
@@ -203,18 +203,34 @@ public class BossLoginController {
             @ApiImplicitParam(paramType = "query", name = "sonWithdrawalCommission", value = "子站点提现手续费率", required = false, type = "Double"),
     })
     @Transactional(rollbackFor = {RuntimeException.class, Error.class})
-    public ResponseEntity<JSONObject> AddBasics(
+    public ResponseEntity<JSONObject> advertising(
             @RequestParam(value = "slideshow", required = false) String slideshow,
+            @RequestParam(value = "type", required = false) String type,
             HttpServletResponse response
     ) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
-                SecondSlideshow secondSlideshow = new SecondSlideshow();
-                secondSlideshow.setFile(slideshow);
-                secondSlideshow.setFileType(SlideshowEnum.SlideshowType.ADVERTISING.getOrderStatus());
-                secondSlideshow.setCreateDate(LocalDateTime.now());
-                secondSlideshow.setModifyDate(LocalDateTime.now());
-                secondSlideshow.setIsDeleted((byte) 0);
-                secondSlideshowMapper.insertSelective(secondSlideshow);
+        SecondSlideshowExample secondSlideshowExample = new SecondSlideshowExample();
+        secondSlideshowExample.createCriteria().andIsDeletedEqualTo((byte) 0)
+                .andFileTypeEqualTo(type);
+        List<SecondSlideshow> secondSlideshows =
+        secondSlideshowMapper.selectByExample(secondSlideshowExample);
+        if (secondSlideshows.size()==0){
+            SecondSlideshow secondSlideshow = new SecondSlideshow();
+            secondSlideshow.setFile(slideshow);
+            secondSlideshow.setFileType(type);
+            secondSlideshow.setCreateDate(LocalDateTime.now());
+            secondSlideshow.setModifyDate(LocalDateTime.now());
+            secondSlideshow.setIsDeleted((byte) 0);
+            secondSlideshowMapper.insertSelective(secondSlideshow);
+        } else {
+            SecondSlideshow secondSlideshow = new SecondSlideshow();
+            secondSlideshow.setFile(slideshow);
+            secondSlideshow.setFileType(type);
+            secondSlideshow.setModifyDate(LocalDateTime.now());
+            secondSlideshow.setIsDeleted((byte) 0);
+            secondSlideshowMapper.updateByExampleSelective(secondSlideshow,secondSlideshowExample);
+        }
+
 
         return builder.body(ResponseUtils.getResponseBody(0));
     }
