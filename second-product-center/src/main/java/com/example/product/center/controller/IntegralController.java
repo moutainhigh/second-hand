@@ -628,10 +628,10 @@ public class IntegralController {
             SecondIntegralStrategyExample secondIntegralStrategyExample1 = new SecondIntegralStrategyExample();
             secondIntegralStrategyExample1.createCriteria().andIsDeletedEqualTo((byte) 0)
                     .andIntegralIdEqualTo(secondIntegralRecord.getId());
-            List<SecondIntegralStrategy> secondIntegralStrategies =
+            List<SecondIntegralStrategy> secondIntegralStrategies1 =
                     secondIntegralStrategyMapper.selectByExample(secondIntegralStrategyExample1);
-            if (secondIntegralStrategies.get(0).getProductId()!=null){
-                SecondProduct secondProduct = secondProductMapper.selectByPrimaryKey(secondIntegralStrategies.get(0).getProductId());
+            if (secondIntegralStrategies1.get(0).getProductId()!=null){
+                SecondProduct secondProduct = secondProductMapper.selectByPrimaryKey(secondIntegralStrategies1.get(0).getProductId());
                 SecondStore secondStore = secondStoreMapper.selectByPrimaryKey(secondProduct.getStoreId());
                 integralRecordList.setAddress(secondStore.getSecondAddress());
             }
