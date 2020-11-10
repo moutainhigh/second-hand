@@ -422,6 +422,7 @@ private SecondStoreMapper secondStoreMapper;
 
         if (secondAuthentications.size()!=0 && EndAuthenticationState.equals(Authentication.State.PASS.getState())){
             SecondUser secondUser = new SecondUser();
+            secondUser.setPhone(secondAuthentications.get(0).getStudentNumber());
             secondUser.setId(secondAuthentications.get(0).getUserId());
             secondUser.setIsAuthentication(Authentication.UserState.PASS.getState());
             secondUserMapper.updateByPrimaryKeySelective(secondUser);
@@ -429,6 +430,7 @@ private SecondStoreMapper secondStoreMapper;
             secondStoreExample.createCriteria().andUserIdEqualTo(secondAuthentications.get(0).getUserId())
                     .andIsDeletedEqualTo((short) 0);
             SecondStore secondStore = new SecondStore();
+            secondStore.setPhoneNumber(secondAuthentications.get(0).getStudentNumber());
             secondStore.setSecondStatus(0);
             secondStore.setCreateTime(LocalDateTime.now());
             secondStoreMapper.updateByExampleSelective(secondStore,secondStoreExample);
