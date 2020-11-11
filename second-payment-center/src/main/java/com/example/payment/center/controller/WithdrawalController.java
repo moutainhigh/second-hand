@@ -431,6 +431,7 @@ public class WithdrawalController {
         List<WithdrawalRecord> withdrawalRecords = new ArrayList<>();
         secondWithdrawals.forEach(secondWithdrawal -> {
             WithdrawalRecord withdrawalRecord = new WithdrawalRecord();
+            withdrawalRecord.setState(secondWithdrawal.getWithdrawalState());
             withdrawalRecord.setDeduck(secondWithdrawal.getDeduct());
             withdrawalRecord.setMark(secondWithdrawal.getWithdrawalMark());
             withdrawalRecord.setMoney(secondWithdrawal.getWithdrawalMoney());

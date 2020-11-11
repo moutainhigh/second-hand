@@ -21,6 +21,7 @@ public class WithdrawalRecord {
     private String type;//取款类型
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;//发起时间
+    private String state;
 
     public Integer getWithdrawalId() {
         return withdrawalId;
@@ -76,5 +77,13 @@ public class WithdrawalRecord {
 
     public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 }
