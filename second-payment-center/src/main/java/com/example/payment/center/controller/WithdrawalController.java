@@ -441,6 +441,7 @@ public class WithdrawalController {
             withdrawalRecord.setWithdrawalId(secondWithdrawal.getId());
             withdrawalRecords.add(withdrawalRecord);
         });
+
         return builder.body(ResponseUtils.getResponseBody(withdrawalRecords));
 
     }
