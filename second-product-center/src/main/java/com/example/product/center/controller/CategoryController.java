@@ -148,17 +148,17 @@ public class CategoryController {
         secondCategory.setFile(fileId);
         secondCategoryMapper.updateByPrimaryKeySelective(secondCategory);
         //删除图片
-        if (fileId!=null){
-            String str1=str.substring(0, str.indexOf("="));
-            String str2=str.substring(str1.length()+1, str.length());
-            System.out.println(str2);
-            SecondFile secondFile =  secondFileMapper.selectByPrimaryKey(Integer.valueOf(str2));
-            if (secondFile!=null){
-                FileMangeService fileManageService = new FileMangeService();
-                fileManageService.deleteFile(secondFile.getGroupName(), secondFile.getRemoteFilename());
-                secondFileMapper.deleteByPrimaryKey(secondFile.getId());
-            }
-        }
+//        if (fileId!=null){
+//            String str1=str.substring(0, str.indexOf("="));
+//            String str2=str.substring(str1.length()+1, str.length());
+//            System.out.println(str2);
+//            SecondFile secondFile =  secondFileMapper.selectByPrimaryKey(Integer.valueOf(str2));
+//            if (secondFile!=null){
+//                FileMangeService fileManageService = new FileMangeService();
+//                fileManageService.deleteFile(secondFile.getGroupName(), secondFile.getRemoteFilename());
+//                secondFileMapper.deleteByPrimaryKey(secondFile.getId());
+//            }
+//        }
         return builder.body(ResponseUtils.getResponseBody(0));
     }
     @ApiOperation(value = "获取类目", notes = "添加类目时获取类目列表")
