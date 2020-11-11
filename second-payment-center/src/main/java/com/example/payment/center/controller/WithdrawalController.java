@@ -207,6 +207,11 @@ public class WithdrawalController {
             Integer realityMoneyx = (int) Math.ceil(realityMoneys);
             //                        提现实际金额
             Integer realityMoney = (withdrawalMoney-(realityMoneyx*(int)(rate*100)))+mon;
+            if (realityMoney<=0){
+                balanceService.addBalance(storeId,BanlaceEnum.Relation.MONEY.getState(),withdrawalMoney);
+                response.sendError(HttpStatus.FORBIDDEN.value(), "余额不足");
+                return builder.body(ResponseUtils.getResponseBody(1));
+            }
             SecondWithdrawal secondWithdrawal = new SecondWithdrawal();
             secondWithdrawal.setDeduct((realityMoneyx*(int)(rate*100)));//扣除的手续费
             secondWithdrawal.setSource(source);
