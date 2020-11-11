@@ -2,10 +2,7 @@ package com.example.payment.center.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.payment.center.dao.*;
-import com.example.payment.center.manual.Authentication;
-import com.example.payment.center.manual.BanlaceEnum;
-import com.example.payment.center.manual.SecondWithdrawalList;
-import com.example.payment.center.manual.WithdrawalEnum;
+import com.example.payment.center.manual.*;
 import com.example.payment.center.manual.dao.BalanceMapper;
 import com.example.payment.center.manual.dao.SonBalanceMapper;
 import com.example.payment.center.model.*;
@@ -413,5 +410,36 @@ public class WithdrawalController {
 //        Double realityMoneys = ((Double.valueOf(money)*20)/100);//                        利息进一位
         Integer realityMoneyx = (int) Math.ceil(realityMoneys1);
         System.out.println(realityMoneyx);
+    }
+    @ApiOperation(value = "提现记录", notes = "提现记录")
+    @RequestMapping(value = "/record", method = RequestMethod.GET)
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "storeId", value = "店铺id", required = true, type = "Integer"),
+    })
+    public ResponseEntity<JSONObject> record(Integer userId,Integer storeId)
+            throws JSONException {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
+        SecondWithdrawalExample secondWithdrawalExample = new SecondWithdrawalExample();
+        secondWithdrawalExample.createCriteria()
+                .andUserIdEqualTo(userId)
+                .andStoreIdEqualTo(storeId)
+                .andIsDeletedEqualTo((byte) 0);
+        List<SecondWithdrawal> secondWithdrawals =
+        secondWithdrawalMapper.selectByExample(secondWithdrawalExample);
+        List<WithdrawalRecord> withdrawalRecords = new ArrayList<>();
+        secondWithdrawals.forEach(secondWithdrawal -> {
+            WithdrawalRecord withdrawalRecord = new WithdrawalRecord();
+            withdrawalRecord.setDeduck(secondWithdrawal.getDeduct());
+            withdrawalRecord.setMark(secondWithdrawal.getWithdrawalMark());
+            withdrawalRecord.setMoney(secondWithdrawal.getWithdrawalMoney());
+            withdrawalRecord.setRealityMoney(secondWithdrawal.getRealityMoney());
+            withdrawalRecord.setType(secondWithdrawal.getWithdrawalType());
+            withdrawalRecord.setCreateTime(secondWithdrawal.getCreateDate());
+            withdrawalRecord.setWithdrawalId(secondWithdrawal.getId());
+            withdrawalRecords.add(withdrawalRecord);
+        });
+        return builder.body(ResponseUtils.getResponseBody(withdrawalRecords));
+
     }
 }
