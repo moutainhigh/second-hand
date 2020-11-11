@@ -245,6 +245,7 @@ public class StoreLoginController {
             secondStoreAddress.setContact(name);
             secondStoreAddress.setIsDeleted((short) 0);
             secondStoreAddress.setModifyTime(LocalDateTime.now());
+            secondStoreAddress.setPhoneNumber(phoneNumber);
             secondStoreAddressMapper.insertSelective(secondStoreAddress);
             //店铺
             SecondStore secondStore = new SecondStore();

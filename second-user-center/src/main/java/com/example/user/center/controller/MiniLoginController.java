@@ -600,7 +600,7 @@ private SecondStoreMapper secondStoreMapper;
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
         SecondStoreExample secondStoreExample = new SecondStoreExample();
         secondStoreExample.createCriteria().andUserIdEqualTo(userId)
-                .andIsDeletedEqualTo((short) 0).andSecondStatusEqualTo(0);
+                .andIsDeletedEqualTo((short) 0);
         List<SecondStore> secondStores = secondStoreMapper.selectByExample(secondStoreExample);
 
         SecondUser secondUser = secondUserMapper.selectByPrimaryKey(userId);
