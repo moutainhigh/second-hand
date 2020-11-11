@@ -425,6 +425,7 @@ public class WithdrawalController {
                 .andUserIdEqualTo(userId)
                 .andStoreIdEqualTo(storeId)
                 .andIsDeletedEqualTo((byte) 0);
+        secondWithdrawalExample.setOrderByClause("create_date desc");
         List<SecondWithdrawal> secondWithdrawals =
         secondWithdrawalMapper.selectByExample(secondWithdrawalExample);
         List<WithdrawalRecord> withdrawalRecords = new ArrayList<>();
