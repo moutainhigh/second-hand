@@ -426,7 +426,7 @@ public class SonLoginController {
                 .andStoreIdEqualTo(storeId)
                 .andIsDeletedEqualTo((short) 0)
                 .andDetailTypeEqualTo(BanlaceEnum.Relation.MONEY.getState())
-                .andIncomeExpensesEqualTo(BanlaceEnum.incomeExpenses.PUT.getState());
+                .andIncomeExpensesEqualTo(BanlaceEnum.incomeExpenses.PAY.getState());
         List<SecondStoreBalanceDetail> secondStoreBalanceDetails =
                 secondStoreBalanceDetailMapper.selectByExample(secondStoreBalanceDetailExample);
         Integer sumMoney = secondStoreBalanceDetails.stream().mapToInt(SecondStoreBalanceDetail::getAmount).sum();
