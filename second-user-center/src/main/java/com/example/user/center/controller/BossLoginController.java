@@ -178,18 +178,19 @@ public class BossLoginController {
             secondBoss.setSonWithdrawalCommission(sonWithdrawalCommission);
             secondBossMapper.updateByPrimaryKeySelective(secondBoss);
         }
-        if (slideshow.length != 0){
-            for (String file:slideshow){
-                SecondSlideshow secondSlideshow = new SecondSlideshow();
-                secondSlideshow.setFile(file);
-                secondSlideshow.setFileType(SlideshowEnum.SlideshowType.HOMEPAGE.getOrderStatus());
-                secondSlideshow.setCreateDate(LocalDateTime.now());
-                secondSlideshow.setModifyDate(LocalDateTime.now());
-                secondSlideshow.setIsDeleted((byte) 0);
-                secondSlideshowMapper.insertSelective(secondSlideshow);
+        if (slideshow!=null){
+            if (slideshow.length != 0){
+                for (String file:slideshow){
+                    SecondSlideshow secondSlideshow = new SecondSlideshow();
+                    secondSlideshow.setFile(file);
+                    secondSlideshow.setFileType(SlideshowEnum.SlideshowType.HOMEPAGE.getOrderStatus());
+                    secondSlideshow.setCreateDate(LocalDateTime.now());
+                    secondSlideshow.setModifyDate(LocalDateTime.now());
+                    secondSlideshow.setIsDeleted((byte) 0);
+                    secondSlideshowMapper.insertSelective(secondSlideshow);
+                }
             }
         }
-
         return builder.body(ResponseUtils.getResponseBody(0));
     }
     @RequestMapping(path = "/advertising", method = RequestMethod.POST)
