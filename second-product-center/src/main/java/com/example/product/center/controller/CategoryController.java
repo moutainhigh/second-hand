@@ -145,7 +145,7 @@ public class CategoryController {
         SecondCategory secondCategory = new SecondCategory();
         secondCategory.setSecondName(categoryName);
         secondCategory.setId(categoryId);
-        if (fileId!=null && fileId.equals("")){
+        if (fileId!=null && !fileId.equals("")){
             secondCategory.setFile(fileId);
         }
 
