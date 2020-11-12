@@ -522,7 +522,8 @@ private SecondStoreMapper secondStoreMapper;
             userList.setProductNum(secondProducts.size());
             //购买数量
             SecondOrderExample secondOrderExample = new SecondOrderExample();
-            secondOrderExample.createCriteria().andUserIdEqualTo(secondUser.getId());
+            secondOrderExample.createCriteria().andUserIdEqualTo(secondUser.getId())
+            .andOrderStatusNotEqualTo(OrderEnum.OrderStatus.PAYMENT.getOrderStatus());
             List<SecondOrder> orders =
             secondOrderMapper.selectByExample(secondOrderExample);
             userList.setBuyProductNum(orders.size());//购买数量

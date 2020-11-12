@@ -130,7 +130,8 @@ public class StatisticsController {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
         SecondOrderExample secondOrderExample = new SecondOrderExample();
         SecondOrderExample.Criteria criteria = secondOrderExample.createCriteria()
-                .andIsDeletedEqualTo((byte) 0);
+                .andIsDeletedEqualTo((byte) 0)
+                .andOrderStatusNotEqualTo(OrderEnum.OrderStatus.PAYMENT.getOrderStatus());
         if (startTime!=null && endTime!=null){
             Instant instant = startTime.toInstant();//开始时间
             Instant instant1 = endTime.toInstant();//结束时间
