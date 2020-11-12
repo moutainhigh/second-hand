@@ -1,5 +1,7 @@
 package com.example.user.center.manual;
 
+import java.util.List;
+
 /**
  * @author shihao
  * @Title: EnterStoreList
@@ -15,6 +17,7 @@ public class EnterStoreList {
     private String storeName;//店铺名称
     private String storeAddress;//商户地址
     private String phone;//联系方式
+    private List<String> file;//
 
     public Integer getStoreId() {
         return storeId;
@@ -64,5 +67,11 @@ public class EnterStoreList {
         this.phone = phone;
     }
 
+    public List<String> getFile() {
+        return file;
+    }
 
+    public void setFile(List<String> file) {
+        this.file = file;
+    }
 }

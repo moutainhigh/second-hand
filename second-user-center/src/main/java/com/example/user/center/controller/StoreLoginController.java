@@ -34,6 +34,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author shihao
@@ -444,6 +445,25 @@ public class StoreLoginController {
             enterStoreList.setStoreAddress(secondStore.getSecondAddress());
             SecondUser secondUser = secondUserMapper.selectByPrimaryKey(secondStore.getUserId());
             enterStoreList.setNickName(secondUser.getNickName());
+            SecondStoreAuthenticationExample secondStoreAuthenticationExample = new SecondStoreAuthenticationExample();
+            secondStoreAuthenticationExample.createCriteria().andUserIdEqualTo(secondStore.getUserId())
+                    .andStoreIdEqualTo(secondStore.getId())
+                    .andIsDeletedEqualTo((byte) 0)
+            .andAuthenticationStateEqualTo(Authentication.State.PASS.getState());
+            List<SecondStoreAuthentication> secondStoreAuthentications =
+                    secondStoreAuthenticationMapper.selectByExample(secondStoreAuthenticationExample);
+            if (secondStoreAuthentications.size() != 0){
+                SecondStoreAuthenticationPictureExample secondStoreAuthenticationPictureExample = new SecondStoreAuthenticationPictureExample();
+                secondStoreAuthenticationPictureExample.createCriteria()
+                        .andSecondAuthenticationIdEqualTo(secondStoreAuthentications.get(0).getId())
+                        .andIsDeletedEqualTo((byte) 0);
+                List<SecondStoreAuthenticationPicture> secondStoreAuthenticationPictures =
+                secondStoreAuthenticationPictureMapper.selectByExample(secondStoreAuthenticationPictureExample);
+                if (secondStoreAuthenticationPictures.size() != 0){
+                    List<String> files = secondStoreAuthenticationPictures.stream().map(SecondStoreAuthenticationPicture::getSecondPicture).collect(Collectors.toList());
+                    enterStoreList.setFile(files);
+                }
+            }
             enterStoreLists.add(enterStoreList);
         });
         return builder.body(ResponseUtils.getResponseBody(enterStoreLists));
