@@ -212,7 +212,7 @@ public class SecondProductWantController {
             wantProductList.setIsWant(selectProductCollect(secondProductWant.getProductId(),userId));
             //想要数量
             secondProductWantExample.clear();
-            secondProductWantExample.createCriteria().andUserIdEqualTo(userId)
+            secondProductWantExample.createCriteria().andProductIdEqualTo(secondProductWant.getProductId())
                     .andIsDeletedEqualTo((short) 0)
                     .andTypeEqualTo(WantEnum.Relation.WANT.getState());
             List<SecondProductWant> secondProductWantList =
