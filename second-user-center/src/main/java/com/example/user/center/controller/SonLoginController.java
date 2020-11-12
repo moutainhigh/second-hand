@@ -211,7 +211,8 @@ public class SonLoginController {
         secondSonExample.createCriteria().andCollegoryIdEqualTo(collegoryId)
                 .andIsDeletedEqualTo((short) 0);
         List<SecondSon> secondSons = secondSonMapper.selectByExample(secondSonExample);
-        if (secondSons.size()!=0){
+        SecondSon secondSon = secondSonMapper.selectByPrimaryKey(sonId);
+        if (secondSons.size()!=0 && !secondSon.getCollegoryId().equals(collegoryId)){
             response.sendError(HttpStatus.FORBIDDEN.value(), "已经存在子站点");
             return builder.body(ResponseUtils.getResponseBody(1));
         }
