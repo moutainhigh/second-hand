@@ -306,7 +306,7 @@ public class SecondProductController {
         secondProduct.setStoreId(storeId);
         secondProduct.setIsDeleted((short) 0);
         secondProduct.setModifyTime(LocalDateTime.now());
-        if (file1!=null){
+        if (file1!=null&& !file1.equals("")){
             secondProduct.setFile(file1);
         }
         secondProductMapper.updateByPrimaryKeySelective(secondProduct);
