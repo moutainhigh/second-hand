@@ -145,7 +145,10 @@ public class CategoryController {
         SecondCategory secondCategory = new SecondCategory();
         secondCategory.setSecondName(categoryName);
         secondCategory.setId(categoryId);
-        secondCategory.setFile(fileId);
+        if (fileId!=null && fileId.equals("")){
+            secondCategory.setFile(fileId);
+        }
+
         secondCategoryMapper.updateByPrimaryKeySelective(secondCategory);
         //删除图片
 //        if (fileId!=null){
