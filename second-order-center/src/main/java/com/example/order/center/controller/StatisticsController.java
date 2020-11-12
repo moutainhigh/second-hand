@@ -229,60 +229,72 @@ public class StatisticsController {
                 ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
                 List<StatisticsAmount> statisticsAmounts =
                 statisticsService.dataAmount(storeId);
-        //        //每天最大收入
-        Optional<Integer> max = statisticsAmounts.stream()
-                .map(StatisticsAmount::getAmount).reduce(Integer::max);
-        //日均收入
-        double avg = statisticsAmounts.stream()
-                .collect(Collectors.averagingInt(StatisticsAmount::getAmount));
-        Integer dayAmount = (int) Math.ceil(avg);
-        //七日的收入
-        List<StatisticsDaySum> statisticsDaySums = statisticsService.dayAmount(storeId);
-        StatisticsMiniStore statisticsMiniStore = new StatisticsMiniStore();
-        System.out.println(statisticsDaySums.get(0));
-        if (statisticsDaySums.size()!=0 && statisticsDaySums.get(0) != null){
-            statisticsMiniStore.setSevenAmount(statisticsDaySums.get(0).getSum());
-        }else {
-            statisticsMiniStore.setSevenAmount(0);
-        }
-        statisticsMiniStore.setDaySum(dayAmount);
-        statisticsMiniStore.setDayMax(max.get());
-        SecondOrderExample secondOrderExample = new SecondOrderExample();
-        SecondOrderExample.Criteria criteria =
-        secondOrderExample.createCriteria()
-                .andOrderStatusNotEqualTo(OrderEnum.OrderStatus.PAYMENT.getOrderStatus())
-                .andIsDeletedEqualTo((byte) 0);
-        if (storeId!=null){
-            criteria.andStoneIdEqualTo(storeId);
-        }
+                if (statisticsAmounts.size()!=0){
+                    //        //每天最大收入
+                    Optional<Integer> max = statisticsAmounts.stream()
+                            .map(StatisticsAmount::getAmount).reduce(Integer::max);
+                    //日均收入
+                    double avg = statisticsAmounts.stream()
+                            .collect(Collectors.averagingInt(StatisticsAmount::getAmount));
+                    Integer dayAmount = (int) Math.ceil(avg);
+                    //七日的收入
+                    List<StatisticsDaySum> statisticsDaySums = statisticsService.dayAmount(storeId);
+                    StatisticsMiniStore statisticsMiniStore = new StatisticsMiniStore();
+                    System.out.println(statisticsDaySums.get(0));
+                    if (statisticsDaySums.size()!=0 && statisticsDaySums.get(0) != null){
+                        statisticsMiniStore.setSevenAmount(statisticsDaySums.get(0).getSum());
+                    }else {
+                        statisticsMiniStore.setSevenAmount(0);
+                    }
+                    statisticsMiniStore.setDaySum(dayAmount);
+                    statisticsMiniStore.setDayMax(max.get());
+                    SecondOrderExample secondOrderExample = new SecondOrderExample();
+                    SecondOrderExample.Criteria criteria =
+                            secondOrderExample.createCriteria()
+                                    .andOrderStatusNotEqualTo(OrderEnum.OrderStatus.PAYMENT.getOrderStatus())
+                                    .andIsDeletedEqualTo((byte) 0);
+                    if (storeId!=null){
+                        criteria.andStoneIdEqualTo(storeId);
+                    }
 //                .andOrderStatusNotEqualTo(OrderEnum.OrderStatus.PAYMENT.getOrderStatus());
-        List<SecondOrder> secondOrders =
-                secondOrderMapper.selectByExample(secondOrderExample);
-        statisticsMiniStore.setOrderNumber(secondOrders.size());
-        criteria.andOrderStatusNotEqualTo(OrderEnum.OrderStatus.PAYMENT.getOrderStatus());
-        List<SecondOrder> secondOrders1 =
-        secondOrderMapper.selectByExample(secondOrderExample);
-        statisticsMiniStore.setPaymentOrder(secondOrders1.size());
-        secondOrderExample.clear();
-        SecondOrderExample.Criteria criteria1 =
-                secondOrderExample.createCriteria()
-                        .andOrderStatusEqualTo(OrderEnum.OrderStatus.EVALUATE.getOrderStatus())
-                        .andIsDeletedEqualTo((byte) 0);
-        if (storeId!=null){
-            criteria1.andStoneIdEqualTo(storeId);
-        }
-        SecondOrderExample.Criteria criteria2 =
-                secondOrderExample.createCriteria()
-                        .andOrderStatusEqualTo(OrderEnum.OrderStatus.COMPLETE.getOrderStatus())
-                        .andIsDeletedEqualTo((byte) 0);
-        if (storeId!=null){
-            criteria2.andStoneIdEqualTo(storeId);
-        }
-        secondOrderExample.or(criteria2);
-        List<SecondOrder> secondOrders2 =
-                secondOrderMapper.selectByExample(secondOrderExample);
-        statisticsMiniStore.setCancelOrder(secondOrders2.size());
-        return builder.body(ResponseUtils.getResponseBody(statisticsMiniStore));
+                    List<SecondOrder> secondOrders =
+                            secondOrderMapper.selectByExample(secondOrderExample);
+                    statisticsMiniStore.setOrderNumber(secondOrders.size());
+                    criteria.andOrderStatusNotEqualTo(OrderEnum.OrderStatus.PAYMENT.getOrderStatus());
+                    List<SecondOrder> secondOrders1 =
+                            secondOrderMapper.selectByExample(secondOrderExample);
+                    statisticsMiniStore.setPaymentOrder(secondOrders1.size());
+                    secondOrderExample.clear();
+                    SecondOrderExample.Criteria criteria1 =
+                            secondOrderExample.createCriteria()
+                                    .andOrderStatusEqualTo(OrderEnum.OrderStatus.EVALUATE.getOrderStatus())
+                                    .andIsDeletedEqualTo((byte) 0);
+                    if (storeId!=null){
+                        criteria1.andStoneIdEqualTo(storeId);
+                    }
+                    SecondOrderExample.Criteria criteria2 =
+                            secondOrderExample.createCriteria()
+                                    .andOrderStatusEqualTo(OrderEnum.OrderStatus.COMPLETE.getOrderStatus())
+                                    .andIsDeletedEqualTo((byte) 0);
+                    if (storeId!=null){
+                        criteria2.andStoneIdEqualTo(storeId);
+                    }
+                    secondOrderExample.or(criteria2);
+                    List<SecondOrder> secondOrders2 =
+                            secondOrderMapper.selectByExample(secondOrderExample);
+                    statisticsMiniStore.setCancelOrder(secondOrders2.size());
+                    return builder.body(ResponseUtils.getResponseBody(statisticsMiniStore));
+                }else {
+                    StatisticsMiniStore statisticsMiniStore = new StatisticsMiniStore();
+                    statisticsMiniStore.setCancelOrder(0);
+                    statisticsMiniStore.setPaymentOrder(0);
+                    statisticsMiniStore.setOrderNumber(0);
+                    statisticsMiniStore.setDayMax(0);
+                    statisticsMiniStore.setDaySum(0);
+                    statisticsMiniStore.setSevenAmount(0);
+                    return builder.body(ResponseUtils.getResponseBody(statisticsMiniStore));
+                }
+
 
     }
     //商家端小程序统计

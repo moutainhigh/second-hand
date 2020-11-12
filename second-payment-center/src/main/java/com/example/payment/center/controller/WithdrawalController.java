@@ -209,7 +209,7 @@ public class WithdrawalController {
             Integer realityMoney = (withdrawalMoney-(realityMoneyx*(int)(rate*100)))+mon;
             if (realityMoney<=0){
                 balanceService.addBalance(storeId,BanlaceEnum.Relation.MONEY.getState(),withdrawalMoney);
-                response.sendError(HttpStatus.FORBIDDEN.value(), "余额不足");
+                response.sendError(HttpStatus.FORBIDDEN.value(), "提现金额过低");
                 return builder.body(ResponseUtils.getResponseBody(1));
             }
             SecondWithdrawal secondWithdrawal = new SecondWithdrawal();
