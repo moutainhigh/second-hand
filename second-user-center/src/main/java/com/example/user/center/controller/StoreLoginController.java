@@ -455,11 +455,22 @@ public class StoreLoginController {
             Integer storeId
     ) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
-        SecondStore secondStore = new SecondStore();
-        secondStore.setId(storeId);
-        secondStore.setIsDeleted((short) 0);
+        SecondStore secondStore = secondStoreMapper.selectByPrimaryKey(storeId);
+        secondStore.setIsDeleted((short) 1);
         secondStore.setModifyDate(LocalDateTime.now());
         secondStoreMapper.updateByPrimaryKeySelective(secondStore);
+        SecondUser secondUser = secondUserMapper.selectByPrimaryKey(secondStore.getUserId());
+        secondUser.setIdDeleted((byte) 1);
+        secondUser.setModifyDate(LocalDateTime.now());
+        secondUserMapper.updateByPrimaryKeySelective(secondUser);
+        SecondAuthExample secondAuthExample = new SecondAuthExample();
+        secondAuthExample.createCriteria().andUserIdEqualTo(secondUser.getId())
+                .andStoreIdEqualTo(secondStore.getId())
+                .andIsDeletedEqualTo((byte) 0);
+        SecondAuth secondAuth = new SecondAuth();
+        secondAuth.setIsDeleted((byte) 1);
+        secondAuth.setModifyDate(LocalDateTime.now());
+        secondAuthMapper.updateByExampleSelective(secondAuth,secondAuthExample);
         return builder.body(ResponseUtils.getResponseBody(0));
     }
     @RequestMapping(path = "/storeDetails", method = RequestMethod.GET)
