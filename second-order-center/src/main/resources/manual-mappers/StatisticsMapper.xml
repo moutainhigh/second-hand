@@ -47,6 +47,7 @@ GROUP BY
         second_order
         WHERE
         DATE_SUB( CURDATE( ), INTERVAL 7 DAY ) &lt;= date( create_time )
+        AND order_status &lt;&gt; 'payment'
         <if test="stoneId != null and stoneId != ''">
             AND stone_id = #{stoneId}
         </if>
