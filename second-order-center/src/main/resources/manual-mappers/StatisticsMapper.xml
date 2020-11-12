@@ -32,7 +32,7 @@ SELECT
 FROM
 	second_order
 WHERE
-        1 = 1
+        order_status &lt;&gt; 'payment'
         <if test="stoneId != null and stoneId != ''">
             AND stone_id = #{stoneId}
         </if>

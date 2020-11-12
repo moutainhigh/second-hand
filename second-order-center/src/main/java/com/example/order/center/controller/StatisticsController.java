@@ -250,7 +250,7 @@ public class StatisticsController {
         SecondOrderExample secondOrderExample = new SecondOrderExample();
         SecondOrderExample.Criteria criteria =
         secondOrderExample.createCriteria()
-
+                .andOrderStatusNotEqualTo(OrderEnum.OrderStatus.PAYMENT.getOrderStatus())
                 .andIsDeletedEqualTo((byte) 0);
         if (storeId!=null){
             criteria.andStoneIdEqualTo(storeId);
