@@ -304,7 +304,7 @@ public class SecondProductController {
         secondProduct.setProductDesc(productDesc);//商品描述
         secondProduct.setIsPutaway(ProductEnum.IsPutaway.getState(isPutaway).getState());//是否上架
         Integer[] a1 = new Integer[productId];
-        System.out.println(a1);
+        System.out.println(a1[0]);
 //        if (isPutaway.equals(ProductEnum.IsPutaway.PUTAWAY.getState())){
 //            Integer[] a = new Integer[productId];
 //            IsPutaway(a,isPutaway);
