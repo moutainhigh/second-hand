@@ -459,7 +459,7 @@ public class SecondProductController {
         SecondProductExample.Criteria criteria = secondProductExample.createCriteria().andIsDeletedEqualTo((short) 0)
 //                .andIsPutawayEqualTo(ProductEnum.IsPutaway.PUTAWAY.getState())
                 .andProductTypeEqualTo(ProductEnum.Relation.GENERAL.getState())
-                .andProductStateEqualTo(ProductEnum.ProductState.SELL.getState())
+//                .andProductStateEqualTo(ProductEnum.ProductState.SELL.getState())
                 .andShowTypeEqualTo(ProductEnum.ShowType.getState(showType).getState());
 //筛选类目
         if (categoryId != null) {
