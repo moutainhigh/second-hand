@@ -1,10 +1,10 @@
 package com.example.product.center.config;
 
 
+
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
-import com.example.product.center.intercepter.AuthorityInterceptor;
 import com.example.product.center.intercepter.AuthorityInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
@@ -33,10 +33,16 @@ public class WebConfigurer extends WebMvcConfigurationSupport {
         return new MyInterceptor();
 
     }
+
     @Override
 
     public void addInterceptors(InterceptorRegistry registry) {
+
         registry.addInterceptor(authorityInterceptor);
+
+        registry.addInterceptor(myInterceptor()).addPathPatterns("/**")
+
+                .excludePathPatterns("/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**","/config/**");
 
         super.addInterceptors(registry);
 
@@ -100,6 +106,10 @@ public class WebConfigurer extends WebMvcConfigurationSupport {
 
     }
 
+    @Bean
+    public RestTemplate restTemplate(ClientHttpRequestFactory factory) {
+        return new RestTemplate(factory);
+    }
 
     @Bean
     public ClientHttpRequestFactory simpleClientHttpRequestFactory() {
@@ -126,7 +136,6 @@ public class WebConfigurer extends WebMvcConfigurationSupport {
         //上传文件大小 5M 5*1024*1024
 
         resolver.setMaxUploadSize(5 *1024 *1024);
-
         return resolver;
 
     }
