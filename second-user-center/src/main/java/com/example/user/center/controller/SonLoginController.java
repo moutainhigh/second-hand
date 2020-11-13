@@ -334,6 +334,25 @@ public class SonLoginController {
         secondAuth.setIsDeleted((byte) 1);
         secondAuth.setModifyDate(LocalDateTime.now());
         secondAuthMapper.updateByExampleSelective(secondAuth,secondAuthExample);
+        SecondUserSonExample secondUserSonExample = new SecondUserSonExample();
+        secondUserSonExample.createCriteria().andSonIdEqualTo(id)
+                .andIsDeletedEqualTo((byte) 0);
+        List<SecondUserSon> secondUserSons =
+                secondUserSonMapper.selectByExample(secondUserSonExample);
+        SecondUserSon secondUserSon = new SecondUserSon();
+        secondUserSon.setIsDeleted((byte) 0);
+        secondUserSon.setModifyDate(LocalDateTime.now());
+        secondUserSonMapper.updateByExampleSelective(secondUserSon,secondUserSonExample);
+        secondUserSons.forEach(secondUserSon1 -> {
+            SecondUser secondUser = secondUserMapper.selectByPrimaryKey(secondUserSon1.getUserId());
+            secondUser.setIsAuthentication(Authentication.UserState.NOPASS.getState());
+            secondUser.setModifyDate(LocalDateTime.now());
+            secondUserMapper.updateByPrimaryKeySelective(secondUser);
+            SecondStore secondStore = secondStoreMapper.selectByPrimaryKey(secondUserSon1.getStoreId());
+            secondStore.setSecondStatus(Authentication.UserState.NOPASS.getState());
+            secondStore.setModifyDate(LocalDateTime.now());
+            secondStoreMapper.updateByPrimaryKeySelective(secondStore);
+        });
         return builder.body(ResponseUtils.getResponseBody(0));
     }
     @RequestMapping(path = "/ListSon", method = RequestMethod.POST)
