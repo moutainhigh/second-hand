@@ -307,6 +307,7 @@ public class SecondProductController {
 
         if (isPutaway.equals(ProductEnum.IsPutaway.PUTAWAY.getState())){
             Integer[] a1 = new Integer[productId];
+            a1[0] = productId;
             IsPutaway(a1,isPutaway);
             System.out.println(a1[0]);
         }else {
