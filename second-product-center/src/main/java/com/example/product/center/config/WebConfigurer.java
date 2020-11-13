@@ -18,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
 @Configuration
@@ -25,6 +26,35 @@ public class WebConfigurer extends WebMvcConfigurationSupport {
 
     @Autowired
     private AuthorityInterceptor authorityInterceptor;
+    @Bean
+
+    public MyInterceptor myInterceptor() {
+
+        return new MyInterceptor();
+
+    }
+    @Override
+
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(authorityInterceptor);
+
+        super.addInterceptors(registry);
+
+    }
+
+    @Override
+
+    protected void addResourceHandlers(ResourceHandlerRegistry registry) {
+
+        registry.addResourceHandler("swagger-ui.html")
+
+                .addResourceLocations("classpath:/META-INF/resources/");
+
+        registry.addResourceHandler("/webjars/**")
+
+                .addResourceLocations("classpath:/META-INF/resources/webjars/");
+
+    }
 
     @Bean
 
