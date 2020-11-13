@@ -302,7 +302,12 @@ public class SecondProductController {
         secondProduct.setCategoryId(categoryId);//类目
         secondProduct.setProductName(productName);//商品名称
         secondProduct.setProductDesc(productDesc);//商品描述
-        secondProduct.setIsPutaway(ProductEnum.IsPutaway.getState(isPutaway).getState());//是否上架
+        if (isPutaway.equals(ProductEnum.IsPutaway.PUTAWAY.getState())){
+            Integer[] a = new Integer[productId];
+            IsPutaway(a,isPutaway);
+        }else {
+            secondProduct.setIsPutaway(ProductEnum.IsPutaway.getState(isPutaway).getState());//是否上架
+        }
         secondProduct.setStoreId(storeId);
         secondProduct.setIsDeleted((short) 0);
         secondProduct.setModifyTime(LocalDateTime.now());
