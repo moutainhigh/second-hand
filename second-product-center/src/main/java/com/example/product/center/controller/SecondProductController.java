@@ -1018,6 +1018,7 @@ if (price!=null && price==1){
     public ResponseEntity<JSONObject> IsPutaway(Integer[] productsId, Integer isPutaway) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
         for (Integer productId : productsId) {
+            System.out.println("product"+productId);
             SecondProduct secondProduct2 = secondProductMapper.selectByPrimaryKey(productId);
             if (isPutaway.equals(ProductEnum.IsPutaway.PUTAWAY.getState())
             && secondProduct2.getProductState().equals(ProductEnum.ProductState.SELLOUT.getState())){
