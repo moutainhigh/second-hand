@@ -321,6 +321,7 @@ public ResponseEntity<JSONObject> completePaymentAfter(
                                 secondOrderDetailMapper.selectByExample(secondOrderDetailExample);
                         SecondGoods secondGoods = secondGoodsMapper.selectByPrimaryKey(secondOrderDetails.get(0).getGoodsId());
                         SecondProduct secondProduct = secondProductMapper.selectByPrimaryKey(secondGoods.getProductId());
+                        secondProduct.setIsPutaway(ProductEnum.IsPutaway.OUT.getState());
                         secondProduct.setProductState(ProductEnum.ProductState.SELLOUT.getState());
                         secondProduct.setModifyTime(LocalDateTime.now());
                         secondProductMapper.updateByPrimaryKeySelective(secondProduct);

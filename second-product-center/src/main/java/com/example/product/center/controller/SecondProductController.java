@@ -314,8 +314,6 @@ public class SecondProductController {
                 secondProductMapper.selectByPrimaryKey(secondProduct.getId());
 //        System.out.println(secondProduct);
         //删除redis数据保证数据一致
-        System.out.println(secondProduct.getId());
-        System.out.println(secondProduct1.getCategoryId());
 //        if (secondProduct1.getCategoryId()!=null){
 //            deleted(String.valueOf(secondProduct1.getCategoryId())+"ProductCategory");
 //        }
@@ -459,7 +457,7 @@ public class SecondProductController {
         SecondProductExample secondProductExample = new SecondProductExample();
         secondProductExample.setOrderByClause("create_time desc");
         SecondProductExample.Criteria criteria = secondProductExample.createCriteria().andIsDeletedEqualTo((short) 0)
-                .andIsPutawayEqualTo(ProductEnum.IsPutaway.PUTAWAY.getState())
+//                .andIsPutawayEqualTo(ProductEnum.IsPutaway.PUTAWAY.getState())
                 .andProductTypeEqualTo(ProductEnum.Relation.GENERAL.getState())
                 .andProductStateEqualTo(ProductEnum.ProductState.SELL.getState())
                 .andShowTypeEqualTo(ProductEnum.ShowType.getState(showType).getState());
@@ -513,7 +511,6 @@ public class SecondProductController {
         List<ProductList> productLists = new ArrayList<>();
 
         List<SecondProduct> secondProducts = secondProductMapper.selectByExampleWithBLOBs(secondProductExample);
-        System.out.println(secondProducts);
         secondProducts.forEach(secondProduct1 -> {
 //            for(SecondProduct secondProduct1 : secondProducts){
             //物品
@@ -1012,11 +1009,57 @@ if (price!=null && price==1){
     public ResponseEntity<JSONObject> IsPutaway(Integer[] productsId, Integer isPutaway) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
         for (Integer productId : productsId) {
-            SecondProduct secondProduct = new SecondProduct();
-            secondProduct.setId(productId);
-            secondProduct.setIsPutaway(isPutaway);
-            secondProduct.setModifyTime(LocalDateTime.now());
-            secondProductMapper.updateByPrimaryKeySelective(secondProduct);
+            SecondProduct secondProduct2 = secondProductMapper.selectByPrimaryKey(productId);
+            if (isPutaway.equals(ProductEnum.IsPutaway.PUTAWAY.getState())
+            && secondProduct2.getProductState().equals(ProductEnum.ProductState.SELLOUT.getState())){
+                secondProduct2.setCreateTime(LocalDateTime.now());
+                secondProduct2.setModifyTime(LocalDateTime.now());
+                secondProduct2.setIsPutaway(ProductEnum.IsPutaway.PUTAWAY.getState());
+                secondProduct2.setProductState(ProductEnum.ProductState.SELL.getState());
+                secondProductMapper.insertSelective(secondProduct2);
+                SecondProductAddressExample secondProductAddressExample = new SecondProductAddressExample();
+                secondProductAddressExample.createCriteria().andProductIdEqualTo(productId)
+                        .andIsDeletedEqualTo((short) 0);
+                List<SecondProductAddress> secondProductAddresses =
+                        secondProductAddressMapper.selectByExample(secondProductAddressExample);
+                SecondProductAddress secondProductAddress = secondProductAddresses.get(0);
+                secondProductAddress.setProductId(secondProduct2.getId());
+                secondProductAddress.setCreateTime(LocalDateTime.now());
+                secondProductAddress.setModifyTime(LocalDateTime.now());
+                secondProductAddressMapper.insertSelective(secondProductAddress);
+                //商品图
+                SecondProductPictrueExample secondProductPictrueExample = new SecondProductPictrueExample();
+                secondProductPictrueExample.createCriteria().andProductIdEqualTo(productId)
+                        .andIsDeletedEqualTo((short) 0);
+                List<SecondProductPictrue> secondProductPictrues =
+                        secondProductPictrueMapper.selectByExample(secondProductPictrueExample);
+                if (secondProductPictrues.size()!=0){
+                    secondProductPictrues.forEach(secondProductPictrue -> {
+                        secondProductPictrue.setProductId(secondProduct2.getId());
+                        secondProductPictrue.setCreateTime(LocalDateTime.now());
+                        secondProductPictrue.setModifyTime(LocalDateTime.now());
+                        secondProductPictrueMapper.insertSelective(secondProductPictrue);
+                    });
+                    //物品
+                    SecondGoodsExample secondGoodsExample = new SecondGoodsExample();
+                    secondGoodsExample.createCriteria().andIsDeletedEqualTo((short) 0)
+                            .andProductIdEqualTo(productId);
+                    List<SecondGoods> secondGoods =
+                            secondGoodsMapper.selectByExample(secondGoodsExample);
+                    SecondGoods secondGoods1 = secondGoods.get(0);
+                    secondGoods1.setProductId(secondProduct2.getId());
+                    secondGoods1.setGoodsResp(1);
+                    secondGoods1.setCreateTime(LocalDateTime.now());
+                    secondGoods1.setModifyTime(LocalDateTime.now());
+                    secondGoodsMapper.insertSelective(secondGoods1);
+                }
+            }else {
+                SecondProduct secondProduct = new SecondProduct();
+                secondProduct.setId(productId);
+                secondProduct.setIsPutaway(isPutaway);
+                secondProduct.setModifyTime(LocalDateTime.now());
+                secondProductMapper.updateByPrimaryKeySelective(secondProduct);
+            }
         }
         return builder.body(ResponseUtils.getResponseBody(0));
     }
