@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.second.common:second-common:0.0.1">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/second/common/second-common/0.0.1/second-common-0.0.1.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/second/common/second-common/0.0.1/second-common-0.0.1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/second/common/second-common/0.0.1/second-common-0.0.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
