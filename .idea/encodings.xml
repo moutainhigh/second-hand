@@ -2,6 +2,7 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/hanfu-web-utils" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/second-common" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/second-entity-center" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/second-order-center" charset="UTF-8" />

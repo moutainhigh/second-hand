@@ -81,7 +81,7 @@
     <orderEntry type="library" name="Maven: org.springframework.plugin:spring-plugin-metadata:1.2.0.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.mapstruct:mapstruct:1.2.0.Final" level="project" />
     <orderEntry type="library" name="Maven: io.springfox:springfox-swagger-ui:2.9.2" level="project" />
-    <orderEntry type="module" module-name="second-common" />
+    <orderEntry type="library" name="Maven: com.second.common:second-common:0.0.1" level="project" />
     <orderEntry type="library" name="Maven: cn.bestwu:fastdfs-client-java:1.27" level="project" />
     <orderEntry type="library" name="Maven: com.auth0:java-jwt:3.8.3" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.9.8" level="project" />
@@ -89,11 +89,6 @@
     <orderEntry type="library" name="Maven: com.github.pagehelper:pagehelper-spring-boot-autoconfigure:1.2.5" level="project" />
     <orderEntry type="library" name="Maven: com.github.pagehelper:pagehelper:5.1.4" level="project" />
     <orderEntry type="library" name="Maven: com.github.jsqlparser:jsqlparser:1.0" level="project" />
-    <orderEntry type="library" name="Maven: com.itextpdf:itextpdf:5.5.13" level="project" />
-    <orderEntry type="library" name="Maven: com.google.zxing:javase:3.4.0" level="project" />
-    <orderEntry type="library" name="Maven: com.google.zxing:core:3.4.0" level="project" />
-    <orderEntry type="library" name="Maven: com.beust:jcommander:1.72" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: com.github.jai-imageio:jai-imageio-core:1.4.0" level="project" />
     <orderEntry type="module" module-name="second-web-utils" />
     <orderEntry type="library" name="Maven: org.apache.maven.plugins:maven-compiler-plugin:maven-plugin:3.8.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.maven:maven-plugin-api:3.0" level="project" />

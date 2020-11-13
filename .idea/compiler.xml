@@ -20,6 +20,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="hanfu-web-utils" target="11" />
       <module name="second-common" target="11" />
       <module name="second-hand" target="11" />
       <module name="second-order-center" target="1.8" />
