@@ -499,15 +499,15 @@ private SecondStoreMapper secondStoreMapper;
             userList.setUserId(secondUser.getId());
             userList.setUserFIle(secondUser.getFile());
             userList.setNickName(secondUser.getNickName());
-//            SecondAuthenticationExample secondAuthenticationExample = new SecondAuthenticationExample();
-//            secondAuthenticationExample.createCriteria().andUserIdEqualTo(secondUser.getId())
-//                    .andAuthenticationStateEqualTo(IsAuthentication)
-//            .andIsDeletedEqualTo((byte) 0);
-//            List<SecondAuthentication> secondAuthentication =
-//                    secondAuthenticationMapper.selectByExample(secondAuthenticationExample);
-//            if (secondAuthentication.size()!=0){
-//                userList.setCollege(secondAuthentication.get(0).getCollegesName());
-//            }
+            SecondAuthenticationExample secondAuthenticationExample = new SecondAuthenticationExample();
+            secondAuthenticationExample.createCriteria().andUserIdEqualTo(secondUser.getId())
+                    .andAuthenticationStateEqualTo(IsAuthentication)
+            .andIsDeletedEqualTo((byte) 0);
+            List<SecondAuthentication> secondAuthentication =
+                    secondAuthenticationMapper.selectByExample(secondAuthenticationExample);
+            if (secondAuthentication.size()!=0){
+                userList.setCollege(secondAuthentication.get(0).getCollegesName());
+            }
             SecondStoreExample secondStoreExample = new SecondStoreExample();
             secondStoreExample.createCriteria().andUserIdEqualTo(secondUser.getId())
                     .andIsDeletedEqualTo((short) 0)

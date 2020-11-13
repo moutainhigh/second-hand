@@ -72,7 +72,9 @@ public class CategoryController {
         secondCategory.setCreateTime(LocalDateTime.now());
         secondCategory.setModifyTime(LocalDateTime.now());
         secondCategory.setIsDeleted((short) 0);
-        secondCategory.setFile(fileId);
+        if (fileId!=null && !fileId.equals("")){
+            secondCategory.setFile(fileId);
+        }
         secondCategoryMapper.insertSelective(secondCategory);
         return builder.body(ResponseUtils.getResponseBody(secondCategory));
     }
