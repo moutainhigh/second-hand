@@ -79,6 +79,8 @@ public class SonLoginController {
     private SecondStoreBalanceDetailMapper secondStoreBalanceDetailMapper;
     @Autowired
     private SecondAuthenticationMapper secondAuthenticationMapper;
+    @Autowired
+    private SecondProductMapper secondProductMapper;
     @InitBinder
     public void initBinder(WebDataBinder binder, WebRequest request) {
         //转换日期
@@ -359,8 +361,14 @@ public class SonLoginController {
                     .andIsDeletedEqualTo((byte) 0);
             SecondAuthentication secondAuthentication = new SecondAuthentication();
             secondAuthentication.setAuthenticationState(1);
-            secondAuthentication.setIsDeleted((byte) 0);
+            secondAuthentication.setIsDeleted((byte) 1);
             secondAuthenticationMapper.updateByExampleSelective(secondAuthentication,secondAuthenticationExample);
+            SecondProductExample secondProductExample = new SecondProductExample();
+            secondProductExample.createCriteria().andStoreIdEqualTo(secondUserSon1.getStoreId())
+                    .andIsDeletedEqualTo((short) 0);
+            SecondProduct secondProduct = new SecondProduct();
+            secondProduct.setIsDeleted((short) 1);
+            secondProductMapper.updateByExampleSelective(secondProduct,secondProductExample);
         });
         return builder.body(ResponseUtils.getResponseBody(0));
     }
