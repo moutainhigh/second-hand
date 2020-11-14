@@ -98,7 +98,8 @@ public class MiniPaymentOrderController {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
         SecondBossSettingExample secondBossSettingExample = new SecondBossSettingExample();
         secondBossSettingExample.createCriteria().andBossIdEqualTo(1)
-                .andBossTypeEqualTo(Authentication.LoginType.USERWX.getState());
+                .andBossTypeEqualTo(Authentication.LoginType.USERWX.getState())
+        .andIsDeletedEqualTo((byte) 0);
         List<SecondBossSetting> secondBossSettings =//商家支付配置
         secondBossSettingMapper.selectByExample(secondBossSettingExample);
 //        MiniProgramConfig miniProgramConfig = new MiniProgramConfig();

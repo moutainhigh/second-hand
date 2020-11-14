@@ -77,6 +77,8 @@ public class SonLoginController {
     private SecondUserSonMapper secondUserSonMapper;
     @Autowired
     private SecondStoreBalanceDetailMapper secondStoreBalanceDetailMapper;
+    @Autowired
+    private SecondAuthenticationMapper secondAuthenticationMapper;
     @InitBinder
     public void initBinder(WebDataBinder binder, WebRequest request) {
         //转换日期
@@ -352,6 +354,13 @@ public class SonLoginController {
             secondStore.setSecondStatus(Authentication.UserState.NOPASS.getState());
             secondStore.setModifyDate(LocalDateTime.now());
             secondStoreMapper.updateByPrimaryKeySelective(secondStore);
+            SecondAuthenticationExample secondAuthenticationExample = new SecondAuthenticationExample();
+            secondAuthenticationExample.createCriteria().andUserIdEqualTo(secondUserSon1.getUserId())
+                    .andIsDeletedEqualTo((byte) 0);
+            SecondAuthentication secondAuthentication = new SecondAuthentication();
+            secondAuthentication.setAuthenticationState(1);
+            secondAuthentication.setIsDeleted((byte) 0);
+            secondAuthenticationMapper.updateByExampleSelective(secondAuthentication,secondAuthenticationExample);
         });
         return builder.body(ResponseUtils.getResponseBody(0));
     }
