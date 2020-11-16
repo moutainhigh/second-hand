@@ -61,8 +61,17 @@ public class CategoryController {
             @RequestParam(value = "categoryName", required = false) String categoryName,
             @RequestParam(value = "parentCategoryId", required = false) Integer parentCategoryId,
             @RequestParam(value = "categoryType", required = false) String categoryType,
-            @RequestParam(value = "levelId", required = false) Integer levelId
+            @RequestParam(value = "levelId", required = false) Integer levelId,
+            HttpServletResponse response
     ) throws Exception {
+        //防止非一级类目上级类目传空
+        if (levelId !=0 && parentCategoryId==null || levelId !=0 && parentCategoryId==0){
+            response.sendError(HttpStatus.FORBIDDEN.value(), "请选择上级类目");
+        }
+        SecondCategory secondCategory1 = secondCategoryMapper.selectByPrimaryKey(parentCategoryId);
+        if (levelId<=secondCategory1.getLevelId()){
+            response.sendError(HttpStatus.FORBIDDEN.value(), "上级类目同级或者更高级");
+        }
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
         SecondCategory secondCategory = new SecondCategory();
         secondCategory.setLevelId(levelId);
@@ -106,8 +115,8 @@ public class CategoryController {
             return builder.body(ResponseUtils.getResponseBody(1));
         }
         //判断都没有 逻辑删除删除类目
-        SecondCategory secondCategory1 = secondCategoryMapper.selectByPrimaryKey(categoryId);
-        String str = secondCategory1.getFile();
+//        SecondCategory secondCategory1 = secondCategoryMapper.selectByPrimaryKey(categoryId);
+//        String str = secondCategory1.getFile();
 
         SecondCategory secondCategory = new SecondCategory();
         secondCategory.setId(categoryId);

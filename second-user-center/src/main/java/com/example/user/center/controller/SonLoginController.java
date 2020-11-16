@@ -683,4 +683,25 @@ public class SonLoginController {
 
         return builder.body(ResponseUtils.getResponseBody(storeDetails));
     }
+
+    @RequestMapping(path = "/addColleges", method = RequestMethod.POST)
+    @ApiOperation(value = "添加学校", notes = "添加学校")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "cityId", value = "学校id", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "name", value = "学校名称", required = true, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "record", value = "学校类别", required = true, type = "String"),
+    })
+    public ResponseEntity<JSONObject> addColleges(
+            String name,
+            String record,
+            Integer cityId
+    ) throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
+        SecondColleges secondColleges = new SecondColleges();
+        secondColleges.setCityId(cityId);
+        secondColleges.setName(name);
+        secondColleges.setRecord(record);
+        secondCollegesMapper.insertSelective(secondColleges);
+        return builder.body(ResponseUtils.getResponseBody(0));
+    }
 }
