@@ -262,7 +262,7 @@ public class WithdrawalController {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
         SecondWithdrawalExample secondWithdrawalExample = new SecondWithdrawalExample();
         secondWithdrawalExample.createCriteria().andSourceEqualTo(source)
-                .andWithdrawalStateEqualTo(WithdrawalEnum.WithdrawalState.CHECK.getWithdrawalState())
+//                .andWithdrawalStateEqualTo(WithdrawalEnum.WithdrawalState.CHECK.getWithdrawalState())
                 .andIsDeletedEqualTo((byte) 0);
         List<SecondWithdrawal> secondWithdrawal =
         secondWithdrawalMapper.selectByExample(secondWithdrawalExample);
