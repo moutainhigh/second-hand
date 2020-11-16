@@ -476,7 +476,33 @@ public class SonLoginController {
         storeDetails.setStoreStatus(secondStore.getSecondStatus());
         if (secondStoreBalances.size()!=0){
             storeDetails.setMoney(secondStoreBalances.get(0).getSecondBalance());
-            storeDetails.setSumMoney(sumMoney+secondStoreBalances.get(0).getSecondBalance());
+            SecondAuthExample secondAuthExample = new SecondAuthExample();
+            secondAuthExample.createCriteria().andIsDeletedEqualTo((byte) 0)
+                    .andUserIdEqualTo(userId)
+                    .andStoreIdEqualTo(storeId);
+            List<SecondAuth> secondAuths =
+                    secondAuthMapper.selectByExample(secondAuthExample);
+            if (secondAuths.size()!=0){
+                SecondUserSonExample secondUserSonExample = new SecondUserSonExample();
+                secondUserSonExample.createCriteria().andIsDeletedEqualTo((byte) 0)
+                        .andSonIdEqualTo(secondAuths.get(0).getStoreId());
+                List<SecondUserSon> secondUserSons =
+                        secondUserSonMapper.selectByExample(secondUserSonExample);
+                Set<Integer> storeIds = secondUserSons.stream().map(SecondUserSon::getStoreId)
+                        .collect(Collectors.toSet());
+                if (storeIds!=null && storeIds.size()!=0){
+                    SecondOrderExample secondOrderExample = new SecondOrderExample();
+                    secondOrderExample.createCriteria().andStoneIdIn(Lists.newArrayList(storeIds));
+                    List<SecondOrder> secondOrders =
+                            secondOrderMapper.selectByExample(secondOrderExample);
+                    //统计订单钱数
+                    Integer m = secondOrders.stream().mapToInt(SecondOrder::getAmount).sum();
+                    storeDetails.setSumMoney(m);
+                } else {
+                    storeDetails.setSumMoney(0);
+                }
+
+            }
         } else {
             SecondStoreBalance secondStoreBalance = new SecondStoreBalance();
             secondStoreBalance.setUserId(userId);
@@ -488,7 +514,7 @@ public class SonLoginController {
             secondStoreBalance.setIsDeleted((short) 0);
             secondStoreBalanceMapper.insertSelective(secondStoreBalance);
             storeDetails.setMoney(0);
-            storeDetails.setSumMoney(sumMoney+secondStoreBalances.get(0).getSecondBalance());
+            storeDetails.setSumMoney(0);
         }
         return builder.body(ResponseUtils.getResponseBody(storeDetails));
     }
