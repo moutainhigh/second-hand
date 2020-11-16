@@ -11,6 +11,8 @@ package com.example.user.center.manual;
 public class SonTransactionAmount {
         private String sonName;
         private Integer money;
+        private Integer userNum;
+        private Integer sonId;
 
     public String getSonName() {
         return sonName;
@@ -26,5 +28,21 @@ public class SonTransactionAmount {
 
     public void setMoney(Integer money) {
         this.money = money;
+    }
+
+    public Integer getUserNum() {
+        return userNum;
+    }
+
+    public void setUserNum(Integer userNum) {
+        this.userNum = userNum;
+    }
+
+    public Integer getSonId() {
+        return sonId;
+    }
+
+    public void setSonId(Integer sonId) {
+        this.sonId = sonId;
     }
 }

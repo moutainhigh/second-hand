@@ -599,19 +599,30 @@ public class SonLoginController {
             SecondSon secondSon = secondSonMapper.selectByPrimaryKey(secondUserSons.get(0).getSonId());
             sonTransactionAmount.setSonName(secondSon.getSonName());
             sonTransactionAmount.setMoney(secondOrder.getAmount());
+            sonTransactionAmount.setSonId(secondSon.getId());
             sonTransactionAmounts.add(sonTransactionAmount);
         });
-        Set<String> sonName =
-        sonTransactionAmounts.stream().map(SonTransactionAmount::getSonName).collect(Collectors.toSet());
+        Set<Integer> sonIds =
+        sonTransactionAmounts.stream().map(SonTransactionAmount::getSonId).collect(Collectors.toSet());
 
         List<SonTransactionAmount> sonTransactionAmounts1 = new ArrayList<>();
-        sonName.forEach(s -> {
+        sonIds.forEach(s -> {
             Integer moneys =
-            sonTransactionAmounts.stream().filter(a->a.getSonName().equals(s))
+            sonTransactionAmounts.stream().filter(a->a.getSonId().equals(s))
                     .mapToInt(SonTransactionAmount::getMoney).sum();
+            Set<String> sonName = sonTransactionAmounts.stream().filter(a->a.getSonId().equals(s))
+                    .map(SonTransactionAmount::getSonName).collect(Collectors.toSet());
             SonTransactionAmount sonTransactionAmount1 = new SonTransactionAmount();
-            sonTransactionAmount1.setSonName(s);
+            sonTransactionAmount1.setSonId(s);
+            sonTransactionAmount1.setSonName(sonName.iterator().next());
             sonTransactionAmount1.setMoney(moneys);
+
+            SecondUserSonExample secondUserSonExample = new SecondUserSonExample();
+            secondUserSonExample.createCriteria().andIsDeletedEqualTo((byte) 0)
+                    .andSonIdEqualTo(s);
+            List<SecondUserSon> secondUserSons =
+                    secondUserSonMapper.selectByExample(secondUserSonExample);
+            sonTransactionAmount1.setUserNum(secondUserSons.size());
             sonTransactionAmounts1.add(sonTransactionAmount1);
         });
 
