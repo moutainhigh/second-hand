@@ -422,7 +422,7 @@ private SecondStoreMapper secondStoreMapper;
 
         if (secondAuthentications.size()!=0 && EndAuthenticationState.equals(Authentication.State.PASS.getState())){
             SecondUser secondUser = new SecondUser();
-            secondUser.setPhone(secondAuthentications.get(0).getStudentNumber());
+//            secondUser.setPhone(secondAuthentications.get(0).getStudentNumber());
             secondUser.setId(secondAuthentications.get(0).getUserId());
             secondUser.setIsAuthentication(Authentication.UserState.PASS.getState());
             secondUserMapper.updateByPrimaryKeySelective(secondUser);
@@ -613,6 +613,8 @@ private SecondStoreMapper secondStoreMapper;
         }
         userDetails.setUserFile(secondUser.getFile());//头像
         userDetails.setNickName(secondUser.getNickName());//昵称
+        userDetails.setPhone(secondUser.getPhone());//电话
+        userDetails.setEmail(secondUser.getEmail());//邮箱
         SecondAttentionExample secondAttentionExample = new SecondAttentionExample();
         secondAttentionExample.createCriteria().andIsDeletedEqualTo((byte) 0)
                 .andUserIdEqualTo(userId);
@@ -786,6 +788,35 @@ private SecondStoreMapper secondStoreMapper;
 
         return builder.body(ResponseUtils.getResponseBody(storeDetails));
     }
+
+    @RequestMapping(path = "/updateUser", method = RequestMethod.POST)
+    @ApiOperation(value = "用户修改", notes = "用户修改")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "name", value = "昵称", required = true, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "file", value = "头像", required = true, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "phone", value = "电话", required = true, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "email", value = "邮箱", required = true, type = "String"),
+    })
+    public ResponseEntity<JSONObject> updateUser(@RequestParam(value = "name", required = false) String name,
+                                                     @RequestParam(value = "file", required = false) String file,
+                                                     @RequestParam(value = "phone", required = false) String phone,
+                                                     @RequestParam(value = "email", required = false) String email,
+                                                     @RequestParam(value = "userId", required = false) Integer userId,
+                                                     HttpServletResponse response, HttpServletRequest request) throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
+            SecondUser secondUser = new SecondUser();
+        secondUser.setId(userId);
+        secondUser.setPhone(phone);
+        secondUser.setModifyDate(LocalDateTime.now());
+        secondUser.setFile(file);
+        secondUser.setEmail(email);
+        secondUser.setNickName(name);
+        secondUserMapper.updateByPrimaryKeySelective(secondUser);
+            return builder.body(ResponseUtils.getResponseBody(0));
+
+        }
+
+
     @InitBinder
     public void initBinder(WebDataBinder binder, WebRequest request) {
         //转换日期

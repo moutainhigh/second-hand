@@ -23,6 +23,8 @@ public class CreateOrderRequest {
     private Integer userId;
     @ApiModelProperty(required = false, value = "支付类型")
     private String paymentType;
+    @ApiModelProperty(required = false, value = "地址id,用户商品的时候使用")
+    private Integer addressId;
 
     public String getGoodsList() {
         return goodsList;
@@ -70,5 +72,13 @@ public class CreateOrderRequest {
 
     public void setPaymentType(String paymentType) {
         this.paymentType = paymentType;
+    }
+
+    public Integer getAddressId() {
+        return addressId;
+    }
+
+    public void setAddressId(Integer addressId) {
+        this.addressId = addressId;
     }
 }

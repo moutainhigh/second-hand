@@ -13,6 +13,8 @@ public class UserDetails {
     private Integer storeId;//店铺id
     private String userFile;//用户头像
     private String nickName;//昵称
+    private String phone;
+    private String email;//
     private Integer attentionNumber;//关注数量
     private Integer myFansNumber;//粉丝数量
     private Integer evaluateNumber;//评价数量
@@ -107,5 +109,40 @@ public class UserDetails {
 
     public void setLookNumber(Integer lookNumber) {
         this.lookNumber = lookNumber;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return "UserDetails{" +
+                "userId=" + userId +
+                ", storeId=" + storeId +
+                ", userFile='" + userFile + '\'' +
+                ", nickName='" + nickName + '\'' +
+                ", phone='" + phone + '\'' +
+                ", email='" + email + '\'' +
+                ", attentionNumber=" + attentionNumber +
+                ", myFansNumber=" + myFansNumber +
+                ", evaluateNumber=" + evaluateNumber +
+                ", authentication=" + authentication +
+                ", attention='" + attention + '\'' +
+                ", collectNumber=" + collectNumber +
+                ", lookNumber=" + lookNumber +
+                '}';
     }
 }

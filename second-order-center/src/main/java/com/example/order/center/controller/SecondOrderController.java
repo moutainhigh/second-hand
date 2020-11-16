@@ -82,6 +82,8 @@ public class SecondOrderController {
     private SecondProductAddressMapper secondProductAddressMapper;
     //店铺地址
     @Autowired
+    private SecondStoreAddressMapper secondStoreAddressMapper;
+    @Autowired
     private SecondStoreMapper secondStoreMapper;
     //订单地址
     @Autowired
@@ -186,28 +188,50 @@ public class SecondOrderController {
                 secondProduct.setProductState(ProductEnum.ProductState.SELLOUT.getState());
                 secondProductMapper.updateByPrimaryKeySelective(secondProduct);
             }
-            SecondProductAddressExample secondProductAddressExample = new SecondProductAddressExample();
-            secondProductAddressExample.createCriteria().andProductIdEqualTo(secondProduct.getId())
-                    .andIsDeletedEqualTo((short) 0);
-            List<SecondProductAddress> secondProductAddresses =
-            secondProductAddressMapper.selectByExample(secondProductAddressExample);
-            //添加商品地址
-            SecondOrderAddress secondOrderAddress = new SecondOrderAddress();
-            secondOrderAddress.setOrderId(secondOrder.getId());
-            secondOrderAddress.setSecondProvince(secondProductAddresses.get(0).getSecondProvince());
-            secondOrderAddress.setSecondCity(secondProductAddresses.get(0).getSecondCity());
-            secondOrderAddress.setSecondConty(secondProductAddresses.get(0).getContact());
-            secondOrderAddress.setSecondConty(secondProductAddresses.get(0).getSecondConty());
-            secondOrderAddress.setSecondAddressDetail(secondProductAddresses.get(0).getSecondAddressDetail());
-            secondOrderAddress.setLongitude(secondProductAddresses.get(0).getLongitude());
-            secondOrderAddress.setLatitude(secondProductAddresses.get(0).getLatitude());
-            secondOrderAddress.setContact(secondProductAddresses.get(0).getContact());
-            secondOrderAddress.setPhone(secondProductAddresses.get(0).getPhoneNumber());
-            secondOrderAddress.setSecondDesc(secondProductAddresses.get(0).getSecondDesc());
-            secondOrderAddress.setCreateTime(LocalDateTime.now());
-            secondOrderAddress.setModifyTime(LocalDateTime.now());
-            secondOrderAddress.setIsDeleted((short) 0);
-            secondOrderAddressMapper.insertSelective(secondOrderAddress);
+            //地址 地址id为空说明是商家创建订单 不为空用户创建订单
+            if (request.getAddressId() ==null){
+                SecondProductAddressExample secondProductAddressExample = new SecondProductAddressExample();
+                secondProductAddressExample.createCriteria().andProductIdEqualTo(secondProduct.getId())
+                        .andIsDeletedEqualTo((short) 0);
+                List<SecondProductAddress> secondProductAddresses =
+                        secondProductAddressMapper.selectByExample(secondProductAddressExample);
+                //添加订单地址
+                SecondOrderAddress secondOrderAddress = new SecondOrderAddress();
+                secondOrderAddress.setOrderId(secondOrder.getId());
+                secondOrderAddress.setSecondProvince(secondProductAddresses.get(0).getSecondProvince());
+                secondOrderAddress.setSecondCity(secondProductAddresses.get(0).getSecondCity());
+                secondOrderAddress.setSecondConty(secondProductAddresses.get(0).getContact());
+                secondOrderAddress.setSecondConty(secondProductAddresses.get(0).getSecondConty());
+                secondOrderAddress.setSecondAddressDetail(secondProductAddresses.get(0).getSecondAddressDetail());
+                secondOrderAddress.setLongitude(secondProductAddresses.get(0).getLongitude());
+                secondOrderAddress.setLatitude(secondProductAddresses.get(0).getLatitude());
+                secondOrderAddress.setContact(secondProductAddresses.get(0).getContact());
+                secondOrderAddress.setPhone(secondProductAddresses.get(0).getPhoneNumber());
+                secondOrderAddress.setSecondDesc(secondProductAddresses.get(0).getSecondDesc());
+                secondOrderAddress.setCreateTime(LocalDateTime.now());
+                secondOrderAddress.setModifyTime(LocalDateTime.now());
+                secondOrderAddress.setIsDeleted((short) 0);
+                secondOrderAddressMapper.insertSelective(secondOrderAddress);
+            } else {
+                SecondStoreAddress secondStoreAddress = secondStoreAddressMapper.selectByPrimaryKey(request.getAddressId());
+                SecondOrderAddress secondOrderAddress = new SecondOrderAddress();
+                secondOrderAddress.setOrderId(secondOrder.getId());
+                secondOrderAddress.setSecondProvince(secondStoreAddress.getSecondProvince());
+                secondOrderAddress.setSecondCity(secondStoreAddress.getSecondCity());
+                secondOrderAddress.setSecondConty(secondStoreAddress.getContact());
+                secondOrderAddress.setSecondConty(secondStoreAddress.getSecondConty());
+                secondOrderAddress.setSecondAddressDetail(secondStoreAddress.getSecondAddressDetail());
+                secondOrderAddress.setLongitude(secondStoreAddress.getLongitude());
+                secondOrderAddress.setLatitude(secondStoreAddress.getLatitude());
+                secondOrderAddress.setContact(secondStoreAddress.getContact());
+                secondOrderAddress.setPhone(secondStoreAddress.getPhoneNumber());
+                secondOrderAddress.setSecondDesc(secondStoreAddress.getSecondDesc());
+                secondOrderAddress.setCreateTime(LocalDateTime.now());
+                secondOrderAddress.setModifyTime(LocalDateTime.now());
+                secondOrderAddress.setIsDeleted((short) 0);
+                secondOrderAddressMapper.insertSelective(secondOrderAddress);
+            }
+
             //详情
             secondOrderDetails.forEach(secondOrderDetail -> {
                 secondOrderDetail.setOrderId(secondOrder.getId());
