@@ -25,6 +25,7 @@ public class SecondWithdrawalList {
     private String account;//账号
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;//创建时间
+    private String state;
 
     public Integer getSecondWithdrawal() {
         return secondWithdrawal;
@@ -106,6 +107,14 @@ public class SecondWithdrawalList {
         this.createTime = createTime;
     }
 
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
     @Override
     public String toString() {
         return "SecondWithdrawalList{" +
@@ -119,6 +128,7 @@ public class SecondWithdrawalList {
                 ", WithdrawalMethod='" + WithdrawalMethod + '\'' +
                 ", account='" + account + '\'' +
                 ", createTime=" + createTime +
+                ", state='" + state + '\'' +
                 '}';
     }
 }

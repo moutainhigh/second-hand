@@ -264,6 +264,7 @@ public class WithdrawalController {
         secondWithdrawalExample.createCriteria().andSourceEqualTo(source)
 //                .andWithdrawalStateEqualTo(WithdrawalEnum.WithdrawalState.CHECK.getWithdrawalState())
                 .andIsDeletedEqualTo((byte) 0);
+        secondWithdrawalExample.setOrderByClause("modify_date desc");
         List<SecondWithdrawal> secondWithdrawal =
         secondWithdrawalMapper.selectByExample(secondWithdrawalExample);
         List<SecondWithdrawalList> secondWithdrawalLists = new ArrayList<>();
@@ -296,6 +297,7 @@ public class WithdrawalController {
                 secondStoreMapper.selectByExample(secondStoreExample);
                 secondWithdrawalList.setStoreName(secondStores.get(0).getStoreName());
             }
+            secondWithdrawalList.setState(secondWithdrawal1.getWithdrawalState());
             secondWithdrawalList.setName(secondWithdrawal1.getWithdrawalName());
             secondWithdrawalList.setWithdrawalMoney(secondWithdrawal1.getWithdrawalMoney());
             secondWithdrawalList.setRealityMoney(secondWithdrawal1.getRealityMoney());
