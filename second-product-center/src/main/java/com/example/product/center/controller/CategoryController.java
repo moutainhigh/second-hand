@@ -114,17 +114,17 @@ public class CategoryController {
         secondCategory.setIsDeleted((short) 1);
         secondCategoryMapper.updateByPrimaryKeySelective(secondCategory);
         //删除图片
-        if (str!=null){
-            String str1=str.substring(0, str.indexOf("="));
-            String str2=str.substring(str1.length()+1, str.length());
-            System.out.println(str2);
-            SecondFile secondFile =  secondFileMapper.selectByPrimaryKey(Integer.valueOf(str2));
-            if (secondFile!=null){
-                FileMangeService fileManageService = new FileMangeService();
-                fileManageService.deleteFile(secondFile.getGroupName(), secondFile.getRemoteFilename());
-                secondFileMapper.deleteByPrimaryKey(secondFile.getId());
-            }
-        }
+//        if (str!=null){
+//            String str1=str.substring(0, str.indexOf("="));
+//            String str2=str.substring(str1.length()+1, str.length());
+//            System.out.println(str2);
+//            SecondFile secondFile =  secondFileMapper.selectByPrimaryKey(Integer.valueOf(str2));
+//            if (secondFile!=null){
+//                FileMangeService fileManageService = new FileMangeService();
+//                fileManageService.deleteFile(secondFile.getGroupName(), secondFile.getRemoteFilename());
+//                secondFileMapper.deleteByPrimaryKey(secondFile.getId());
+//            }
+//        }
         return builder.body(ResponseUtils.getResponseBody(0));
 
     }
