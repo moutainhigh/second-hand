@@ -65,7 +65,7 @@ public class CategoryController {
             HttpServletResponse response
     ) throws Exception {
         //防止非一级类目上级类目传空
-        if (levelId !=0 && parentCategoryId==null || levelId !=0 && parentCategoryId==0){
+        if (levelId !=0 && parentCategoryId==null || levelId !=0 && parentCategoryId==0|| levelId !=0 && parentCategoryId.equals("")){
             response.sendError(HttpStatus.FORBIDDEN.value(), "请选择上级类目");
         }
         SecondCategory secondCategory1 = secondCategoryMapper.selectByPrimaryKey(parentCategoryId);
