@@ -67,6 +67,7 @@ public class CancelController {
             @RequestParam(value = "userId", required = false) Integer userId,
             HttpServletResponse response
     ) throws Exception {
+        //
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
         String key = "MIGfMA0GCSqGSIb3";
         String IntegralRecord = String.valueOf(IntegralRecordCode).replace("思维创造", "");
