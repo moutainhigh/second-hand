@@ -478,8 +478,7 @@ public class SonLoginController {
             storeDetails.setMoney(secondStoreBalances.get(0).getSecondBalance());
             SecondAuthExample secondAuthExample = new SecondAuthExample();
             secondAuthExample.createCriteria().andIsDeletedEqualTo((byte) 0)
-                    .andUserIdEqualTo(userId)
-                    .andStoreIdEqualTo(storeId);
+                    .andUserIdEqualTo(userId);
             List<SecondAuth> secondAuths =
                     secondAuthMapper.selectByExample(secondAuthExample);
             if (secondAuths.size()!=0){
