@@ -344,7 +344,7 @@ public class SonLoginController {
         List<SecondUserSon> secondUserSons =
                 secondUserSonMapper.selectByExample(secondUserSonExample);
         SecondUserSon secondUserSon = new SecondUserSon();
-        secondUserSon.setIsDeleted((byte) 0);
+        secondUserSon.setIsDeleted((byte) 1);
         secondUserSon.setModifyDate(LocalDateTime.now());
         secondUserSonMapper.updateByExampleSelective(secondUserSon,secondUserSonExample);
         secondUserSons.forEach(secondUserSon1 -> {
