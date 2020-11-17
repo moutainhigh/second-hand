@@ -342,6 +342,8 @@ public class SecondOrderController {
             List<SecondOrderAddress> secondOrderAddresses
                     =secondOrderAddressMapper.selectByExample(secondOrderAddressExample);
             if (secondOrderAddresses.size()!=0){
+                orderList.setNameAddress(secondOrderAddresses.get(0).getContact());
+                orderList.setPhoneAddress(secondOrderAddresses.get(0).getPhone());
                 orderList.setStoreAddress(secondOrderAddresses.get(0).getSecondAddressDetail());
             }
             orderList.setStoreName(secondStore.getStoreName());

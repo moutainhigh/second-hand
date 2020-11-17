@@ -28,6 +28,8 @@ public class OrderList {
     private String userFile;//用户头像
     private Integer sonId;//子站点id
     private String storeAddress;//店铺地址
+    private String phoneAddress;//地址电话
+    private String nameAddress;//地址姓名
     private Integer payOrderId;//支付订单
 
     private List<OrderProductList> orderProductLists;
@@ -158,5 +160,21 @@ public class OrderList {
 
     public void setPayOrderId(Integer payOrderId) {
         this.payOrderId = payOrderId;
+    }
+
+    public String getPhoneAddress() {
+        return phoneAddress;
+    }
+
+    public void setPhoneAddress(String phoneAddress) {
+        this.phoneAddress = phoneAddress;
+    }
+
+    public String getNameAddress() {
+        return nameAddress;
+    }
+
+    public void setNameAddress(String nameAddress) {
+        this.nameAddress = nameAddress;
     }
 }
