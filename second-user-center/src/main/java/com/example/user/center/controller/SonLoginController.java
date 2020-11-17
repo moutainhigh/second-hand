@@ -625,7 +625,24 @@ public class SonLoginController {
             sonTransactionAmount1.setUserNum(secondUserSons.size());
             sonTransactionAmounts1.add(sonTransactionAmount1);
         });
-
+        SecondSonExample secondSonExample = new SecondSonExample();
+        secondSonExample.createCriteria().andIsDeletedEqualTo((short) 0)
+                .andIdNotIn(Lists.newArrayList(sonIds));
+        List<SecondSon> secondSons =
+                secondSonMapper.selectByExample(secondSonExample);
+        secondSons.forEach(secondSon -> {
+            SonTransactionAmount sonTransactionAmount2 = new SonTransactionAmount();
+            sonTransactionAmount2.setSonId(secondSon.getId());
+            sonTransactionAmount2.setSonName(secondSon.getSonName());
+            sonTransactionAmount2.setMoney(0);
+            SecondUserSonExample secondUserSonExample = new SecondUserSonExample();
+            secondUserSonExample.createCriteria().andIsDeletedEqualTo((byte) 0)
+                    .andSonIdEqualTo(secondSon.getId());
+            List<SecondUserSon> secondUserSons =
+                    secondUserSonMapper.selectByExample(secondUserSonExample);
+            sonTransactionAmount2.setUserNum(secondUserSons.size());
+            sonTransactionAmounts1.add(sonTransactionAmount2);
+        });
         return builder.body(ResponseUtils.getResponseBody(sonTransactionAmounts1));
     }
     @RequestMapping(path = "/sonStoreDetails", method = RequestMethod.GET)
