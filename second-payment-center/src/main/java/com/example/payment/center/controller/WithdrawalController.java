@@ -182,7 +182,7 @@ public class WithdrawalController {
             secondWithdrawalExemptMapper.selectByExample(secondWithdrawalExemptExample);
 
             SecondWithdrawalExempt secondWithdrawalExempt = new SecondWithdrawalExempt();
-            if (secondWithdrawalExempts.size()!=0){
+            if (secondWithdrawalExempts.size()!=0 && rate != 0){
                 if (secondWithdrawalExempts.get(0).getExemptCommission()!=null){
                     if (secondWithdrawalExempts.get(0).getExemptCommission()>withdrawalMoney){
                         secondWithdrawalExempt.setId(secondWithdrawalExempts.get(0).getId());
