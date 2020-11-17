@@ -378,6 +378,22 @@ public class WithdrawalController {
 
                 }
             }
+            //如果拒绝提现
+            if (type.equals(WithdrawalEnum.WithdrawalState.CANCEL.getWithdrawalState())){
+                balanceService.addBalance(secondWithdrawals.get(0).getStoreId(),BanlaceEnum.Relation.MONEY.getState(),secondWithdrawals.get(0).getWithdrawalMoney());
+                //流水
+                SecondStoreBalanceDetail secondStoreBalanceDetail = new SecondStoreBalanceDetail();
+                secondStoreBalanceDetail.setUserId(secondWithdrawals.get(0).getUserId());
+                secondStoreBalanceDetail.setPayDesc("拒绝提现");
+                secondStoreBalanceDetail.setStoreId(secondWithdrawals.get(0).getStoreId());
+                secondStoreBalanceDetail.setAmount(secondWithdrawals.get(0).getWithdrawalMoney());
+                secondStoreBalanceDetail.setDetailType(BanlaceEnum.Relation.MONEY.getState());
+                secondStoreBalanceDetail.setIncomeExpenses(BanlaceEnum.incomeExpenses.PUT.getState());
+                secondStoreBalanceDetail.setCreateTime(LocalDateTime.now());
+                secondStoreBalanceDetail.setModifyTime(LocalDateTime.now());
+                secondStoreBalanceDetail.setIsDeleted((short) 0);
+                secondStoreBalanceDetailMapper.insertSelective(secondStoreBalanceDetail);
+            }
             //审批记录
             SecondWithdrawalAudit secondWithdrawalAudit = new SecondWithdrawalAudit();
             secondWithdrawalAudit.setWithdrawalId(secondWithdrawal.getId());
@@ -413,10 +429,19 @@ public class WithdrawalController {
     }
     public static void main(String[] args) {
         Integer money = 10100;
-        Double realityMoneys1 = ((Double.valueOf(money) / 10000));
-//        Double realityMoneys = ((Double.valueOf(money)*20)/100);//                        利息进一位
-        Integer realityMoneyx = (int) Math.ceil(realityMoneys1);
+        Double realityMoneys = ((Double.valueOf(money) / 10000));
+//        Double realityMoneys1 = ((Double.valueOf(money) / 10000));
+//        Double realityMoneys = ((Double.valueOf(money)*20)/100);//
+//                      利息进一位
+        //向上取整:Math.ceil() //只要有小数都+1
+        //向下取整:Math.floor() //不取小数
+        //四舍五入:Math.round() //四舍五入
+        System.out.println(Math.floor(money*0.5/100));
+        System.out.println(realityMoneys);
+        Integer realityMoneyx = (int) Math.ceil(realityMoneys);
         System.out.println(realityMoneyx);
+        Integer realityMoney = (realityMoneyx*(int)(0.5*100));
+        System.out.println(realityMoney);
     }
     @ApiOperation(value = "提现记录", notes = "提现记录")
     @RequestMapping(value = "/record", method = RequestMethod.GET)
