@@ -131,10 +131,14 @@ public class SecondOrderController {
         JSONArray jsonArray= JSONArray.parseArray(request.getGoodsList());
         List<goods> list1 = JSONObject.parseArray(jsonArray.toJSONString(), goods.class);
                 //扣减库存
-        list1.forEach(good->{
+//        list1.forEach(good->{
+        for (goods good: list1){
            int a=  payOrderService.stock(good.getQuantity(),good.getGoodsId());
-            System.out.println(a);
-        });
+            if (a<=0){
+                response.sendError(HttpStatus.FORBIDDEN.value(), "库存不足,或者商品已经卖出");
+                return builder.body(ResponseUtils.getResponseBody(list));
+            }
+        };
                 //支付订单
         SecondPayOrder secondPayOrder = new SecondPayOrder();
         secondPayOrder.setPayCode(UUID.randomUUID().toString());
