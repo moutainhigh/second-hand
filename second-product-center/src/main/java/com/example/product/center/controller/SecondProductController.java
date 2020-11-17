@@ -894,7 +894,7 @@ if (price!=null && price==1){
                 secondProductWants = secondProductWantMapper.selectByExample(secondProductWantExample);
                 productList.setWant(secondProductWants.size());
 
-
+                productList.setFile(secondProduct.getFile());
                 productList.setId(secondProduct.getId());//商品id
                 productList.setProductName(secondProduct.getProductName());//商品名称
                 productList.setProductDesc(secondProduct.getProductDesc());//描述
