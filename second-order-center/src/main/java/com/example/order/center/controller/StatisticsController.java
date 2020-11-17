@@ -169,8 +169,6 @@ public class StatisticsController {
         List<SecondOrder> secondOrders5 =
                 secondOrders.stream().filter(
                 a->!a.getOrderStatus().equals(OrderEnum.OrderStatus.PAYMENT.getOrderStatus())
-                        && !a.getOrderStatus().equals(OrderEnum.OrderStatus.CONTROVERSIAL.getOrderStatus()
-                        )&& !a.getOrderStatus().equals(OrderEnum.OrderStatus.CANCEL.getOrderStatus())
                 )
                         .collect(Collectors.toList());
         Integer tolal = secondOrders5.stream().mapToInt(SecondOrder::getAmount).sum();
