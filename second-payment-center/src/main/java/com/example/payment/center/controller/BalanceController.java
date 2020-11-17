@@ -58,6 +58,7 @@ public class BalanceController {
         secondStoreBalanceDetailExample.createCriteria().andUserIdEqualTo(userId)
                 .andStoreIdEqualTo(storeId)
                 .andIsDeletedEqualTo((short) 0);
+        secondStoreBalanceDetailExample.setOrderByClause("create_time desc");
         if (type!=null){
             criteria.andDetailTypeEqualTo(type);
         }
