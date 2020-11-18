@@ -83,7 +83,8 @@ public class StoreLoginController {
 
         SecondAuthExample secondAuthExample = new SecondAuthExample();
         secondAuthExample.createCriteria().andAuthKeyEqualTo(openid)
-                .andAuthTypeEqualTo(WxStoreLoginConfig.AuthType.WECHART.getAuthType());
+                .andAuthTypeEqualTo(WxStoreLoginConfig.AuthType.WECHART.getAuthType())
+        .andIsDeletedEqualTo((byte) 0);
         List<SecondAuth> auths = secondAuthMapper.selectByExample(secondAuthExample);
         SecondUser secondUser = CollectionUtils.isEmpty(auths) ? register(openid, sessionKey, encryptedData, iv) : secondUserMapper.selectByPrimaryKey(auths.get(0).getUserId());
 

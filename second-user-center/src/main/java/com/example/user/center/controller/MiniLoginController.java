@@ -119,7 +119,8 @@ private SecondStoreMapper secondStoreMapper;
         System.out.println(openid+"我是openId");
         SecondAuthExample secondAuthExample = new SecondAuthExample();
         secondAuthExample.createCriteria().andAuthKeyEqualTo(openid)
-                .andAuthTypeEqualTo(WxLoginConfig.AuthType.WECHART.getAuthType());
+                .andAuthTypeEqualTo(WxLoginConfig.AuthType.WECHART.getAuthType())
+                .andIsDeletedEqualTo((byte) 0);
         List<SecondAuth> auths = secondAuthMapper.selectByExample(secondAuthExample);
         SecondUser secondUser = CollectionUtils.isEmpty(auths) ? register(openid, sessionKey, encryptedData, iv) : secondUserMapper.selectByPrimaryKey(auths.get(0).getUserId());
 
