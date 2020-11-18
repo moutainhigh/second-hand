@@ -68,9 +68,11 @@ public class CategoryController {
         if (levelId !=0 && parentCategoryId==null || levelId !=0 && parentCategoryId==0|| levelId !=0 && parentCategoryId.equals("")){
             response.sendError(HttpStatus.FORBIDDEN.value(), "请选择上级类目");
         }
-        SecondCategory secondCategory1 = secondCategoryMapper.selectByPrimaryKey(parentCategoryId);
-        if (levelId<=secondCategory1.getLevelId()){
-            response.sendError(HttpStatus.FORBIDDEN.value(), "上级类目同级或者更高级");
+        if (parentCategoryId!= null){
+            SecondCategory secondCategory1 = secondCategoryMapper.selectByPrimaryKey(parentCategoryId);
+            if (levelId<=secondCategory1.getLevelId()){
+                response.sendError(HttpStatus.FORBIDDEN.value(), "上级类目同级或者更高级");
+            }
         }
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
         SecondCategory secondCategory = new SecondCategory();
