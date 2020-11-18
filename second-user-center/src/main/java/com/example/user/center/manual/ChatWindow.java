@@ -96,4 +96,19 @@ public class ChatWindow {
     public void setUnread(Integer unread) {
         this.unread = unread;
     }
+
+    @Override
+    public String toString() {
+        return "ChatWindow{" +
+                "userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", userFile='" + userFile + '\'' +
+                ", byUserFile='" + byUserFile + '\'' +
+                ", byUserName='" + byUserName + '\'' +
+                ", byUserId=" + byUserId +
+                ", unread=" + unread +
+                ", createTime=" + createTime +
+                ", modifyTime=" + modifyTime +
+                '}';
+    }
 }

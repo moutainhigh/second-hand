@@ -22,13 +22,19 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
 
 import javax.annotation.Resource;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -45,6 +51,12 @@ import java.util.stream.Collectors;
 @RequestMapping("/Chat")
 @CrossOrigin
 public class ChatController {
+    @InitBinder
+    public void initBinder(WebDataBinder binder, WebRequest request) {
+        //转换日期
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));// CustomDateEditor为自定义日期编辑器
+    }
     //聊天
     @Autowired
     private SecondChatMapper secondChatMapper;
@@ -254,6 +266,13 @@ public class ChatController {
                     JSON.parseObject(String.valueOf(object), new TypeReference<List<ChatWindow>>(){});
         }
         List<ChatWindow> latestItem = chatWindows.stream().sorted(Comparator.comparing(ChatWindow::getModifyTime).reversed()).collect(Collectors.toList());
+        latestItem.forEach(latestItem1->{
+            LocalDateTime time = latestItem1.getModifyTime();
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String createTime = dateTimeFormatter.format(time);
+            LocalDateTime localDateTime = LocalDateTime.parse(createTime,dateTimeFormatter);
+            latestItem1.setModifyTime(localDateTime);
+        });
         return builder.body(ResponseUtils.getResponseBody(latestItem));
     }
 
@@ -284,5 +303,16 @@ public class ChatController {
         secondChat.setReadStatus(ChatEnum.ChatStatus.YET.getMessageStatus());
         secondChatMapper.updateByExampleSelective(secondChat,secondChatExample);
         return builder.body(ResponseUtils.getResponseBody(0));
+    }
+
+    public static void main(String[] args) {
+        LocalDateTime time = LocalDateTime.now();
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String createTime = dateTimeFormatter.format(time);
+        System.out.println(createTime);
+        LocalDateTime localDateTime = LocalDateTime.parse(createTime,dateTimeFormatter);
+        ChatWindow chatWindow = new ChatWindow();
+        chatWindow.setCreateTime(localDateTime);
+        System.out.println(chatWindow);
     }
 }
