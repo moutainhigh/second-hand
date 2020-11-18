@@ -186,33 +186,36 @@ public class SecondProductController {
 //        deleted(String.valueOf(secondUserSons.get(0).getSonId())+"ProductSon");
         deleted(String.valueOf(secondProduct.getId()) + "detail");
         //
-        SecondStoreAddress secondStoreAddress = secondStoreAddressMapper.selectByPrimaryKey(addressId);
-        SecondProductAddress secondProductAddress = new SecondProductAddress();
-        secondProductAddress.setProductId(secondProduct.getId());
-        secondProductAddress.setSecondProvince(secondStoreAddress.getSecondProvince());
-        secondProductAddress.setSecondCity(secondStoreAddress.getSecondCity());
-        secondProductAddress.setSecondConty(secondStoreAddress.getSecondConty());
-        secondProductAddress.setSecondAddressDetail(secondStoreAddress.getSecondAddressDetail());
-        if(secondStoreAddress.getLongitude()==null&&secondStoreAddress.getLatitude()==null){
-            String add =
-                    secondStoreAddress.getSecondProvince() + secondStoreAddress.getSecondCity()
-                    + secondStoreAddress.getSecondConty() + secondStoreAddress.getSecondAddressDetail();
-                    JSONObject a = addressService.getIngAndLat(add);
-            AddressList list = JSON.parseObject(String.valueOf(a), new TypeReference<AddressList>() {
-            });
-            secondProductAddress.setLongitude(list.getResult().get(0).getLocation().get(0).getLng());
-            secondProductAddress.setLatitude(list.getResult().get(0).getLocation().get(0).getLat());
-        } else {
-            secondProductAddress.setLongitude(secondStoreAddress.getLongitude());
-            secondProductAddress.setLatitude(secondStoreAddress.getLatitude());
+        if (addressId!=null){
+            SecondStoreAddress secondStoreAddress = secondStoreAddressMapper.selectByPrimaryKey(addressId);
+            SecondProductAddress secondProductAddress = new SecondProductAddress();
+            secondProductAddress.setProductId(secondProduct.getId());
+            secondProductAddress.setSecondProvince(secondStoreAddress.getSecondProvince());
+            secondProductAddress.setSecondCity(secondStoreAddress.getSecondCity());
+            secondProductAddress.setSecondConty(secondStoreAddress.getSecondConty());
+            secondProductAddress.setSecondAddressDetail(secondStoreAddress.getSecondAddressDetail());
+            if(secondStoreAddress.getLongitude()==null&&secondStoreAddress.getLatitude()==null){
+                String add =
+                        secondStoreAddress.getSecondProvince() + secondStoreAddress.getSecondCity()
+                                + secondStoreAddress.getSecondConty() + secondStoreAddress.getSecondAddressDetail();
+                JSONObject a = addressService.getIngAndLat(add);
+                AddressList list = JSON.parseObject(String.valueOf(a), new TypeReference<AddressList>() {
+                });
+                secondProductAddress.setLongitude(list.getResult().get(0).getLocation().get(0).getLng());
+                secondProductAddress.setLatitude(list.getResult().get(0).getLocation().get(0).getLat());
+            } else {
+                secondProductAddress.setLongitude(secondStoreAddress.getLongitude());
+                secondProductAddress.setLatitude(secondStoreAddress.getLatitude());
+            }
+            secondProductAddress.setContact(secondStoreAddress.getContact());
+            secondProductAddress.setPhoneNumber(secondStoreAddress.getPhoneNumber());
+            secondProductAddress.setSecondDesc(secondStoreAddress.getSecondDesc());
+            secondProductAddress.setCreateTime(LocalDateTime.now());
+            secondProductAddress.setModifyTime(LocalDateTime.now());
+            secondProductAddress.setIsDeleted((short) 0);
+            secondProductAddressMapper.insertSelective(secondProductAddress);
         }
-        secondProductAddress.setContact(secondStoreAddress.getContact());
-        secondProductAddress.setPhoneNumber(secondStoreAddress.getPhoneNumber());
-        secondProductAddress.setSecondDesc(secondStoreAddress.getSecondDesc());
-        secondProductAddress.setCreateTime(LocalDateTime.now());
-        secondProductAddress.setModifyTime(LocalDateTime.now());
-        secondProductAddress.setIsDeleted((short) 0);
-        secondProductAddressMapper.insertSelective(secondProductAddress);
+
         //物品
         SecondGoods secondGoods = new SecondGoods();
         secondGoods.setProductId(secondProduct.getId());
