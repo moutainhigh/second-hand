@@ -201,3 +201,55 @@ java.lang.NullPointerException: null
 2020-11-19 15:23:58.124  INFO 18172 --- [http-nio-7002-exec-1] com.zaxxer.hikari.HikariDataSource       : dataSource - Start completed.
 2020-11-19 15:24:09.966  INFO 18172 --- [http-nio-7002-exec-3] c.e.p.c.i.AuthorityInterceptor           : /product/Category/categoryList{"authentication":["0"],"categoryType":["user"]}
 2020-11-19 15:28:28.964  INFO 18172 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-11-19 15:33:28.967  INFO 18172 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-11-19 15:38:28.969  INFO 18172 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-11-19 15:43:28.970  INFO 18172 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-11-19 15:48:28.971  INFO 18172 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-11-19 15:53:28.973  INFO 18172 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-11-19 15:58:28.975  INFO 18172 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-11-19 16:03:28.977  INFO 18172 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-11-19 16:08:28.980  INFO 18172 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-11-19 16:13:28.982  INFO 18172 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-11-19 16:18:28.984  INFO 18172 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-11-19 16:23:28.986  INFO 18172 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-11-19 16:28:28.988  INFO 18172 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-11-19 16:33:28.989  INFO 18172 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-11-19 16:38:28.991  INFO 18172 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-11-19 16:43:28.997  INFO 18172 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-11-19 16:48:29.000  INFO 18172 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-11-19 16:53:29.006  INFO 18172 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-11-19 16:58:29.027  INFO 18172 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-11-19 16:58:32.898  INFO 18172 --- [http-nio-7002-exec-5] c.e.p.c.i.AuthorityInterceptor           : /product/swagger-ui.html{}
+2020-11-19 16:58:33.069  INFO 18172 --- [http-nio-7002-exec-6] c.e.p.c.i.AuthorityInterceptor           : /product/webjars/springfox-swagger-ui/springfox.css{"v":["2.9.2"]}
+2020-11-19 16:58:33.093  INFO 18172 --- [http-nio-7002-exec-7] c.e.p.c.i.AuthorityInterceptor           : /product/webjars/springfox-swagger-ui/swagger-ui.css{"v":["2.9.2"]}
+2020-11-19 16:58:33.094  INFO 18172 --- [http-nio-7002-exec-9] c.e.p.c.i.AuthorityInterceptor           : /product/webjars/springfox-swagger-ui/swagger-ui-standalone-preset.js{"v":["2.9.2"]}
+2020-11-19 16:58:33.095  INFO 18172 --- [http-nio-7002-exec-10] c.e.p.c.i.AuthorityInterceptor           : /product/webjars/springfox-swagger-ui/springfox.js{"v":["2.9.2"]}
+2020-11-19 16:58:33.094  INFO 18172 --- [http-nio-7002-exec-8] c.e.p.c.i.AuthorityInterceptor           : /product/webjars/springfox-swagger-ui/swagger-ui-bundle.js{"v":["2.9.2"]}
+2020-11-19 16:58:34.059  INFO 18172 --- [http-nio-7002-exec-1] c.e.p.c.i.AuthorityInterceptor           : /product/swagger-resources/configuration/ui{}
+2020-11-19 16:58:34.525  INFO 18172 --- [http-nio-7002-exec-2] c.e.p.c.i.AuthorityInterceptor           : /product/swagger-resources/configuration/security{}
+2020-11-19 16:58:34.563  INFO 18172 --- [http-nio-7002-exec-3] c.e.p.c.i.AuthorityInterceptor           : /product/swagger-resources{}
+2020-11-19 16:58:34.788  INFO 18172 --- [http-nio-7002-exec-5] c.e.p.c.i.AuthorityInterceptor           : /product/{}
+2020-11-19 16:58:34.793  INFO 18172 --- [http-nio-7002-exec-6] c.e.p.c.i.AuthorityInterceptor           : /product/webjars/springfox-swagger-ui/fonts/titillium-web-v6-latin-700.woff2{}
+2020-11-19 16:58:34.886  INFO 18172 --- [http-nio-7002-exec-5] c.e.p.c.i.AuthorityInterceptor           : /product/error{}
+2020-11-19 16:58:34.924  INFO 18172 --- [http-nio-7002-exec-10] c.e.p.c.i.AuthorityInterceptor           : /product/csrf{}
+2020-11-19 16:58:34.942  INFO 18172 --- [http-nio-7002-exec-10] c.e.p.c.i.AuthorityInterceptor           : /product/error{}
+2020-11-19 16:58:35.745  INFO 18172 --- [http-nio-7002-exec-9] c.e.p.c.i.AuthorityInterceptor           : /product/webjars/springfox-swagger-ui/fonts/source-code-pro-v7-latin-300.woff2{}
+2020-11-19 16:58:35.745  INFO 18172 --- [http-nio-7002-exec-7] c.e.p.c.i.AuthorityInterceptor           : /product/webjars/springfox-swagger-ui/fonts/open-sans-v15-latin-700.woff2{}
+2020-11-19 16:58:35.745  INFO 18172 --- [http-nio-7002-exec-8] c.e.p.c.i.AuthorityInterceptor           : /product/webjars/springfox-swagger-ui/fonts/open-sans-v15-latin-regular.woff2{}
+2020-11-19 16:58:35.762  INFO 18172 --- [http-nio-7002-exec-1] c.e.p.c.i.AuthorityInterceptor           : /product/webjars/springfox-swagger-ui/fonts/titillium-web-v6-latin-600.woff2{}
+2020-11-19 17:03:29.106  INFO 18172 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-11-19 17:08:29.159  INFO 18172 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-11-19 17:13:29.169  INFO 18172 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-11-19 17:18:29.176  INFO 18172 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-11-19 17:23:29.178  INFO 18172 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-11-19 17:28:29.178  INFO 18172 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-11-19 17:33:29.180  INFO 18172 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-11-19 17:38:29.181  INFO 18172 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-11-19 17:43:29.190  INFO 18172 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-11-19 17:48:29.192  INFO 18172 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-11-19 17:53:29.195  INFO 18172 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-11-19 17:58:29.197  INFO 18172 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-11-19 18:03:29.199  INFO 18172 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-11-19 18:08:29.199  INFO 18172 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-11-19 18:13:29.200  INFO 18172 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2020-11-19 18:18:29.206  INFO 18172 --- [AsyncResolver-bootstrap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration

@@ -112,7 +112,7 @@ public class WithdrawalController {
             @ApiImplicitParam(paramType = "query", name = "methodId", value = "取款方式id", required = true, type = "String"),
             @ApiImplicitParam(paramType = "query", name = "storeId", value = "店铺id", required = true, type = "String"),
             @ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, type = "String"),
-            @ApiImplicitParam(paramType = "query", name = "sonId", value = "子站点id,zi站点提现填", required = true, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "sonId", value = "子站点id,zi站点提现填", required = false, type = "String"),
     })
     public ResponseEntity<JSONObject> addWithdrawal(@RequestParam(value = "source", required = false) String source,
                                                     @RequestParam(value = "phone", required = false) String phone,
@@ -201,19 +201,28 @@ public class WithdrawalController {
                     }
                 }
             }
+            Integer Deduct;//利息
+            Integer realityMoney;//实际提现金额
+            if(withdrawalMoney<=10000){
+                Deduct = (int) Math.floor(10000*rate/100);
+                realityMoney = withdrawalMoney - Deduct + mon;
+            } else {
+                Deduct = (int)Math.floor(withdrawalMoney*rate/100);
+                realityMoney = withdrawalMoney-Deduct+mon;
+            }
             //计算
-            Double realityMoneys = ((Double.valueOf(withdrawalMoney) / 10000));
-//            Double realityMoneys = ((Double.valueOf(withdrawalMoney)*rate)/100);//                        利息进一位
-            Integer realityMoneyx = (int) Math.ceil(realityMoneys);
-            //                        提现实际金额
-            Integer realityMoney = (withdrawalMoney-(realityMoneyx*(int)(rate*100)))+mon;
+//            Double realityMoneys = ((Double.valueOf(withdrawalMoney) / 10000));
+////            Double realityMoneys = ((Double.valueOf(withdrawalMoney)*rate)/100);//                        利息进一位
+//            Integer realityMoneyx = (int) Math.ceil(realityMoneys);
+//            //                        提现实际金额
+//            Integer realityMoney = (withdrawalMoney-(realityMoneyx*(int)(rate*100)))+mon;
             if (realityMoney<=0){
                 balanceService.addBalance(storeId,BanlaceEnum.Relation.MONEY.getState(),withdrawalMoney);
                 response.sendError(HttpStatus.FORBIDDEN.value(), "提现金额过低");
                 return builder.body(ResponseUtils.getResponseBody(1));
             }
             SecondWithdrawal secondWithdrawal = new SecondWithdrawal();
-            secondWithdrawal.setDeduct((realityMoneyx*(int)(rate*100)));//扣除的手续费
+            secondWithdrawal.setDeduct(Deduct);//扣除的手续费
             secondWithdrawal.setSource(source);
             secondWithdrawal.setWithdrawalMark(getC(null));
             secondWithdrawal.setPhone(phone);
@@ -428,7 +437,7 @@ public class WithdrawalController {
 
     }
     public static void main(String[] args) {
-        Integer money = 10100;
+        Integer money = 11001;
         Double realityMoneys = ((Double.valueOf(money) / 10000));
 //        Double realityMoneys1 = ((Double.valueOf(money) / 10000));
 //        Double realityMoneys = ((Double.valueOf(money)*20)/100);//
@@ -436,12 +445,19 @@ public class WithdrawalController {
         //向上取整:Math.ceil() //只要有小数都+1
         //向下取整:Math.floor() //不取小数
         //四舍五入:Math.round() //四舍五入
-        System.out.println(Math.floor(money*0.5/100));
-        System.out.println(realityMoneys);
-        Integer realityMoneyx = (int) Math.ceil(realityMoneys);
-        System.out.println(realityMoneyx);
-        Integer realityMoney = (realityMoneyx*(int)(0.5*100));
-        System.out.println(realityMoney);
+        if(money<=10000){
+            System.out.println(money*(1-0.5/100));
+        } else {
+            System.out.println(Math.floor(money*0.5/100));
+            System.out.println(money-Math.floor(money*0.5/100));
+        }
+
+//        System.out.println(Math.floor(money*0.5/100));
+//        System.out.println(realityMoneys);
+//        Integer realityMoneyx = (int) Math.ceil(realityMoneys);
+//        System.out.println(realityMoneyx);
+//        Integer realityMoney = (realityMoneyx*(int)(0.5*100));
+//        System.out.println(realityMoney);
     }
     @ApiOperation(value = "提现记录", notes = "提现记录")
     @RequestMapping(value = "/record", method = RequestMethod.GET)
