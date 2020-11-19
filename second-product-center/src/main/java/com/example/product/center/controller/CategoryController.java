@@ -190,10 +190,22 @@ public class CategoryController {
     public ResponseEntity<JSONObject> listCategory(
             @RequestParam(name = "parentCategoryId", required = false) Integer parentCategoryId,
             @RequestParam(name = "categoryType", required = false) String categoryType,
+            @RequestParam(name = "authentication", required = false) Integer authentication,
             @RequestParam(name = "levelId", required = false) Integer levelId
            )
             throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
+        //没认证的假数据，过微信审核
+        if (authentication!=null&&authentication==0){
+            List<CategoryInfo> categoryInfos = new ArrayList<>();
+            CategoryInfo categoryInfo = new CategoryInfo();
+            categoryInfo.setId(411);
+            categoryInfo.setName("衣服");
+            categoryInfo.setLevel(0);
+            categoryInfo.setFileId("https://swcloud.tjsichuang.cn:1444/second/user/File/getPicture?id=1155");
+            categoryInfos.add(categoryInfo);
+            return builder.body(ResponseUtils.getResponseBody(categoryInfo));
+        }
         List<SecondCategory> secondCategories = new ArrayList<>();
 //        根据上级类目查询其下级所有类目
         if (parentCategoryId!=null){
@@ -215,41 +227,13 @@ public class CategoryController {
     @RequestMapping(value = "/categoryList", method = RequestMethod.GET)
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "categoryType", value = "类目类型", required = false, type = "String"),
-            @ApiImplicitParam(paramType = "query", name = "authentication", value = "没认证的假数据，过审", required = false, type = "Integer")
     })
     public ResponseEntity<JSONObject> categoryList(
             @RequestParam(name = "categoryType", required = false) String categoryType,
-            @RequestParam(name = "authentication", required = false) Integer authentication,
+
             HttpServletRequest request)
             throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
-        //没认证的假数据，过微信审核
-        if (authentication!=null&&authentication==0){
-            List<CategoryInfo> categoryInfos = new ArrayList<>();
-            CategoryInfo categoryInfo = new CategoryInfo();
-            categoryInfo.setId(408);
-            categoryInfo.setName("衣服");
-            categoryInfo.setLevel(0);
-            categoryInfo.setFileId("https://swcloud.tjsichuang.cn:1444/second/user/File/getPicture?id=1155");
-            List<CategoryInfo> categoryInfos1 = new ArrayList<>();
-            CategoryInfo categoryInfo1 = new CategoryInfo();
-            categoryInfo1.setId(409);
-            categoryInfo1.setName("羽绒服");
-            categoryInfo1.setLevel(1);
-            categoryInfo1.setFileId("https://swcloud.tjsichuang.cn:1444/second/user/File/getPicture?id=1155");
-            categoryInfos1.add(categoryInfo1);
-            categoryInfo.setCategories(categoryInfos1);
-            List<CategoryInfo> categoryInfos2 = new ArrayList<>();
-            CategoryInfo categoryInfo2 = new CategoryInfo();
-            categoryInfo2.setId(410);
-            categoryInfo2.setName("男羽绒服");
-            categoryInfo2.setLevel(2);
-            categoryInfo2.setFileId("https://swcloud.tjsichuang.cn:1444/second/user/File/getPicture?id=1155");
-            categoryInfos2.add(categoryInfo2);
-            categoryInfo1.setCategories(categoryInfos2);
-            categoryInfos.add(categoryInfo);
-            return builder.body(ResponseUtils.getResponseBody(categoryInfos));
-        }
 //        查询所有一级类目
         SecondCategoryExample secondCategoryExample = new SecondCategoryExample();
         secondCategoryExample.createCriteria().andLevelIdEqualTo(0)

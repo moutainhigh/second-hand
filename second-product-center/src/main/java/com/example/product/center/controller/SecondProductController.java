@@ -471,6 +471,7 @@ public class SecondProductController {
             ProductList productList = new ProductList();
             productList.setProductName("羽绒服 男款");
             productList.setProductDesc("<p>超暖羽绒服，夏季必备</p>");
+            productList.setPrice(9900);
             productList.setId(230);
             productList.setFile("https://swcloud.tjsichuang.cn:1444/second/user/File/getPicture?id=1156");
             productLists1.add(productList);
