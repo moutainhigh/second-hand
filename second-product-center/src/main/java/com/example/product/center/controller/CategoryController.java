@@ -197,12 +197,12 @@ public class CategoryController {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
         //没认证的假数据，过微信审核
         if (authentication!=null&&authentication==0){
-            List<CategoryInfo> categoryInfos = new ArrayList<>();
-            CategoryInfo categoryInfo = new CategoryInfo();
+            List<SecondCategory> categoryInfos = new ArrayList<>();
+            SecondCategory categoryInfo = new SecondCategory();
             categoryInfo.setId(411);
-            categoryInfo.setName("衣服");
-            categoryInfo.setLevel(0);
-            categoryInfo.setFileId("https://swcloud.tjsichuang.cn:1444/second/user/File/getPicture?id=1155");
+            categoryInfo.setSecondName("衣服");
+            categoryInfo.setLevelId(0);
+            categoryInfo.setFile("https://swcloud.tjsichuang.cn:1444/second/user/File/getPicture?id=1155");
             categoryInfos.add(categoryInfo);
             return builder.body(ResponseUtils.getResponseBody(categoryInfos));
         }
