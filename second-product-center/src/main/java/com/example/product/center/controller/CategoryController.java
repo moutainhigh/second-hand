@@ -64,17 +64,20 @@ public class CategoryController {
             @RequestParam(value = "levelId", required = false) Integer levelId,
             HttpServletResponse response
     ) throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
         //防止非一级类目上级类目传空
         if (levelId !=0 && parentCategoryId==null || levelId !=0 && parentCategoryId==0|| levelId !=0 && parentCategoryId.equals("")){
             response.sendError(HttpStatus.FORBIDDEN.value(), "请选择上级类目");
+            return builder.body(ResponseUtils.getResponseBody(1));
         }
         if (parentCategoryId!= null){
             SecondCategory secondCategory1 = secondCategoryMapper.selectByPrimaryKey(parentCategoryId);
             if (levelId<=secondCategory1.getLevelId()){
                 response.sendError(HttpStatus.FORBIDDEN.value(), "上级类目同级或者更高级");
+                return builder.body(ResponseUtils.getResponseBody(1));
             }
         }
-        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
+
         SecondCategory secondCategory = new SecondCategory();
         secondCategory.setLevelId(levelId);
         secondCategory.setCategoryType(CategoryEnum.Relation.getState(categoryType).getState());
