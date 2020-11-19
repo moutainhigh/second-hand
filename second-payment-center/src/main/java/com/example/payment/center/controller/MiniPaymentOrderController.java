@@ -564,36 +564,36 @@ public ResponseEntity<JSONObject> completePaymentAfter(
 //        System.out.println(miniProgramConfig.getMchID());
 //        return builder.body(ResponseUtils.getResponseBody(0));
 //    }
-@Scheduled(cron = "0/5 * * * * ?")
-@Transactional(rollbackFor = {RuntimeException.class, Error.class})
-public void paymentOrder() throws Exception{
-    System.out.println("校验");
-    SecondOrderExample secondOrderExample = new SecondOrderExample();
-    secondOrderExample.createCriteria().andIsDeletedEqualTo((byte) 0)
-            .andOrderStatusEqualTo(OrderEnum.OrderStatus.PAYMENT.getOrderStatus());
-    List<SecondOrder> secondOrders= secondOrderMapper.selectByExample(secondOrderExample);
-    if (secondOrders.size()!=0){
-        secondOrders.forEach(secondOrder -> {
-            Duration duration = java.time.Duration.between(secondOrder.getCreateTime(),  LocalDateTime.now());
-            Long a = duration.toMinutes();
-            System.out.println(a);
-            if (a>1){
-                secondOrder.setIsDeleted((byte) 1);
-                secondOrderMapper.updateByPrimaryKeySelective(secondOrder);
-                SecondOrderDetailExample secondOrderDetailExample = new SecondOrderDetailExample();
-                secondOrderDetailExample.createCriteria().andOrderIdEqualTo(secondOrder.getId());
-                List<SecondOrderDetail> secondOrderDetails =
-                        secondOrderDetailMapper.selectByExample(secondOrderDetailExample);
-                secondOrderDetails.forEach(secondOrderDetail -> {
-                    addStockService.addStock(secondOrderDetail.getGoodsId(),secondOrderDetail.getQuantity());
-                    SecondGoods secondGoods = secondGoodsMapper.selectByPrimaryKey(secondOrderDetail.getGoodsId());
-                    SecondProduct secondProduct = secondProductMapper.selectByPrimaryKey(secondGoods.getProductId());
-                    secondProduct.setProductState(ProductEnum.ProductState.SELL.getState());
-                    secondProductMapper.updateByPrimaryKeySelective(secondProduct);
-                });
-            }
-        });
-    }
-
-}
+//@Scheduled(cron = "0/5 * * * * ?")
+//@Transactional(rollbackFor = {RuntimeException.class, Error.class})
+//public void paymentOrder() throws Exception{
+//    System.out.println("校验");
+//    SecondOrderExample secondOrderExample = new SecondOrderExample();
+//    secondOrderExample.createCriteria().andIsDeletedEqualTo((byte) 0)
+//            .andOrderStatusEqualTo(OrderEnum.OrderStatus.PAYMENT.getOrderStatus());
+//    List<SecondOrder> secondOrders= secondOrderMapper.selectByExample(secondOrderExample);
+//    if (secondOrders.size()!=0){
+//        secondOrders.forEach(secondOrder -> {
+//            Duration duration = java.time.Duration.between(secondOrder.getCreateTime(),  LocalDateTime.now());
+//            Long a = duration.toMinutes();
+//            System.out.println(a);
+//            if (a>1){
+//                secondOrder.setIsDeleted((byte) 1);
+//                secondOrderMapper.updateByPrimaryKeySelective(secondOrder);
+//                SecondOrderDetailExample secondOrderDetailExample = new SecondOrderDetailExample();
+//                secondOrderDetailExample.createCriteria().andOrderIdEqualTo(secondOrder.getId());
+//                List<SecondOrderDetail> secondOrderDetails =
+//                        secondOrderDetailMapper.selectByExample(secondOrderDetailExample);
+//                secondOrderDetails.forEach(secondOrderDetail -> {
+//                    addStockService.addStock(secondOrderDetail.getGoodsId(),secondOrderDetail.getQuantity());
+//                    SecondGoods secondGoods = secondGoodsMapper.selectByPrimaryKey(secondOrderDetail.getGoodsId());
+//                    SecondProduct secondProduct = secondProductMapper.selectByPrimaryKey(secondGoods.getProductId());
+//                    secondProduct.setProductState(ProductEnum.ProductState.SELL.getState());
+//                    secondProductMapper.updateByPrimaryKeySelective(secondProduct);
+//                });
+//            }
+//        });
+//    }
+//
+//}
 }

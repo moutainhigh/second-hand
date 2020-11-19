@@ -477,11 +477,12 @@ public class StoreLoginController {
     ) throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
         SecondStore secondStore = secondStoreMapper.selectByPrimaryKey(storeId);
-        secondStore.setIsDeleted((short) 1);
+        secondStore.setSecondStatus(1);
+//        secondStore.setIsDeleted((short) 1);
         secondStore.setModifyDate(LocalDateTime.now());
         secondStoreMapper.updateByPrimaryKeySelective(secondStore);
         SecondUser secondUser = secondUserMapper.selectByPrimaryKey(secondStore.getUserId());
-        secondUser.setIdDeleted((byte) 1);
+        secondUser.setUserStatus((byte) 1);
         secondUser.setModifyDate(LocalDateTime.now());
         secondUserMapper.updateByPrimaryKeySelective(secondUser);
         SecondAuthExample secondAuthExample = new SecondAuthExample();
@@ -492,6 +493,13 @@ public class StoreLoginController {
         secondAuth.setIsDeleted((byte) 1);
         secondAuth.setModifyDate(LocalDateTime.now());
         secondAuthMapper.updateByExampleSelective(secondAuth,secondAuthExample);
+        SecondStoreAuthenticationExample secondStoreAuthenticationExample = new SecondStoreAuthenticationExample();
+        secondStoreAuthenticationExample.createCriteria().andUserIdEqualTo(secondStore.getUserId())
+                .andStoreIdEqualTo(secondStore.getId())
+                .andIsDeletedEqualTo((byte) 0);
+        SecondStoreAuthentication secondStoreAuthentication = new SecondStoreAuthentication();
+        secondStoreAuthentication.setIsDeleted((byte) 1);
+        secondStoreAuthenticationMapper.updateByExampleSelective(secondStoreAuthentication,secondStoreAuthenticationExample);
         return builder.body(ResponseUtils.getResponseBody(0));
     }
     @RequestMapping(path = "/storeDetails", method = RequestMethod.GET)
