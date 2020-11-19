@@ -204,7 +204,7 @@ public class CategoryController {
             categoryInfo.setLevel(0);
             categoryInfo.setFileId("https://swcloud.tjsichuang.cn:1444/second/user/File/getPicture?id=1155");
             categoryInfos.add(categoryInfo);
-            return builder.body(ResponseUtils.getResponseBody(categoryInfo));
+            return builder.body(ResponseUtils.getResponseBody(categoryInfos));
         }
         List<SecondCategory> secondCategories = new ArrayList<>();
 //        根据上级类目查询其下级所有类目
