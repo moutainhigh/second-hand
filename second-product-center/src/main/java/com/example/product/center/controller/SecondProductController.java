@@ -461,10 +461,21 @@ public class SecondProductController {
             @RequestParam(name = "categoryId", required = false) Integer categoryId,
             @RequestParam(name = "stairCategoryId", required = false) Integer stairCategoryId,
             @RequestParam(name = "price", required = false) Integer price,
+            @RequestParam(name = "authentication", required = false) Integer authentication,
             @RequestParam(name = "putaway", required = false) Integer putaway
     )
             throws Exception {
         ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
+        if (authentication!=null && authentication==0){
+            List<ProductList> productLists1 = new ArrayList<>();
+            ProductList productList = new ProductList();
+            productList.setProductName("羽绒服 男款");
+            productList.setProductDesc("<p>超暖羽绒服，夏季必备</p>");
+            productList.setId(230);
+            productList.setFile("https://swcloud.tjsichuang.cn:1444/second/user/File/getPicture?id=1156");
+            productLists1.add(productList);
+            return builder.body(ResponseUtils.getResponseBody(productLists1));
+        }
         //商品列表
         SecondProductExample secondProductExample = new SecondProductExample();
         secondProductExample.setOrderByClause("create_time desc");
