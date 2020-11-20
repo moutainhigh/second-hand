@@ -246,7 +246,7 @@ public class WithdrawalController {
             secondWithdrawal.setSonId(sonId);
             secondWithdrawal.setCreateDate(LocalDateTime.now());
             secondWithdrawal.setModifyDate(LocalDateTime.now());
-            secondWithdrawal.setIsDeleted((byte) 1);
+            secondWithdrawal.setIsDeleted((byte) 0);
             secondWithdrawalMapper.insertSelective(secondWithdrawal);
             //店铺余额流水
             SecondStoreBalanceDetail secondStoreBalanceDetail = new SecondStoreBalanceDetail();
@@ -258,7 +258,7 @@ public class WithdrawalController {
             secondStoreBalanceDetail.setIncomeExpenses(BanlaceEnum.incomeExpenses.PAY.getState());
             secondStoreBalanceDetail.setCreateTime(LocalDateTime.now());
             secondStoreBalanceDetail.setModifyTime(LocalDateTime.now());
-            secondStoreBalanceDetail.setIsDeleted((short) 1);
+            secondStoreBalanceDetail.setIsDeleted((short) 0);
             secondStoreBalanceDetailMapper.insertSelective(secondStoreBalanceDetail);
         } else {
             response.sendError(HttpStatus.FORBIDDEN.value(), "余额不足");
