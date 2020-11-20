@@ -205,9 +205,15 @@ public class WithdrawalController {
             Integer realityMoney;//实际提现金额
             if(withdrawalMoney<=10000){
                 Deduct = (int) Math.floor(10000*rate/100);
+                if (withdrawalMoney == 0){
+                    Deduct = 0;
+                }
                 realityMoney = withdrawalMoney - Deduct + mon;
             } else {
                 Deduct = (int)Math.floor(withdrawalMoney*rate/100);
+                if (withdrawalMoney == 0){
+                    Deduct = 0;
+                }
                 realityMoney = withdrawalMoney-Deduct+mon;
             }
             //计算
@@ -240,7 +246,7 @@ public class WithdrawalController {
             secondWithdrawal.setSonId(sonId);
             secondWithdrawal.setCreateDate(LocalDateTime.now());
             secondWithdrawal.setModifyDate(LocalDateTime.now());
-            secondWithdrawal.setIsDeleted((byte) 0);
+            secondWithdrawal.setIsDeleted((byte) 1);
             secondWithdrawalMapper.insertSelective(secondWithdrawal);
             //店铺余额流水
             SecondStoreBalanceDetail secondStoreBalanceDetail = new SecondStoreBalanceDetail();
@@ -252,7 +258,7 @@ public class WithdrawalController {
             secondStoreBalanceDetail.setIncomeExpenses(BanlaceEnum.incomeExpenses.PAY.getState());
             secondStoreBalanceDetail.setCreateTime(LocalDateTime.now());
             secondStoreBalanceDetail.setModifyTime(LocalDateTime.now());
-            secondStoreBalanceDetail.setIsDeleted((short) 0);
+            secondStoreBalanceDetail.setIsDeleted((short) 1);
             secondStoreBalanceDetailMapper.insertSelective(secondStoreBalanceDetail);
         } else {
             response.sendError(HttpStatus.FORBIDDEN.value(), "余额不足");
@@ -362,27 +368,22 @@ public class WithdrawalController {
                             .andIsDeletedEqualTo((short) 0);
                     List<SecondStore> secondStores = secondStoreMapper.selectByExample(secondStoreExample);
                     if (secondStores.size()!=0){
-//                        SecondStoreBalanceExample secondStoreBalanceExample = new SecondStoreBalanceExample();
-//                        secondStoreBalanceExample.createCriteria().andUserIdEqualTo(secondSon.getUserId())
-//                                .andStoreIdEqualTo(secondStores.get(0).getId())
-//                                .andBalanceTypeEqualTo(BanlaceEnum.Relation.MONEY.getState())
-//                                .andIsDeletedEqualTo((short) 0);
-//                        List<SecondStoreBalance> secondStoreBalances =
-//                        secondStoreBalanceMapper.selectByExample(secondStoreBalanceExample);
-
-                        balanceService.addBalance(secondStores.get(0).getId(),BanlaceEnum.Relation.MONEY.getState(),(secondWithdrawals.get(0).getDeduct()*30)/100);
+                        balanceService.addBalance(secondStores.get(0).getId(),BanlaceEnum.Relation.MONEY.getState(),(int)(secondWithdrawals.get(0).getDeduct()*0.3));
                         //店铺余额流水
-                        SecondStoreBalanceDetail secondStoreBalanceDetail = new SecondStoreBalanceDetail();
-                        secondStoreBalanceDetail.setUserId(secondSon.getUserId());
-                        secondStoreBalanceDetail.setPayDesc("提现反钱");
-                        secondStoreBalanceDetail.setStoreId(secondStores.get(0).getId());
-                        secondStoreBalanceDetail.setAmount((secondWithdrawals.get(0).getDeduct()*30)/100);
-                        secondStoreBalanceDetail.setDetailType(BanlaceEnum.Relation.MONEY.getState());
-                        secondStoreBalanceDetail.setIncomeExpenses(BanlaceEnum.incomeExpenses.PUT.getState());
-                        secondStoreBalanceDetail.setCreateTime(LocalDateTime.now());
-                        secondStoreBalanceDetail.setModifyTime(LocalDateTime.now());
-                        secondStoreBalanceDetail.setIsDeleted((short) 0);
-                        secondStoreBalanceDetailMapper.insertSelective(secondStoreBalanceDetail);
+                        if (secondWithdrawals.get(0).getDeduct()>0){
+                            SecondStoreBalanceDetail secondStoreBalanceDetail = new SecondStoreBalanceDetail();
+                            secondStoreBalanceDetail.setUserId(secondSon.getUserId());
+                            secondStoreBalanceDetail.setPayDesc("提现反钱");
+                            secondStoreBalanceDetail.setStoreId(secondStores.get(0).getId());
+                            secondStoreBalanceDetail.setAmount((int)(secondWithdrawals.get(0).getDeduct()*0.3));
+                            secondStoreBalanceDetail.setDetailType(BanlaceEnum.Relation.MONEY.getState());
+                            secondStoreBalanceDetail.setIncomeExpenses(BanlaceEnum.incomeExpenses.PUT.getState());
+                            secondStoreBalanceDetail.setCreateTime(LocalDateTime.now());
+                            secondStoreBalanceDetail.setModifyTime(LocalDateTime.now());
+                            secondStoreBalanceDetail.setIsDeleted((short) 0);
+                            secondStoreBalanceDetailMapper.insertSelective(secondStoreBalanceDetail);
+                        }
+
                     }
 
                 }
@@ -437,27 +438,34 @@ public class WithdrawalController {
 
     }
     public static void main(String[] args) {
-        Integer money = 11001;
-        Double realityMoneys = ((Double.valueOf(money) / 10000));
-//        Double realityMoneys1 = ((Double.valueOf(money) / 10000));
-//        Double realityMoneys = ((Double.valueOf(money)*20)/100);//
+        double a= 1*0.3;
+        System.out.println(a);
+        System.out.println(Math.ceil(a));
 //                      利息进一位
         //向上取整:Math.ceil() //只要有小数都+1
         //向下取整:Math.floor() //不取小数
         //四舍五入:Math.round() //四舍五入
-        if(money<=10000){
-            System.out.println(money*(1-0.5/100));
-        } else {
-            System.out.println(Math.floor(money*0.5/100));
-            System.out.println(money-Math.floor(money*0.5/100));
-        }
 
-//        System.out.println(Math.floor(money*0.5/100));
-//        System.out.println(realityMoneys);
-//        Integer realityMoneyx = (int) Math.ceil(realityMoneys);
-//        System.out.println(realityMoneyx);
-//        Integer realityMoney = (realityMoneyx*(int)(0.5*100));
+//        Integer withdrawalMoney = 0;
+//        double rate = 0.5;
+//        Integer mon = 10000;
+//        Integer Deduct;//利息
+//        Integer realityMoney;//实际提现金额
+//        if(withdrawalMoney<=10000){
+//            Deduct = (int) Math.floor(10000*rate/100);
+//            if (withdrawalMoney == 0){
+//                Deduct = 0;
+//            }
+//            realityMoney = withdrawalMoney - Deduct + mon;
+//        } else {
+//            Deduct = (int)Math.floor(withdrawalMoney*rate/100);
+//            if (withdrawalMoney == 0){
+//                Deduct = 0;
+//            }
+//            realityMoney = withdrawalMoney-Deduct+mon;
+//        }
 //        System.out.println(realityMoney);
+//        System.out.println(Deduct);
     }
     @ApiOperation(value = "提现记录", notes = "提现记录")
     @RequestMapping(value = "/record", method = RequestMethod.GET)
