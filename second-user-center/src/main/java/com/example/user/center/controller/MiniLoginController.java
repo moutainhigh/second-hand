@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.WebDataBinder;
@@ -178,7 +179,7 @@ private SecondStoreMapper secondStoreMapper;
         SecondUser secondUser = new SecondUser();
 
         SecondAuthExample example = new SecondAuthExample();
-        example.createCriteria().andUsernameEqualTo(openid)
+        example.createCriteria().andAuthKeyEqualTo(openid)
         .andIsDeletedEqualTo((byte) 0);
         List<SecondAuth> list = secondAuthMapper.selectByExample(example);
         if (CollectionUtils.isEmpty(list)) {
@@ -398,6 +399,7 @@ private SecondStoreMapper secondStoreMapper;
 
     @RequestMapping(path = "/authenticationDispose", method = RequestMethod.POST)
     @ApiOperation(value = "学生认证处理", notes = "学生认证处理")
+    @Transactional(rollbackFor = {RuntimeException.class, Error.class})
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "StartAuthenticationState", value = "开始审核状态", required = true, type = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "AuthenticationId", value = "审核id", required = true, type = "Integer"),

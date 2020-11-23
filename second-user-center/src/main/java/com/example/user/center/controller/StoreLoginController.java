@@ -14,6 +14,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -125,9 +126,10 @@ public class StoreLoginController {
         System.out.println(userInfo + "信息啊");
         SecondUser secondUser = new SecondUser();
 
-        SecondUserExample example = new SecondUserExample();
-        example.createCriteria().andUsernameEqualTo(openid);
-        List<SecondUser> list = secondUserMapper.selectByExample(example);
+        SecondAuthExample example = new SecondAuthExample();
+        example.createCriteria().andAuthKeyEqualTo(openid)
+        .andIsDeletedEqualTo((byte) 0);
+        List<SecondAuth> list = secondAuthMapper.selectByExample(example);
         if (CollectionUtils.isEmpty(list)) {
             secondUser.setAddress(userInfo.getString("country") + " " + userInfo.getString("province") + " " + userInfo.getString("city"));
 //            secondUser.setUsername(openid);
@@ -144,7 +146,7 @@ public class StoreLoginController {
             secondUser.setUserType(Authentication.LoginType.STOREWX.getState());
             secondUserMapper.insert(secondUser);
         } else {
-            secondUser = list.get(0);
+            secondUser = secondUserMapper.selectByPrimaryKey(list.get(0).getUserId());
         }
 
         SecondStore secondStore = new SecondStore();
@@ -388,6 +390,7 @@ public class StoreLoginController {
 
     @RequestMapping(path = "/authenticationDispose", method = RequestMethod.POST)
     @ApiOperation(value = "入驻商家认证处理", notes = "入驻商家认证处理")
+    @Transactional(rollbackFor = {RuntimeException.class, Error.class})
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "StartAuthenticationState", value = "开始审核状态", required = true, type = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "AuthenticationId", value = "审核id", required = true, type = "Integer"),
