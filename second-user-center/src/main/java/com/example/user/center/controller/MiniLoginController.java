@@ -177,9 +177,10 @@ private SecondStoreMapper secondStoreMapper;
         System.out.println(userInfo + "信息啊");
         SecondUser secondUser = new SecondUser();
 
-        SecondUserExample example = new SecondUserExample();
-        example.createCriteria().andUsernameEqualTo(openid);
-        List<SecondUser> list = secondUserMapper.selectByExample(example);
+        SecondAuthExample example = new SecondAuthExample();
+        example.createCriteria().andUsernameEqualTo(openid)
+        .andIsDeletedEqualTo((byte) 0);
+        List<SecondAuth> list = secondAuthMapper.selectByExample(example);
         if (CollectionUtils.isEmpty(list)) {
             secondUser.setAddress(userInfo.getString("country") + " " + userInfo.getString("province") + " " + userInfo.getString("city"));
 //            secondUser.setUsername(openid);
@@ -196,7 +197,7 @@ private SecondStoreMapper secondStoreMapper;
             secondUser.setUserType(Authentication.LoginType.USERWX.getState());
             secondUserMapper.insert(secondUser);
         } else {
-            secondUser = list.get(0);
+            secondUser = secondUserMapper.selectByPrimaryKey(list.get(0).getUserId());
         }
 
         SecondStore secondStore = new SecondStore();
