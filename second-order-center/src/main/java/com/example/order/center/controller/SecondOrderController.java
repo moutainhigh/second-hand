@@ -548,6 +548,8 @@ public class SecondOrderController {
                     secondPayOrder.setCreateTime(LocalDateTime.now());
                     secondPayOrder.setModifyTime(LocalDateTime.now());
                     secondPayOrder.setIsDeleted((byte) 0);
+                    secondPayOrder.setAmount(secondProductVideo.getPrice());
+                    secondPayOrder.setActualPrice(secondProductVideo.getPrice());
                     secondPayOrderMapper.insertSelective(secondPayOrder);
                     //创建订单
                     SecondOrderVideo secondOrder = new SecondOrderVideo();
