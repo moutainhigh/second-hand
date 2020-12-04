@@ -272,9 +272,15 @@ public class MiniPaymentOrderController {
     private SecondTransactionFlow completeHfTansactionFlow(SecondTransactionFlow t, SecondAuth hfUser, SecondPayOrder payOrder,
                                                       Map<String, String> data, Map<String, String> reData) {
         LocalDateTime current = LocalDateTime.now();
-        SecondOrderExample secondOrderExample = new SecondOrderExample();
-        secondOrderExample.createCriteria().andPayOrderIdEqualTo(payOrder.getId());
-        List<SecondOrder> HfOrders= secondOrderMapper.selectByExample(secondOrderExample);
+        String ty;
+        if (payOrder.getType().equals(OrderEnum.PayType.VIDEO.getPayTypeType())){
+            ty = OrderEnum.PayType.VIDEO.getPayTypeType();
+        } else {
+            SecondOrderExample secondOrderExample = new SecondOrderExample();
+            secondOrderExample.createCriteria().andPayOrderIdEqualTo(payOrder.getId());
+            List<SecondOrder> HfOrders= secondOrderMapper.selectByExample(secondOrderExample);
+            ty = HfOrders.get(0).getOrderType();
+        }
         t.setAppId(data.get("appid"));
         t.setCreateDate(current);
         t.setDeviceInfo(data.get("device_info"));
@@ -288,7 +294,7 @@ public class MiniPaymentOrderController {
         t.setSpbillCreateIp(data.get("spbill_create_ip"));
         t.setTotalFee(data.get("total_fee"));
         t.setTradeType(data.get("trade_type"));
-        t.setTransactionType(HfOrders.get(0).getOrderType());
+        t.setTransactionType(ty);
         t.setHfStatus(TansactionFlowStatusEnum.PROCESS.getStatus());
         t.setUserId(hfUser.getUserId());
         t.setWechartBody(data.get("body"));
