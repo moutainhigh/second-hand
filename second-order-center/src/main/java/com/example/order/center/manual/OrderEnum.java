@@ -55,7 +55,7 @@ public static enum PaymentStatus {
         ORDER("order"),//普通订单
         VIDEO("video");//视频订单
         private String payType;
-        PayType(String PayTypeType) {
+        PayType(String payType) {
             this.payType = payType;
         }
         public String getPayTypeType() {

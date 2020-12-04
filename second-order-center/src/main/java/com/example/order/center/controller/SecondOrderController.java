@@ -542,7 +542,9 @@ public class SecondOrderController {
                     SecondPayOrder secondPayOrder = new SecondPayOrder();
                     secondPayOrder.setPayCode(getC("video"));
                     secondPayOrder.setUserId(userId);
-                    secondPayOrder.setType(OrderEnum.PayType.VIDEO.getPayTypeType());
+                    secondPayOrder.setType(OrderEnum.PayType.VIDEO.getPayTypeType());//OrderEnum.PayType.VIDEO.getPayTypeType()
+                    System.out.println(OrderEnum.PayType.VIDEO.getPayTypeType());
+                    System.out.println(secondPayOrder.getType());
                     secondPayOrder.setPayStatus(OrderEnum.PaymentStatus.UNPAID.getPaymentStatus());
                     secondPayOrder.setPaymentName(paymentType);
                     secondPayOrder.setCreateTime(LocalDateTime.now());

@@ -129,10 +129,14 @@ public class MiniPaymentOrderController {
         hfOrderExample.createCriteria().andPayOrderIdEqualTo(payOrder.getId());
 
         Map<String, String> resp = null;
-        if (PaymentTypeEnum.getPaymentTypeEnum(secondOrderMapper.selectByExample(hfOrderExample).get(0).getPaymentName()).equals(PaymentTypeEnum.WECHART)) {
+        if (payOrder.getType().equals(OrderEnum.PayType.VIDEO.getPayTypeType())){
             resp = wxPay(miniProgramConfig,secondAuth.get(0), payOrder);
-        }else if (PaymentTypeEnum.getPaymentTypeEnum(secondOrderMapper.selectByExample(hfOrderExample).get(0).getPaymentName()).equals(PaymentTypeEnum.BALANCE)){
-            resp = balancePay(secondAuth.get(0), payOrder);
+        } else {
+            if (PaymentTypeEnum.getPaymentTypeEnum(secondOrderMapper.selectByExample(hfOrderExample).get(0).getPaymentName()).equals(PaymentTypeEnum.WECHART)) {
+                resp = wxPay(miniProgramConfig,secondAuth.get(0), payOrder);
+            }else if (PaymentTypeEnum.getPaymentTypeEnum(secondOrderMapper.selectByExample(hfOrderExample).get(0).getPaymentName()).equals(PaymentTypeEnum.BALANCE)){
+                resp = balancePay(secondAuth.get(0), payOrder);
+            }
         }
         System.out.println(resp);
         return builder.body(ResponseUtils.getResponseBody(resp));
