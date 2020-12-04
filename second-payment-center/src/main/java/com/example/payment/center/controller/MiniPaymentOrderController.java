@@ -434,15 +434,19 @@ public ResponseEntity<JSONObject> completePaymentAfter(
             Calendar calendar = Calendar.getInstance();
             String dateName = df.format(calendar.getTime());
             SecondProductVideo secondProductVideo = secondProductVideoMapper.selectByPrimaryKey(secondOrderVideo.getVideoId());
-            String s= Requests.sendGet("http://120.79.157.192:6160/unicomAync/buy.do",
+            String sin =String.valueOf(secondOrderVideo.getAmt())+String.valueOf(secondProductVideo.getCheckItemFacePrice())
+                    +String.valueOf(dateName)+String.valueOf(req.getRemoteAddr())+secondProductVideo.getItemId()+String.valueOf(secondProductVideo.getItemPrice())+String.valueOf(payOrder.getPayCode())+String.valueOf(secondOrderVideo.getUid())+userIdVideo+privatekeyVideo;
+            System.out.println(sin);
+            String sign1 =MD5.MD5Encode(sin);
+            System.out.println(sign1);
+                    String s= Requests.sendGet("http://120.79.157.192:6160/unicomAync/buy.do",
                            "userId="+userIdVideo+
                                    "&itemId="+secondProductVideo.getItemId()+
                                    "&checkItemFacePrice="+ secondProductVideo.getCheckItemFacePrice()+
                                    "&uid="+secondOrderVideo.getUid()+
                                    "&serialno="+payOrder.getPayCode()+
                                    "&dtCreate="+ dateName+
-                                   "&sign="+ MD5.MD5Encode(String.valueOf(secondOrderVideo.getAmt())+String.valueOf(secondProductVideo.getCheckItemFacePrice())
-                                   +dateName+String.valueOf(req.getRemoteAddr())+secondProductVideo.getItemId()+String.valueOf(secondProductVideo.getItemPrice())+payOrder.getPayCode()+String.valueOf(secondOrderVideo.getUid())+userIdVideo+privatekeyVideo)+
+                                   "&sign="+ sign1 +
                                    "&amt=" + secondOrderVideo.getAmt() +
                                    "&itemPrice=" + secondProductVideo.getItemPrice()+
                                    "&ext3=" + req.getRemoteAddr());
