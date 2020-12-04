@@ -448,13 +448,11 @@ public ResponseEntity<JSONObject> completePaymentAfter(
                     SecondOrderVideoExample secondOrderVideoExample1 = new SecondOrderVideoExample();
                     secondOrderVideoExample1.createCriteria().andOrderCodeEqualTo(secondOrderVideo.getOrderCode());
                     if (hashMap.get("status").equals("success")){
-
                         hfTansactionFlow.setHfStatus(TansactionFlowStatusEnum.COMPLETE.getStatus());
                         secondOrderVideo1.setBizOrderId(String.valueOf(hashMap.get("bizOrderId")));
-                        secondOrderVideo1.setOrderStatus(OrderEnum.OrderStatus.COMPLETE.getOrderStatus());
-
                         secondOrderVideo1.setPayStatus(1);
                     }
+                    secondOrderVideo1.setOrderStatus(String.valueOf(hashMap.get("status")));
                     secondOrderVideo1.setIp(req.getRemoteAddr());
                     secondOrderVideo1.setCode(String.valueOf(hashMap.get("code")));
                     secondOrderVideo1.setCodeDesc(String.valueOf(hashMap.get("desc")));
