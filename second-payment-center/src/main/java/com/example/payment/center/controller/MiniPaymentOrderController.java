@@ -435,7 +435,7 @@ public ResponseEntity<JSONObject> completePaymentAfter(
             String dateName = df.format(calendar.getTime());
             SecondProductVideo secondProductVideo = secondProductVideoMapper.selectByPrimaryKey(secondOrderVideo.getVideoId());
             String sin =String.valueOf(secondOrderVideo.getAmt())+String.valueOf(secondProductVideo.getCheckItemFacePrice())
-                    +String.valueOf(dateName)+String.valueOf("39.100.237.144")+secondProductVideo.getItemId()+String.valueOf(secondProductVideo.getItemPrice())+String.valueOf(payOrder.getPayCode())+String.valueOf(secondOrderVideo.getUid())+userIdVideo+privatekeyVideo;
+                    +String.valueOf(dateName)+String.valueOf("39.100.237.144")+String.valueOf(secondProductVideo.getItemId())+String.valueOf(secondProductVideo.getItemPrice())+String.valueOf(payOrder.getPayCode())+String.valueOf(secondOrderVideo.getUid())+userIdVideo+privatekeyVideo;
             System.out.println(sin);
             String sign1 =MD5.MD5Encode(sin);
             System.out.println(sign1);
@@ -449,7 +449,7 @@ public ResponseEntity<JSONObject> completePaymentAfter(
                                    "&sign="+ sign1 +
                                    "&amt=" + secondOrderVideo.getAmt() +
                                    "&itemPrice=" + secondProductVideo.getItemPrice()+
-                                   "&ext3=" + req.getRemoteAddr());
+                                   "&ext3=" + "39.100.237.144");
             System.out.println(s);
             HashMap hashMap = JSON.parseObject(s, HashMap.class);
             if (PaymentTypeEnum.getPaymentTypeEnum(secondOrderVideo.getPaymentName()).equals(PaymentTypeEnum.WECHART)) {
