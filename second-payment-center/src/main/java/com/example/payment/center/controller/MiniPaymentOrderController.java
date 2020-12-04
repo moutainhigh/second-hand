@@ -251,12 +251,12 @@ public class MiniPaymentOrderController {
 
     private void recordTransactionFlow(SecondAuth hfUser, SecondPayOrder payOrder, Map<String, String> data,
                                        Map<String, String> reData) {
-        SecondOrderExample secondOrderExample = new SecondOrderExample();
-        secondOrderExample.createCriteria().andPayOrderIdEqualTo(payOrder.getId());
-        List<SecondOrder> hfOrders= secondOrderMapper.selectByExample(secondOrderExample);
+//        SecondOrderExample secondOrderExample = new SecondOrderExample();
+//        secondOrderExample.createCriteria().andPayOrderIdEqualTo(payOrder.getId());
+//        List<SecondOrder> hfOrders= secondOrderMapper.selectByExample(secondOrderExample);
 
         SecondTransactionFlowExample e = new SecondTransactionFlowExample();
-        e.createCriteria().andTradeTypeEqualTo(hfOrders.get(0).getOrderType()).andOutTradeNoEqualTo(data.get("out_trade_no"))
+        e.createCriteria().andOutTradeNoEqualTo(data.get("out_trade_no"))
                 .andHfStatusEqualTo(TansactionFlowStatusEnum.PROCESS.getStatus());
         List<SecondTransactionFlow> hfTansactionFlows = secondTransactionFlowMapper.selectByExample(e);
 
