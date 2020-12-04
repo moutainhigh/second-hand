@@ -439,8 +439,8 @@ public ResponseEntity<JSONObject> completePaymentAfter(
                                    "&itemId="+secondProductVideo.getItemId()+
                                    "&checkItemFacePrice="+ secondProductVideo.getCheckItemFacePrice()+
                                    "&uid="+secondOrderVideo.getUid()+
-                                   "&serialno"+payOrder.getPayCode()+
-                                   "&dtCreate"+ dateName+
+                                   "&serialno="+payOrder.getPayCode()+
+                                   "&dtCreate="+ dateName+
                                    "&sign="+ MD5.MD5Encode(String.valueOf(secondOrderVideo.getAmt())+String.valueOf(secondProductVideo.getCheckItemFacePrice())
                                    +dateName+String.valueOf(req.getRemoteAddr())+secondProductVideo.getItemId()+String.valueOf(secondProductVideo.getItemPrice())+payOrder.getPayCode()+String.valueOf(secondOrderVideo.getUid())+userIdVideo+privatekeyVideo)+
                                    "&amt=" + secondOrderVideo.getAmt() +
