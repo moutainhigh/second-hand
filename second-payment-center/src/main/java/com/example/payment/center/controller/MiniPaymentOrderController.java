@@ -412,7 +412,7 @@ public ResponseEntity<JSONObject> completePaymentAfter(
         return builder.body(ResponseUtils.getResponseBody(0));
     }
     String userIdVideo = "638";
-    String privatekeyVideo = "638da426ccf508f8452b120b940225e43a21d6ece91331112991b9bf73421df5987";
+    String privatekeyVideo = "da426ccf508f8452b120b940225e43a21d6ece91331112991b9bf73421df5987";
     //视频完成支付
     @ApiOperation(value = "视频订单完成订单支付", notes = "")
     @RequestMapping(value = "/completeVideo", method = RequestMethod.GET)
@@ -435,7 +435,7 @@ public ResponseEntity<JSONObject> completePaymentAfter(
             String dateName = df.format(calendar.getTime());
             SecondProductVideo secondProductVideo = secondProductVideoMapper.selectByPrimaryKey(secondOrderVideo.getVideoId());
             String sin =String.valueOf(secondOrderVideo.getAmt())+String.valueOf(secondProductVideo.getCheckItemFacePrice())
-                    +String.valueOf(dateName)+String.valueOf(req.getRemoteAddr())+secondProductVideo.getItemId()+String.valueOf(secondProductVideo.getItemPrice())+String.valueOf(payOrder.getPayCode())+String.valueOf(secondOrderVideo.getUid())+userIdVideo+privatekeyVideo;
+                    +String.valueOf(dateName)+String.valueOf("39.100.237.144")+secondProductVideo.getItemId()+String.valueOf(secondProductVideo.getItemPrice())+String.valueOf(payOrder.getPayCode())+String.valueOf(secondOrderVideo.getUid())+userIdVideo+privatekeyVideo;
             System.out.println(sin);
             String sign1 =MD5.MD5Encode(sin);
             System.out.println(sign1);
