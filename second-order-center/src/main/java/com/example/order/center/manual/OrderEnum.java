@@ -50,6 +50,18 @@ public static enum PaymentStatus {
         return this.paymentStatus;
     }
 }
+//支付类型
+    public static enum PayType {
+        ORDER("order"),//普通订单
+        VIDEO("video");//视频订单
+        private String payType;
+        PayType(String PayTypeType) {
+            this.payType = payType;
+        }
+        public String getPayTypeType() {
+            return this.payType;
+        }
+    }
 /**
  * 支付类型
  */

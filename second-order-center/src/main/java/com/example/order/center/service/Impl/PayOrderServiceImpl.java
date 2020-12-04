@@ -22,4 +22,9 @@ public class PayOrderServiceImpl implements PayOrderService {
     public Integer stock(Integer quantity,Integer goodsId) {
         return payOrderMapper.stock(quantity,goodsId);
     }
+
+    @Override
+    public Integer stockVideo(Integer quantity, Integer productId) {
+        return payOrderMapper.stockVideo(quantity, productId);
+    }
 }

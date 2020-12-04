@@ -8,6 +8,7 @@ import com.example.order.center.model.*;
 import com.example.order.center.service.BalanceService;
 import com.example.order.center.service.Impl.PayOrderServiceImpl;
 import com.example.order.center.service.PayOrderService;
+import com.second.common.utils.PageTool;
 import com.second.utils.response.handler.ResponseEntity;
 import com.second.utils.response.handler.ResponseUtils;
 import io.swagger.annotations.Api;
@@ -106,6 +107,12 @@ public class SecondOrderController {
     //余额明细
     @Autowired
     private SecondStoreBalanceDetailMapper secondStoreBalanceDetailMapper;
+    //视频商品
+    @Autowired
+    private SecondProductVideoMapper secondProductVideoMapper;
+    //视频订单
+    @Autowired
+    private SecondOrderVideoMapper secondOrderVideoMapper;
     @RequestMapping(path = "/addOrder", method = RequestMethod.POST)
     @ApiOperation(value = "创建订单", notes = "创建订单")
     @Transactional(rollbackFor = {RuntimeException.class, Error.class})
@@ -141,6 +148,7 @@ public class SecondOrderController {
         };
                 //支付订单
         SecondPayOrder secondPayOrder = new SecondPayOrder();
+        secondPayOrder.setType(OrderEnum.PayType.ORDER.getPayTypeType());
         secondPayOrder.setPayCode(UUID.randomUUID().toString());
         secondPayOrder.setUserId(request.getUserId());
         secondPayOrder.setPayStatus(OrderEnum.PaymentStatus.UNPAID.getPaymentStatus());
@@ -503,7 +511,75 @@ public class SecondOrderController {
 
         return builder.body(ResponseUtils.getResponseBody(1));
     }
-
+    @ApiOperation(value = "创建视频会员订单", notes = "创建视频会员订单")
+    @RequestMapping(value = "/addVideoOrder", method = RequestMethod.POST)
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "productId", value = "视频商品id", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "quantity", value = "购买数量", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "remark", value = "订单备注", required = true, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "paymentType", value = "支付类型", required = true, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "uid", value = "充值账号", required = true, type = "String"),
+    })
+    @Transactional(rollbackFor = {RuntimeException.class, Error.class})
+    public ResponseEntity<JSONObject> addVideoOrder(
+            @RequestParam(value = "userId", required = false) Integer userId,
+            @RequestParam(value = "productId", required = false) Integer productId,
+            @RequestParam(value = "quantity", required = false) Integer quantity,
+            @RequestParam(value = "remark", required = false) String remark,
+            @RequestParam(value = "paymentType", required = false) String paymentType,
+            @RequestParam(value = "uid", required = false) String uid,
+            HttpServletResponse response
+    ) throws Exception {
+        //
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
+        synchronized(this){
+            SecondProductVideo secondProductVideo = secondProductVideoMapper.selectByPrimaryKey(productId);
+            if (secondProductVideo.getIsPutaway().equals(ProductEnum.IsPutaway.PUTAWAY.getState())
+            && secondProductVideo.getProductState().equals(ProductEnum.ProductState.SELL.getState())
+            && secondProductVideo.getIsDeleted() == 0){
+                if (payOrderService.stockVideo(quantity,productId)>0){
+                    SecondPayOrder secondPayOrder = new SecondPayOrder();
+                    secondPayOrder.setPayCode(getC("video"));
+                    secondPayOrder.setUserId(userId);
+                    secondPayOrder.setType(OrderEnum.PayType.VIDEO.getPayTypeType());
+                    secondPayOrder.setPayStatus(OrderEnum.PaymentStatus.UNPAID.getPaymentStatus());
+                    secondPayOrder.setPaymentName(paymentType);
+                    secondPayOrder.setCreateTime(LocalDateTime.now());
+                    secondPayOrder.setModifyTime(LocalDateTime.now());
+                    secondPayOrder.setIsDeleted((byte) 0);
+                    secondPayOrderMapper.insertSelective(secondPayOrder);
+                    //创建订单
+                    SecondOrderVideo secondOrder = new SecondOrderVideo();
+                    secondOrder.setOrderCode(getC(UUID.randomUUID().toString()));
+                    secondOrder.setUserId(userId);
+                    secondOrder.setPayStatus(OrderEnum.PaymentStatus.UNPAID.getPaymentStatus());
+                    secondOrder.setOrderStatus(OrderEnum.OrderStatus.PAYMENT.getOrderStatus());
+                    secondOrder.setPaymentName(paymentType);
+                    secondOrder.setAmount(secondProductVideo.getPrice());
+                    secondOrder.setPracticalAmount(secondProductVideo.getPrice());
+                    secondOrder.setPaymentType(OrderEnum.PaymentType.getPaymentTypeEnum(paymentType).getPaymentType());
+                    secondOrder.setHfRemark(remark);
+                    secondOrder.setPayOrderId(secondPayOrder.getId());
+                    secondOrder.setCreateTime(LocalDateTime.now());
+                    secondOrder.setModifyTime(LocalDateTime.now());
+                    secondOrder.setIsDeleted((byte) 0);
+                    secondOrder.setVideoId(productId);
+                    secondOrder.setUid(uid);
+                    if (quantity==null){
+                        quantity = 1;
+                    }
+                    secondOrder.setAmt(quantity);
+                    secondOrderVideoMapper.insertSelective(secondOrder);
+                    return builder.body(ResponseUtils.getResponseBody(secondPayOrder));
+                }else {
+                    response.sendError(HttpStatus.FORBIDDEN.value(), "库存不足");
+                    return builder.body(ResponseUtils.getResponseBody(1));
+                }
+            }
+        }
+        return builder.body(ResponseUtils.getResponseBody(0));
+    }
     public static void main(String[] args) {
         InetAddress ip = null;
                try {

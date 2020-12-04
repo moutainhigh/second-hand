@@ -27,6 +27,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -107,6 +108,9 @@ public class SecondProductController {
     //分类
     @Autowired
     private SecondCategoryMapper secondCategoryMapper;
+    //视频会员商品
+    @Autowired
+    private SecondProductVideoMapper secondProductVideoMapper;
 
     @RequestMapping(path = "/addProduct", method = RequestMethod.POST)
     @ApiOperation(value = "用户添加商品", notes = "用户添加商品")
@@ -1087,6 +1091,159 @@ if (price!=null && price==1){
             }
         }
         return builder.body(ResponseUtils.getResponseBody(0));
+    }
+
+    @RequestMapping(path = "/addVideoProduct", method = RequestMethod.POST)
+    @ApiOperation(value = "添加视频会员商品", notes = "添加视频会员商品")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "itemId", value = "商品编号(充值平台方提供)", required = true, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "checkItemFacePrice", value = "商品面值(单位厘:1元=1000厘，用于验证上传面值是否跟系统itemId的面值一致)", required = true, type = "bigint"),
+            @ApiImplicitParam(paramType = "query", name = "itemPrice", value = "商品销售价格，单位厘；1元=1000厘（对于代理方而言，就是成本价格）", required = true, type = "bigint"),
+            @ApiImplicitParam(paramType = "query", name = "quantity", value = "库存数量", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "price", value = "销售价格,单位分", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "linePrice", value = "划线价格,单位分", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "productName", value = "商品名称", required = true, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "productDesc", value = "商品描述", required = true, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "file", value = "商品展示图", required = true, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "isPutaway", value = "是否上架", required = true, type = "Integer"),
+    })
+    @Transactional(rollbackFor = {RuntimeException.class, Error.class})
+    public ResponseEntity<JSONObject> addVideoProduct(
+            @RequestParam(value = "itemId", required = true) String itemId,
+            @RequestParam(value = "checkItemFacePrice", required = true) Long checkItemFacePrice,
+            @RequestParam(value = "itemPrice", required = true) Long itemPrice,
+            @RequestParam(value = "quantity", required = true) Integer quantity,
+            @RequestParam(value = "price", required = true) Integer price,
+            @RequestParam(value = "linePrice", required = true) Integer linePrice,
+            @RequestParam(value = "productName", required = true) String productName,
+            @RequestParam(value = "file", required = true) String file,
+            @RequestParam(value = "isPutaway", required = true) Integer isPutaway,
+            @RequestParam(value = "productDesc", required = true) String productDesc,
+            HttpServletResponse response
+    ) throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
+        //删除redis数据保证数据一致
+        SecondProductVideo secondProductVideo = new SecondProductVideo();
+        if (StringUtils.isEmpty(itemId)) {
+            response.sendError(HttpStatus.FORBIDDEN.value(), "商品编号不能为空");
+            return builder.body(ResponseUtils.getResponseBody(1));
+        }
+        if (StringUtils.isEmpty(checkItemFacePrice)) {
+            response.sendError(HttpStatus.FORBIDDEN.value(), "商品面值不能为空");
+            return builder.body(ResponseUtils.getResponseBody(1));
+        }
+        if (StringUtils.isEmpty(itemPrice)) {
+            response.sendError(HttpStatus.FORBIDDEN.value(), "商品销售价格不能为空");
+            return builder.body(ResponseUtils.getResponseBody(1));
+        }
+        if (StringUtils.isEmpty(quantity)) {
+            quantity = 0;
+        }
+        if (StringUtils.isEmpty(price)) {
+            price = 1;
+        }
+        if (StringUtils.isEmpty(isPutaway)) {
+            isPutaway = ProductEnum.IsPutaway.OUT.getState();
+        }
+        //
+        secondProductVideo.setItemId(itemId);
+        secondProductVideo.setCheckItemFacePrice(checkItemFacePrice);
+        secondProductVideo.setItemPrice(itemPrice);
+        secondProductVideo.setQuantity(quantity);
+        secondProductVideo.setPrice(price);
+        secondProductVideo.setLinePrice(linePrice);
+        secondProductVideo.setProductName(productName);
+        secondProductVideo.setProductDesc(productDesc);
+        if (!StringUtils.isEmpty(file)) {
+            secondProductVideo.setFile(file);
+        }
+        secondProductVideo.setIsPutaway(isPutaway);
+        secondProductVideo.setProductState(ProductEnum.ProductState.SELL.getState());
+        secondProductVideo.setCreateTime(LocalDateTime.now());
+        secondProductVideo.setModifyTime(LocalDateTime.now());
+        secondProductVideo.setIsDeleted((short) 0);
+        secondProductVideoMapper.insertSelective(secondProductVideo);
+        return builder.body(ResponseUtils.getResponseBody(0));
+    }
+    @RequestMapping(path = "/updateVideoProduct", method = RequestMethod.POST)
+    @ApiOperation(value = "修改视频会员商品", notes = "修改视频会员商品")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "itemId", value = "商品编号(充值平台方提供)", required = true, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "productId", value = "商品id", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "checkItemFacePrice", value = "商品面值(单位厘:1元=1000厘，用于验证上传面值是否跟系统itemId的面值一致)", required = true, type = "bigint"),
+            @ApiImplicitParam(paramType = "query", name = "itemPrice", value = "商品销售价格，单位厘；1元=1000厘（对于代理方而言，就是成本价格）", required = true, type = "bigint"),
+            @ApiImplicitParam(paramType = "query", name = "quantity", value = "库存数量", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "price", value = "销售价格,单位分", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "linePrice", value = "划线价格,单位分", required = true, type = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "productName", value = "商品名称", required = true, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "productDesc", value = "商品描述", required = true, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "file", value = "商品展示图", required = true, type = "String"),
+            @ApiImplicitParam(paramType = "query", name = "isPutaway", value = "是否上架", required = true, type = "Integer"),
+    })
+    @Transactional(rollbackFor = {RuntimeException.class, Error.class})
+    public ResponseEntity<JSONObject> updateVideoProduct(
+            @RequestParam(value = "itemId", required = true) String itemId,
+            @RequestParam(value = "checkItemFacePrice", required = true) Long checkItemFacePrice,
+            @RequestParam(value = "itemPrice", required = true) Long itemPrice,
+            @RequestParam(value = "quantity", required = true) Integer quantity,
+            @RequestParam(value = "productId", required = true) Integer productId,
+            @RequestParam(value = "price", required = true) Integer price,
+            @RequestParam(value = "linePrice", required = true) Integer linePrice,
+            @RequestParam(value = "productName", required = true) String productName,
+            @RequestParam(value = "file", required = true) String file,
+            @RequestParam(value = "isPutaway", required = true) Integer isPutaway,
+            @RequestParam(value = "productDesc", required = true) String productDesc,
+            HttpServletResponse response
+    ) throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
+        SecondProductVideo secondProductVideo = new SecondProductVideo();
+        secondProductVideo.setId(productId);
+        secondProductVideo.setItemId(itemId);
+        secondProductVideo.setCheckItemFacePrice(checkItemFacePrice);
+        secondProductVideo.setItemPrice(itemPrice);
+        secondProductVideo.setQuantity(quantity);
+        secondProductVideo.setPrice(price);
+        secondProductVideo.setLinePrice(linePrice);
+        secondProductVideo.setProductName(productName);
+        secondProductVideo.setProductDesc(productDesc);
+        if (!StringUtils.isEmpty(file)) {
+            secondProductVideo.setFile(file);
+        }
+        secondProductVideo.setIsPutaway(isPutaway);
+        secondProductVideo.setModifyTime(LocalDateTime.now());
+        secondProductVideoMapper.updateByPrimaryKeySelective(secondProductVideo);
+        return builder.body(ResponseUtils.getResponseBody(0));
+    }
+    @RequestMapping(path = "/deleteVideoProduct", method = RequestMethod.POST)
+    @ApiOperation(value = "删除视频会员商品", notes = "删除视频会员商品")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "productId", value = "商品id", required = true, type = "Integer"),
+    })
+    @Transactional(rollbackFor = {RuntimeException.class, Error.class})
+    public ResponseEntity<JSONObject> deleteVideoProduct(
+            @RequestParam(value = "productId", required = true) Integer productId,
+            HttpServletResponse response
+    ) throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
+        SecondProductVideo secondProductVideo = new SecondProductVideo();
+        secondProductVideo.setId(productId);
+        secondProductVideo.setIsDeleted((short) 1);
+        secondProductVideo.setModifyTime(LocalDateTime.now());
+        secondProductVideoMapper.updateByPrimaryKeySelective(secondProductVideo);
+        return builder.body(ResponseUtils.getResponseBody(0));
+    }
+    @RequestMapping(path = "/selectVideoProduct", method = RequestMethod.GET)
+    @ApiOperation(value = "查询视频会员商品", notes = "查询视频会员商品")
+    @Transactional(rollbackFor = {RuntimeException.class, Error.class})
+    public ResponseEntity<JSONObject> selectVideoProduct(
+            HttpServletResponse response
+    ) throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder();
+        SecondProductVideoExample secondProductVideoExample = new SecondProductVideoExample();
+        secondProductVideoExample.createCriteria().andIsDeletedEqualTo((short) 0)
+                .andProductStateEqualTo(ProductEnum.ProductState.SELL.getState())
+                .andIsPutawayEqualTo(ProductEnum.IsPutaway.PUTAWAY.getState());
+        return builder.body(ResponseUtils.getResponseBody(secondProductVideoMapper.selectByExample(secondProductVideoExample)));
     }
     //
     //每隔2秒执行一次

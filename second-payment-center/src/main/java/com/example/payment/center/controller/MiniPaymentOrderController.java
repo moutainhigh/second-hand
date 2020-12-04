@@ -1,13 +1,16 @@
 package com.example.payment.center.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.payment.center.config.MiniProgramConfig;
 import com.example.payment.center.dao.*;
 import com.example.payment.center.manual.*;
 import com.example.payment.center.model.*;
 import com.example.payment.center.service.BalanceService;
+import com.example.payment.center.util.MD5;
 import com.example.payment.center.util.PayUtil;
 import com.example.payment.center.service.AddStockService;
+import com.example.payment.center.util.Requests;
 import com.github.wxpay.sdk.WXPay;
 import com.github.wxpay.sdk.WXPayUtil;
 import com.second.utils.response.handler.ResponseEntity;
@@ -30,6 +33,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -91,6 +96,11 @@ public class MiniPaymentOrderController {
     //余额明细
     @Autowired
     private SecondStoreBalanceDetailMapper secondStoreBalanceDetailMapper;
+    //
+    @Autowired
+    private SecondOrderVideoMapper secondOrderVideoMapper;
+    @Autowired
+    private SecondProductVideoMapper secondProductVideoMapper;
     @ApiOperation(value = "支付订单", notes = "")
     @RequestMapping(value = "/order", method = RequestMethod.GET)
     @Transactional(rollbackFor = {RuntimeException.class, Error.class})
@@ -284,7 +294,7 @@ public class MiniPaymentOrderController {
 /**
  * 完成支付订单
  */
-@ApiOperation(value = "完成支付", notes = "")
+@ApiOperation(value = "完成订单支付", notes = "")
 @RequestMapping(value = "/complete", method = RequestMethod.GET)
 @ApiImplicitParams({
 //			@ApiImplicitParam(paramType = "query", name = "outTradeNo", value = "订单id", required = true, type = "String"),
@@ -366,7 +376,7 @@ public ResponseEntity<JSONObject> completePaymentAfter(
     /**
      * 未完成支付
      */
-    @ApiOperation(value = "未完成支付", notes = "")
+    @ApiOperation(value = "未完成订单支付", notes = "")
     @RequestMapping(value = "/noComplete", method = RequestMethod.GET)
     @Transactional(rollbackFor = {RuntimeException.class, Error.class})
     public ResponseEntity<JSONObject> noComplete(
@@ -390,6 +400,98 @@ public ResponseEntity<JSONObject> completePaymentAfter(
             });
         });
         return builder.body(ResponseUtils.getResponseBody(0));
+    }
+    String userIdVideo = "638";
+    String privatekeyVideo = "638da426ccf508f8452b120b940225e43a21d6ece91331112991b9bf73421df5987";
+    //视频完成支付
+    @ApiOperation(value = "视频订单完成订单支付", notes = "")
+    @RequestMapping(value = "/completeVideo", method = RequestMethod.GET)
+    @ApiImplicitParams({
+//			@ApiImplicitParam(paramType = "query", name = "outTradeNo", value = "订单id", required = true, type = "String"),
+//        @ApiImplicitParam(paramType = "query", name = "transactionType", value = "订单id", required = true, type = "String"),
+    })
+    @Transactional(rollbackFor = {RuntimeException.class, Error.class})
+    public ResponseEntity<JSONObject> completeVideo(
+            Integer payOrderId)
+            throws Exception {
+        ResponseEntity.BodyBuilder builder = ResponseUtils.getBodyBuilder(HttpStatus.OK);
+        SecondPayOrder payOrder = secondPayOrderMapper.selectByPrimaryKey(payOrderId);
+        SecondOrderVideoExample secondOrderVideoExample = new SecondOrderVideoExample();
+        secondOrderVideoExample.createCriteria().andPayOrderIdEqualTo(payOrderId);
+        List<SecondOrderVideo> secondOrderVideos= secondOrderVideoMapper.selectByExample(secondOrderVideoExample);
+        for (SecondOrderVideo secondOrderVideo:secondOrderVideos){
+            DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+            Calendar calendar = Calendar.getInstance();
+            String dateName = df.format(calendar.getTime());
+            SecondProductVideo secondProductVideo = secondProductVideoMapper.selectByPrimaryKey(secondOrderVideo.getVideoId());
+            String s= Requests.sendGet("http://120.79.157.192:6160/unicomAync/buy.do",
+                           "userId="+userIdVideo+
+                                   "&itemId="+secondProductVideo.getItemId()+
+                                   "&checkItemFacePrice="+ secondProductVideo.getCheckItemFacePrice()+
+                                   "&uid="+secondOrderVideo.getUid()+
+                                   "&serialno"+payOrder.getPayCode()+
+                                   "&dtCreate"+ dateName+
+                                   "&sign="+ MD5.MD5Encode(String.valueOf(secondOrderVideo.getAmt())+String.valueOf(secondProductVideo.getCheckItemFacePrice())
+                                   +dateName+String.valueOf(req.getRemoteAddr())+secondProductVideo.getItemId()+String.valueOf(secondProductVideo.getItemPrice())+payOrder.getPayCode()+String.valueOf(secondOrderVideo.getUid())+userIdVideo+privatekeyVideo)+
+                                   "&amt=" + secondOrderVideo.getAmt() +
+                                   "&itemPrice=" + secondProductVideo.getItemPrice()+
+                                   "&ext3=" + req.getRemoteAddr());
+            System.out.println(s);
+            HashMap hashMap = JSON.parseObject(s, HashMap.class);
+            if (PaymentTypeEnum.getPaymentTypeEnum(secondOrderVideo.getPaymentName()).equals(PaymentTypeEnum.WECHART)) {
+                SecondTransactionFlowExample e = new SecondTransactionFlowExample();
+                e.createCriteria().andOutTradeNoEqualTo(String.valueOf(payOrder.getId())+"siwei");
+                List<SecondTransactionFlow> secondTransactionFlows = secondTransactionFlowMapper.selectByExample(e);
+                if (!secondTransactionFlows.isEmpty()) {
+                    SecondTransactionFlow hfTansactionFlow = secondTransactionFlows.get(0);
+                    SecondOrderVideo secondOrderVideo1 = new SecondOrderVideo();
+                    SecondOrderVideoExample secondOrderVideoExample1 = new SecondOrderVideoExample();
+                    secondOrderVideoExample1.createCriteria().andOrderCodeEqualTo(secondOrderVideo.getOrderCode());
+                    if (hashMap.get("status").equals("success")){
+
+                        hfTansactionFlow.setHfStatus(TansactionFlowStatusEnum.COMPLETE.getStatus());
+                        secondOrderVideo1.setBizOrderId(String.valueOf(hashMap.get("bizOrderId")));
+                        secondOrderVideo1.setOrderStatus(OrderEnum.OrderStatus.COMPLETE.getOrderStatus());
+
+                        secondOrderVideo1.setPayStatus(1);
+                    }
+                    secondOrderVideo1.setIp(req.getRemoteAddr());
+                    secondOrderVideo1.setCode(String.valueOf(hashMap.get("code")));
+                    secondOrderVideo1.setCodeDesc(String.valueOf(hashMap.get("desc")));
+                    secondOrderVideo1.setAreaCode(String.valueOf(hashMap.get("areaCode")));
+                    hfTansactionFlow.setModifyDate(LocalDateTime.now());
+                    secondOrderVideo1.setModifyTime(LocalDateTime.now());
+                    secondTransactionFlowMapper.updateByPrimaryKeySelective(hfTansactionFlow);
+                    secondOrderVideoMapper.updateByExampleSelective(secondOrderVideo1,secondOrderVideoExample1);
+//                }
+                    return builder.body(ResponseUtils.getResponseBody(hashMap.get("status")));
+                } else {
+                    throw new Exception("交易柳树不存在, 或者已完成支付");
+                }
+            } else if (PaymentTypeEnum.getPaymentTypeEnum(secondOrderVideo.getPaymentName()).equals(PaymentTypeEnum.BALANCE)){
+                SecondOrderVideoExample secondOrderVideoExample1 = new SecondOrderVideoExample();
+                secondOrderVideoExample1.createCriteria().andOrderCodeEqualTo(secondOrderVideo.getOrderCode());
+                SecondOrderVideo secondOrderVideo1 = new SecondOrderVideo();
+                secondOrderVideo1.setOrderStatus(OrderEnum.OrderStatus.COMPLETE.getOrderStatus());
+                secondOrderVideo1.setModifyTime(LocalDateTime.now());
+                secondOrderVideo1.setPayStatus(1);
+                secondOrderVideoMapper.updateByExampleSelective(secondOrderVideo1,secondOrderVideoExample1);
+            }
+        }
+        return builder.body(ResponseUtils.getResponseBody(0));
+    }
+    private String getVideoData(String itemId,
+                                             String uid,
+                                             Long checkItemFacePrice,
+                                             String serialno,
+                                             Integer amt,
+                                             Long itemPrice,
+                                             String dateName
+                                             )
+            throws Exception {
+        String sign = MD5.MD5Encode(String.valueOf(amt)+String.valueOf(checkItemFacePrice)
+        +dateName+req.getRemoteAddr()+itemId+itemPrice+serialno+uid+userIdVideo+privatekeyVideo);
+        return sign;
     }
     /**
      * 退款

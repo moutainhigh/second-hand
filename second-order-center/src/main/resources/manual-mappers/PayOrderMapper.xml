@@ -5,4 +5,8 @@
     <update id="stock">
     update second_goods set goods_resp = goods_resp - #{quantity} where goods_resp - #{quantity}>=0 and id=#{goodsId} and is_deleted=0
     </update>
+    <update id="stockVideo">
+    update second_product_video set quantity = quantity - #{quantity} where quantity - #{quantity}>=0 and id=#{productId} and is_deleted=0
+    </update>
+
 </mapper>
